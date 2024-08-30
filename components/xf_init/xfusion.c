@@ -24,7 +24,7 @@
 #if XF_TASK_MBUS_IS_ENABLE
 /**
  * @brief 发布订阅默认处理函数。
- * 
+ *
  * @param task 当前任务句柄。
  */
 static void mbus_handle(xf_task_t task);
@@ -35,6 +35,8 @@ static void mbus_handle(xf_task_t task);
 /* ==================== [Macros] ============================================ */
 
 /* ==================== [Global Functions] ================================== */
+
+extern void xf_main(void);
 
 void xfusion_run(const xf_init_preinit_ops_t *const p_ops)
 {
