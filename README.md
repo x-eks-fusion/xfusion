@@ -1,5 +1,11 @@
 # XFusion 轻量级嵌入式框架
 
+## 开源地址
+
+[github](https://github.com/x-eks-fusion/xfusion)
+
+[gitee](https://gitee.com/x-eks-fusion/xfusion)
+
 ## 介绍 xfusion
 
 ### 背景
