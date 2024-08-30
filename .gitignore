@@ -1,52 +1,55 @@
-# Prerequisites
-*.d
 
-# Object files
-*.o
-*.ko
-*.obj
-*.elf
-
-# Linker output
-*.ilk
-*.map
-*.exp
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
 *.hex
+*.map
+*.lst
+*.scvd
+*.uvoptx
+*.uvguix.*
+*.emProject
+*.emSession
+.vscode
+.vs
+*.o
+*.d
+*.exe
 
-# Debug files
-*.dSYM/
-*.su
-*.idb
-*.pdb
+# Forder
+Objects
+build
+DebugConfig
+Listings
+Output
+Debug
+Exe
+Obj
+cmake-build-debug
+CubeMx
 
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
+# File
+JLinkLog.txt
+setting.ini
+.sconsign.dblite
+kconfig-mconf
+
+test.py
+xfconfig
+xfconfig.old
+
+
+# vscode
+.vscode
+*.code-workspace
+
+# 存放垃圾代码
+temp
+
+# python 缓存
+__pycache__
+xf.egg-info
+xf_build.egg-info
+
+# sdk 内的厂商支持包
+sdks/*
+!sdks/README.md
+
+boards/XFKconfig

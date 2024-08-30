@@ -1,0 +1,33 @@
+choice
+    prompt "Byte Alignment"
+    default XF_HEAP_BYTE_ALIGNMENT_4
+
+config XF_HEAP_BYTE_ALIGNMENT_1
+    bool "1 byte"
+    help
+      Set heap byte alignment to 1 byte.
+config XF_HEAP_BYTE_ALIGNMENT_2
+    bool "2 bytes"
+    help
+      Set heap byte alignment to 2 bytes.
+config XF_HEAP_BYTE_ALIGNMENT_4
+    bool "4 bytes"
+    help
+      Set heap byte alignment to 4 bytes.
+config XF_HEAP_BYTE_ALIGNMENT_8
+    bool "8 bytes"
+    help
+      Set heap byte alignment to 8 bytes.
+
+endchoice
+
+config XF_HEAP_BYTE_ALIGNMENT
+    int
+    default 1 if XF_HEAP_BYTE_ALIGNMENT_1
+    default 2 if XF_HEAP_BYTE_ALIGNMENT_2
+    default 4 if XF_HEAP_BYTE_ALIGNMENT_4
+    default 8 if XF_HEAP_BYTE_ALIGNMENT_8
+
+config XF_HEAP_STATIC_SIZE
+    int "static array size for xf_heap"
+    default 4096

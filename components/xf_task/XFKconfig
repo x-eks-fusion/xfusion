@@ -1,0 +1,52 @@
+config XF_TASK_PRIORITY_LEVELS
+    int "Maximum priority of xf_task"
+    range 2 1023
+    default 24
+    help
+        The value range is between 1-1024.
+        Too many priorities may occupy too much memory.
+        It is not recommended to set a very large value.
+
+config XF_TASK_HUNGRY_ENABLE
+    bool "Is it possible to make xf_task feel hunger"
+    default n
+    help
+        xf_task can feel hunger,
+        which means if it cannot run within the hunger_time period,
+        it will automatically temporarily increase its priority
+        until it can eventually execute.
+
+config XF_TASK_CONTEXT_ENABLE
+    bool "Use ctask"
+    default n
+    help
+        If using ctask, XF_TASK_CONTEXT_T needs to be defined as the context object type.
+
+choice XF_TASK_LOG_LEVEL_CHOICE
+    bool "task log level"
+    default XF_TASK_LOG_LEVEL_INFO
+    config XF_TASK_LOG_LEVEL_NONE
+        bool "None"
+    config XF_TASK_LOG_LEVEL_USER
+        bool "User"
+    config XF_TASK_LOG_LEVEL_ERROR
+        bool "Error"
+    config XF_TASK_LOG_LEVEL_WARN
+        bool "Warning"
+    config XF_TASK_LOG_LEVEL_INFO
+        bool "Information"
+    config XF_TASK_LOG_LEVEL_DEBUG
+        bool "Debug"
+    config XF_TASK_LOG_LEVEL_VERBOSE
+        bool "Verbose"
+endchoice
+
+config XF_TASK_LOG_LEVEL
+    int
+    default 0 if XF_TASK_LOG_LEVEL_NONE
+    default 1 if XF_TASK_LOG_LEVEL_USER
+    default 2 if XF_TASK_LOG_LEVEL_ERROR
+    default 3 if XF_TASK_LOG_LEVEL_WARN
+    default 4 if XF_TASK_LOG_LEVEL_INFO
+    default 5 if XF_TASK_LOG_LEVEL_DEBUG
+    default 6 if XF_TASK_LOG_LEVEL_VERBOSE

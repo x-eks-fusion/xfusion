@@ -1,0 +1,24 @@
+
+# @see: esp-idf-v5.0/examples/build_system/cmake/plugins/components/plugins/linker.lf
+# @see: https://docs.espressif.com/projects/esp-idf/zh_CN/latest/esp32/api-guides/linker-script-generation.html
+
+# 目标
+#     # . = ALIGN(4);
+#     # __xf_init_start = .;
+#     # KEEP(*(SORT(.xf_auto_init*)))
+#     # __xf_init_end = .;
+
+[sections:xf_auto_init]
+entries:
+    .xf_auto_init+ # == .xf_auto_init
+                   #    .xf_auto_init.*
+
+[scheme:xf_auto_init_default]
+entries:
+    xf_auto_init -> flash_rodata
+
+[mapping:xf_port]
+archive: *
+entries:
+    * (xf_auto_init_default);
+        xf_auto_init -> flash_rodata KEEP() SORT(name) ALIGN(4) SURROUND(_xf_init)

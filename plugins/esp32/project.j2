@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.5)
+include($ENV{IDF_PATH}/tools/cmake/project.cmake)
+
+set(EXTRA_COMPONENT_DIRS $ENV{XF_ROOT}/ports/espressif/esp32)
+
+project({{project_name}})
+idf_build_set_property(COMPILE_OPTIONS "-fdiagnostics-color=always" APPEND)

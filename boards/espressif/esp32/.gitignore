@@ -1,0 +1,8 @@
+# 中间自动生成的临时文件
+xf_platform_desc.json
+
+# esp-idf
+sdkconfig
+sdkconfig.old
+components/*
+CMakeLists.txt

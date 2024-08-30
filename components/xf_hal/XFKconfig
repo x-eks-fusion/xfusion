@@ -1,0 +1,88 @@
+config XF_HAL_LOCK_DISABLE
+    bool "Disable HAL Lock"
+    default y
+    help
+      Disables the HAL Lock functionality.
+
+config XF_HAL_POSIX_DISABLE
+    bool "Disable HAL Posix"
+    default y
+    help
+      Disables the HAL Posix functionality.
+
+config XF_HAL_GPIO_ENABLE
+    bool "Enable HAL GPIO"
+    default y
+    help
+      Enables the HAL GPIO functionality.
+
+config XF_HAL_PWM_ENABLE
+    bool "Enable HAL PWM"
+    default y
+    help
+      Enables the HAL PWM functionality.
+
+config XF_HAL_TIM_ENABLE
+    bool "Enable HAL TIM"
+    default y
+    help
+      Enables the HAL TIM functionality.
+
+config XF_HAL_UART_ENABLE
+    bool "Enable HAL UART"
+    default y
+    help
+      Enables the HAL UART functionality.
+
+config XF_HAL_I2C_ENABLE
+    bool "Enable HAL I2C"
+    default y
+    help
+      Enables the HAL I2C functionality.
+
+config XF_HAL_SPI_ENABLE
+    bool "Enable HAL SPI"
+    default y
+    help
+      Enables the HAL SPI functionality.
+
+config XF_HAL_ADC_ENABLE
+    bool "Enable HAL ADC"
+    default y
+    help
+      Enables the HAL ADC functionality.
+
+config XF_HAL_DAC_ENABLE
+    bool "Enable HAL DAC"
+    default y
+    help
+      Enables the HAL DAC functionality.
+
+choice XF_HAL_LOG_LEVEL_CHOICE
+    bool "hal log level"
+    default XF_HAL_LOG_LEVEL_INFO
+    config XF_HAL_LOG_LEVEL_NONE
+        bool "None"
+    config XF_HAL_LOG_LEVEL_USER
+        bool "User"
+    config XF_HAL_LOG_LEVEL_ERROR
+        bool "Error"
+    config XF_HAL_LOG_LEVEL_WARN
+        bool "Warning"
+    config XF_HAL_LOG_LEVEL_INFO
+        bool "Information"
+    config XF_HAL_LOG_LEVEL_DEBUG
+        bool "Debug"
+    config XF_HAL_LOG_LEVEL_VERBOSE
+        bool "Verbose"
+endchoice
+
+config XF_HAL_LOG_LEVEL
+    int
+    default 0 if XF_HAL_LOG_LEVEL_NONE
+    default 1 if XF_HAL_LOG_LEVEL_USER
+    default 2 if XF_HAL_LOG_LEVEL_ERROR
+    default 3 if XF_HAL_LOG_LEVEL_WARN
+    default 4 if XF_HAL_LOG_LEVEL_INFO
+    default 5 if XF_HAL_LOG_LEVEL_DEBUG
+    default 6 if XF_HAL_LOG_LEVEL_VERBOSE

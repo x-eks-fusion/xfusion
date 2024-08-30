@@ -1,0 +1,21 @@
+[submodule "components/xf_utils/xf_utils"]
+	path = components/xf_utils/xf_utils
+	url = https://github.com/x-eks-fusion/xf_utils.git
+[submodule "components/xf_heap/xf_heap"]
+	path = components/xf_heap/xf_heap
+	url = https://github.com/x-eks-fusion/xf_heap.git
+[submodule "components/xf_log/xf_log"]
+	path = components/xf_log/xf_log
+	url = https://github.com/x-eks-fusion/xf_log.git
+[submodule "components/xf_init/xf_init"]
+	path = components/xf_init/xf_init
+	url = https://github.com/x-eks-fusion/xf_init.git
+[submodule "components/xf_hal/xf_hal"]
+	path = components/xf_hal/xf_hal
+	url = https://github.com/x-eks-fusion/xf_hal.git
+[submodule "components/xf_task/xf_task"]
+	path = components/xf_task/xf_task
+	url = https://github.com/x-eks-fusion/xf_task.git
+[submodule "docs/doxygen-awesome-css"]
+	path = docs/doxygen-awesome-css
+	url = https://github.com/Im-eks-dev/doxygen-awesome-css.git

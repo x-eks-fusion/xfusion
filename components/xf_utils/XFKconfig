@@ -1,0 +1,131 @@
+menu "Standard Definitions Configuration"
+
+config XF_STDDEF_ENABLE
+    bool "Enable stddef.h"
+    default y
+    help
+        Enable or disable the use of standard definitions.
+        If enabled, standard definitions will be included in the build.
+
+config XF_STDINT_ENABLE
+    bool "Enable stdint.h"
+    default y
+    help
+        Enable or disable the inclusion of stdint.h.
+        If enabled, stdint.h will be included in the build.
+
+config XF_STDBOOL_ENABLE
+    bool "Enable stdbool.h"
+    default y
+    help
+        Enable or disable the inclusion of stdbool.h.
+        If enabled, stdbool.h will be included in the build.
+
+config XF_STDLIB_ENABLE
+    bool "Enable stdlib.h"
+    default y
+    help
+        Enable or disable the inclusion of stdlib.h.
+        If enabled, stdlib.h will be included in the build.
+
+config XF_STRING_ENABLE
+    bool "Enable string.h"
+    default y
+    help
+        Enable or disable the inclusion of string.h.
+        If enabled, string.h will be included in the build.
+
+config XF_STDIO_ENABLE
+    bool "Enable stdio.h"
+    default y
+    help
+      Enable or disable the inclusion of stdio.h.
+      If enabled, stdio.h will be included in the build.
+
+endmenu
+
+menu "Common Error Configuration"
+
+config XF_COMMON_ERR_TO_NAME_LOOKUP
+
+    bool "Enable Error Code to Name Lookup"
+    default y
+    help
+        Enable or disable the error code to name lookup table.
+        If enabled, error codes will be mapped to their string representations (e.g., `XF_OK` -> "XF_OK").
+
+config XF_ATTRIBUTE_ENABLE
+    bool "Enable attribute"
+    default y
+    help
+        Turn on the attribute function.
+        If the compiler does not define it,
+        it will help you define some functions related to __attribute__
+
+endmenu
+
+choice
+    bool "Default log level"
+    default XF_LOG_DEFAULT_LEVEL_INFO
+    help
+        The log levels from high to low are:
+            Error, Warn, Info, Debug, None.
+        Except for None, the higher the log level, the fewer logs are printed. Default is Info.
+        None means no logs are printed.
+
+    config XF_LOG_DEFAULT_LEVEL_NONE
+        bool "None"
+    config XF_LOG_DEFAULT_LEVEL_USER
+        bool "User"
+    config XF_LOG_DEFAULT_LEVEL_ERROR
+        bool "Error"
+    config XF_LOG_DEFAULT_LEVEL_WARN
+        bool "Warning"
+    config XF_LOG_DEFAULT_LEVEL_INFO
+        bool "Information"
+    config XF_LOG_DEFAULT_LEVEL_DEBUG
+        bool "Debug"
+    config XF_LOG_DEFAULT_LEVEL_VERBOSE
+        bool "Verbose"
+endchoice
+
+config XF_LOG_LEVEL
+    int
+    default 0 if XF_LOG_DEFAULT_LEVEL_NONE
+    default 1 if XF_LOG_DEFAULT_LEVEL_USER
+    default 2 if XF_LOG_DEFAULT_LEVEL_ERROR
+    default 3 if XF_LOG_DEFAULT_LEVEL_WARN
+    default 4 if XF_LOG_DEFAULT_LEVEL_INFO
+    default 5 if XF_LOG_DEFAULT_LEVEL_DEBUG
+    default 6 if XF_LOG_DEFAULT_LEVEL_VERBOSE
+
+menu "Check Configuration"
+
+config XF_CHECK_ENABLE
+    bool "Enable Check Macros"
+    default y
+    help
+      macro XF_CHECK enable or disable
+
+config XF_ASSERT_ENABLE
+    bool "Enable Assert Macros"
+    default y
+    help
+      macro XF_ASSERT enable or disable
+
+config XF_ERROR_CHECK_ENABLE
+    bool "Enable Error Check Macros"
+    default y
+    help
+      macro XF_ERROR_CHECK enable or disable
+
+endmenu
+
+menu "Log Configuration"
+
+config XF_LOG_DUMP_ENABLE
+    bool "Enable Log Dump Macros"
+    default y
+    help
+      Whether to print binary array
+endmenu

@@ -1,0 +1,48 @@
+
+choice
+    bool "Select an implementation method for automatic initialization."
+    default XF_INIT_IMPL_BY_SECTION_ENABLE
+    help
+        Select an implementation method for automatic initialization.
+
+    config XF_INIT_IMPL_BY_SECTION_ENABLE
+        bool "section"
+    config XF_INIT_IMPL_BY_CONSTRUCTOR_ENABLE
+        bool "constructor"
+    config XF_INIT_IMPL_BY_REGISTRY_ENABLE
+        bool "registry"
+endchoice
+
+config XF_INIT_USER_REGISTRY_PATH
+    string "User registry path"
+    help
+        If a relative path is required, it is relative to src/xf_init_registry.inc.
+
+choice XF_INIT_LOG_LEVEL_CHOICE
+    bool "init log level"
+    default XF_INIT_LOG_LEVEL_INFO
+    config XF_INIT_LOG_LEVEL_NONE
+        bool "None"
+    config XF_INIT_LOG_LEVEL_USER
+        bool "User"
+    config XF_INIT_LOG_LEVEL_ERROR
+        bool "Error"
+    config XF_INIT_LOG_LEVEL_WARN
+        bool "Warning"
+    config XF_INIT_LOG_LEVEL_INFO
+        bool "Information"
+    config XF_INIT_LOG_LEVEL_DEBUG
+        bool "Debug"
+    config XF_INIT_LOG_LEVEL_VERBOSE
+        bool "Verbose"
+endchoice
+
+config XF_INIT_LOG_LEVEL
+    int
+    default 0 if XF_INIT_LOG_LEVEL_NONE
+    default 1 if XF_INIT_LOG_LEVEL_USER
+    default 2 if XF_INIT_LOG_LEVEL_ERROR
+    default 3 if XF_INIT_LOG_LEVEL_WARN
+    default 4 if XF_INIT_LOG_LEVEL_INFO
+    default 5 if XF_INIT_LOG_LEVEL_DEBUG
+    default 6 if XF_INIT_LOG_LEVEL_VERBOSE

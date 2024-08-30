@@ -1,0 +1,7 @@
+idf_component_register(
+    SRCS                {% for src in srcs %} "{{src}}" {% endfor %}
+    INCLUDE_DIRS        {% for inc_dir in inc_dirs %} "{{inc_dir}}" {% endfor %}
+    REQUIRES            {% for require in requires %} "{{require}}" {% endfor %} esp32
+    WHOLE_ARCHIVE
+)
+

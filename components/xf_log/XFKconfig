@@ -1,0 +1,91 @@
+
+config XF_LOG_COLORS_DISABLE
+    bool "Use ANSI terminal colors when logging output"
+    default "n"
+    help
+        The terminal needs to support ANSI color codes. Such as: putty, xshell, mobaxterm, etc.
+
+config XF_LOG_BUF_SIZE
+    int "log buffer size"
+    default 64
+    range 0 2048
+    help
+        Stack array size.
+
+choice XF_LOG_NEWLINE
+    prompt "new line symbol"
+    help
+        Select the newline symbol for log output.
+    default XF_LOG_NEWLINE_LF
+    config XF_LOG_NEWLINE_LF
+        bool "Line feed (LF)"
+    config XF_LOG_NEWLINE_CRLF
+        bool "carriage return (CRLF)"
+    config XF_LOG_NEWLINE_NONE
+        bool "none"
+endchoice
+
+config XF_LOG_FULL_FILE_NAME_ENABLE
+    bool "Fully display the file name."
+    default "n"
+    help
+        If this option is enabled, the file name may be very long,
+        such as from the root path to the directory where the file is located.
+        Exactly how this is displayed depends on the compiler.
+        Note that enabling this option requires strrchr support;
+        if the compiler does not support __builtin_strrchr,
+        Enabling this option does not save flash space.
+
+menu "mpaland_printf"
+
+    # config XF_PRINTF_CUSTOM_PRINTF_DISABLE
+    #     bool "Disable user printf implementation."
+    #     default n
+
+    config XF_PRINTF_OVERRIDE_STD_ENABLE
+        bool "Override standard library functions such as printf with macro definitions."
+        default n
+        help
+            It is equivalent to replacing functions such as printf in the user's program
+            with functions such as printf implemented by `xf_printf/printf/printf.c`.
+
+    config PRINTF_NTOA_BUFFER_SIZE
+        int "'ntoa' conversion buffer size"
+        default 32
+        range 8 64
+        help
+            'ntoa' conversion buffer size, this must be big enough to hold one converted
+            numeric number including padded zeros (dynamically created on stack)
+
+    config PRINTF_FTOA_BUFFER_SIZE
+        int "'ftoa' conversion buffer size"
+        default 32
+        range 8 64
+        help
+            'ftoa' conversion buffer size, this must be big enough to hold one converted
+            float number including padded zeros (dynamically created on stack)
+
+    config PRINTF_DISABLE_SUPPORT_FLOAT
+        bool "Disable floating-point type support (%f)"
+        default y
+
+    config PRINTF_DISABLE_SUPPORT_EXPONENTIAL
+        bool "Disable exponential floating-point representation (%e/%g)"
+        default y
+
+    # config PRINTF_DEFAULT_FLOAT_PRECISION
+    #     int "default floating point precision"
+    #     default 6
+    #     range 1 6
+
+    config PRINTF_DISABLE_SUPPORT_LONG_LONG
+        bool "Disable the long long types (%llu or %p)"
+        default n
+
+    config PRINTF_DISABLE_SUPPORT_PTRDIFF_T
+        bool "Disable the ptrdiff_t type (%t)"
+        default n
+        help
+            ptrdiff_t is normally defined in <stddef.h> as long or long long type
+
+endmenu # printf configuration

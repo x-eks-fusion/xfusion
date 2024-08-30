@@ -1,0 +1,4 @@
+
+config COMPONENTS_TEST_VAL
+    int "test value"
+    default "1234"
