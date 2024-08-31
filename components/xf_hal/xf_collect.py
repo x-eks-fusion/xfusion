@@ -9,4 +9,4 @@ incs = [
     "."
 ]
 
-xf_build.collect(srcs=srcs, inc_dirs=incs, requires=["xf_init"])
+xf_build.collect(srcs=srcs, inc_dirs=incs, requires=["xf_utils"])
