@@ -1,15 +1,6 @@
 # Get the directory path of the current script
 $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Definition
 
-# Define the file path to check
-$CHECK_FILE = "$SCRIPT_DIR\tools\xf_build\xf_build\xf_build\build.py"
-
-# Check if the file exists
-if (-Not (Test-Path -Path $CHECK_FILE)) {
-    Write-Output "This is not XFUSION"
-    exit 1
-}
-
 # Check if the XF_ROOT environment variable exists
 if (-Not (Test-Path Env:XF_ROOT)) {
     $Env:XF_ROOT = $SCRIPT_DIR
@@ -25,7 +16,7 @@ $index = 0
 $output = @()
 
 # Call the Python script and capture its output
-$gen_kconfig_output = & python3 "$Env:XF_ROOT\tools\export_script\gen_kconfig.py"
+$gen_kconfig_output = & python "$Env:XF_ROOT\tools\export_script\gen_kconfig.py"
 $gen_kconfig_output_lines = $gen_kconfig_output -split "`n"
 
 foreach ($line in $gen_kconfig_output_lines) {
@@ -61,7 +52,7 @@ if (-Not $valid_port) {
 $Env:XF_TARGET = $args[0]
 
 # Call the Python script and capture its output
-$Env:XF_TARGET_PATH = & python3 "$Env:XF_ROOT\tools\export_script\get_path.py" $args[0]
+$Env:XF_TARGET_PATH = & python "$Env:XF_ROOT\tools\export_script\get_path.py" $args[0]
 $Env:XF_TARGET_PATH = $Env:XF_TARGET_PATH.Trim()
 
 if ([string]::IsNullOrEmpty($Env:XF_TARGET_PATH)) {
@@ -82,6 +73,7 @@ if ($VENV_RESULT -eq 1 -or $VENV_RESULT -eq 2) {
 # Upgrade pip and install necessary packages
 & python -m pip install --upgrade pip -i https://pypi.tuna.tsinghua.edu.cn/simple
 & pip install xf_build==0.2.2 -i https://pypi.tuna.tsinghua.edu.cn/simple
+& pip install windows-curses -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 Write-Output "XF_ROOT:           $Env:XF_ROOT"
 Write-Output "XF_TARGET:         $Env:XF_TARGET"

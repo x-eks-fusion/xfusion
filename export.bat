@@ -3,15 +3,6 @@
 rem Get the directory path of the current script
 set "SCRIPT_DIR=%~dp0"
 
-rem Define the file path to check
-set "CHECK_FILE=%SCRIPT_DIR%tools\xf_build\xf_build\xf_build\build.py"
-
-rem Check if the file exists
-if not exist "%CHECK_FILE%" (
-    echo This is not XFUSION
-    exit /b
-)
-
 rem Check if the XF_ROOT environment variable exists
 if not defined XF_ROOT (
     set "XF_ROOT=%SCRIPT_DIR%"
@@ -30,7 +21,7 @@ rem Enable delayed variable expansion
 setlocal enabledelayedexpansion
 
 rem Call the Python script and capture its output
-for /f "delims=" %%i in ('python3 "%XF_ROOT%tools\export_script\gen_kconfig.py"') do (
+for /f "delims=" %%i in ('python "%XF_ROOT%tools\export_script\gen_kconfig.py"') do (
     set "output[!index!]=%%i"
     set /a index+=1
 )
@@ -67,7 +58,7 @@ endlocal
 
 set "XF_TARGET=%~1"
 
-for /f "delims=" %%i in ('python3 "%XF_ROOT%tools\export_script\get_path.py" %~1') do (
+for /f "delims=" %%i in ('python "%XF_ROOT%tools\export_script\get_path.py" %~1') do (
     set "XF_TARGET_PATH=%%i"
 )
 
@@ -89,7 +80,8 @@ if "%VENV_RESULT%"=="1" (
 )
 
 python.exe -m pip install --upgrade pip -i https://pypi.tuna.tsinghua.edu.cn/simple
-pip install xf_build=0.2.2 -i https://pypi.tuna.tsinghua.edu.cn/simple
+pip install xf_build==0.2.2 -i https://pypi.tuna.tsinghua.edu.cn/simple
+pip install windows-curses -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 echo XF_ROOT:           %XF_ROOT%
 echo XF_TARGET:         %XF_TARGET%
