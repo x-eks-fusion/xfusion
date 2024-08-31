@@ -5,4 +5,4 @@ xf_platform_desc.json
 sdkconfig
 sdkconfig.old
 components/*
-./CMakeLists.txt
+/CMakeLists.txt
