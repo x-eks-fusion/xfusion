@@ -16,7 +16,7 @@
 
 /* ==================== [Defines] =========================================== */
 
-#define DEFAULT_SPEED_KHZ           (1 * 1000)
+#define DEFAULT_SPEED               (1 * 1000 * 1000)
 
 #define DEFAULT_SPI_ROLE            XF_HAL_SPI_HOSTS_MASTER
 #define DEFAULT_SPI_NUM             (0)
@@ -57,7 +57,7 @@ void xf_main(void)
         .quadwp_num = XF_HAL_GPIO_NUM_NONE,
     };
 
-    xf_hal_spi_init(DEFAULT_SPI_NUM, DEFAULT_SPI_ROLE, DEFAULT_SPEED_KHZ);
+    xf_hal_spi_init(DEFAULT_SPI_NUM, DEFAULT_SPI_ROLE, DEFAULT_SPEED);
     xf_hal_spi_set_gpio(DEFAULT_SPI_NUM, &master_gpio);
     xf_hal_spi_set_mode(DEFAULT_SPI_NUM, DEFAULT_SPI_SAMPLE_MODE);
     xf_hal_spi_enable(DEFAULT_SPI_NUM);
