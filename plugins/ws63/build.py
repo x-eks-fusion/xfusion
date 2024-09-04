@@ -3,25 +3,44 @@ from xf_build import api
 import logging
 import os
 import shutil
+import glob
+import sys
 from pathlib import Path
 
+# 默认目标
+DEFAULT_TARGET = "ws63-liteos-app"
+# SDK 路径
+SDK_PATH: Path = api.XF_ROOT / "sdks/fbb_ws63/src"
+# SDK 编译输出的路径
+SDK_OUTPUT_PATH: Path = SDK_PATH / "output"
+XF_PROJECT_BUILD_PATH: Path = api.PROJECT_BUILD_PATH
 
 hookimpl = xf_build.get_hookimpl()
-SDK_PATH: Path = api.XF_ROOT / "sdks/fbb_ws63/src"; 
 class ws63():
     @hookimpl
     def build(self, args):
-        project_cmake_file: Path = api.PROJECT_BUILD_PATH / "build_environ.cmake"
+        project_cmake_file: Path = XF_PROJECT_BUILD_PATH / "build_environ.cmake"
         api.apply_template("cmake_project.j2", project_cmake_file)
         os.chdir(SDK_PATH.resolve())
-        api.exec_cmd(["python", "build.py", "-c -nhso -release ws63-liteos-app"])
-        return
-                
+        
+        target = DEFAULT_TARGET
+        # 第一个拓展参数为 help 时 显示 SDK 侧 编译时的可选目标
+        """
+        第一个拓展参数为（如果存在）：
+            help : 显示 SDK 侧 编译时的可选目标
+            其他 : 用户指定编译目标
+        """
+        if len(args) != 0:
+            if args[0] == "help":
+                target = ""
+            else:
+                target = args[0]
+        api.exec_cmd(["python", "build.py", "-c -nhso -release", target])
+          
     @hookimpl
     def clean(self, args):
-        ws63_output_path: Path = SDK_PATH / "output"
-        if ws63_output_path.exists() == True:
-            shutil.rmtree(ws63_output_path)
+        if SDK_OUTPUT_PATH.exists() == True:
+            shutil.rmtree(SDK_OUTPUT_PATH)
 
     @hookimpl
     def flash(self, args):
@@ -37,6 +56,19 @@ class ws63():
 
     @hookimpl
     def menuconfig(self, args):
+        # 第一个拓展参数为 sub 时 打开SDK 侧 menuconfig
         if args[0] == "sub":
+            target = DEFAULT_TARGET
+            """
+            第二个拓展参数为（如果存在）：
+                help : 显示 SDK 侧 menuconfig 可选目标
+                其他 : 用户指定 menuconfig 目标
+            """
+            if len(args) == 2:
+                if args[1] == "help":
+                    target = ""
+                else:
+                    target = args[1]
             os.chdir(SDK_PATH)
-            os.system("python build.py ws63-liteos-app menuconfig")
+            str_menuconfig_sub = f"python build.py menuconfig ${target}"
+            os.system(str_menuconfig_sub)
