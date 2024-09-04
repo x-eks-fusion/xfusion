@@ -18,32 +18,6 @@
 
 #define TAG "spi_self"
 
-#define DEFAULT_SPEED_KHZ           (1 * 1000)
-1
-#define DEFAULT_SPI_ROLE            XF_HAL_SPI_HOSTS_MASTER
-#define DEFAULT_SPI_NUM             (0)
-#define DEFAULT_SPI_SAMPLE_MODE     XF_HAL_SPI_MODE_0
-
-#define DEFAULT_SPI_MOSI_IO_NUM     (9)
-#define DEFAULT_SPI_MISO_IO_NUM     (11)
-#define DEFAULT_SPI_SCLK_IO_NUM     (7)
-#define DEFAULT_SPI_CS_IO_NUM       (10)
-
-#define DEFAULT_SPEED_KHZ           (1 * 1000)
-
-#define DEFAULT_SPI_ROLE            XF_HAL_SPI_HOSTS_MASTER
-#define DEFAULT_SPI_NUM             (0)
-#define DEFAULT_SPI_SAMPLE_MODE     XF_HAL_SPI_MODE_0
-
-#define DEFAULT_SPI_MOSI_IO_NUM     (9)
-#define DEFAULT_SPI_MISO_IO_NUM     (11)
-#define DEFAULT_SPI_SCLK_IO_NUM     (7)
-#define DEFAULT_SPI_CS_IO_NUM       (10)
-
-#define TASK_PRIORITY               5
-#define TASK_DELAY_MS               2000
-
-
 /* ==================== [Typedefs] ========================================== */
 
 /* ==================== [Static Prototypes] ================================= */
