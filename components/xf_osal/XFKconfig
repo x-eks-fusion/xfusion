@@ -1,0 +1,62 @@
+config XF_OSAL_KERNEL_ENABLE
+    bool "Use osal kernel"
+    default "y"
+    help
+        use xf_osal kernel API
+
+config XF_OSAL_TIMER_ENABLE
+    bool "Use osal timer"
+    default "y"
+    help
+        use xf_osal timer API
+
+config XF_OSAL_EVENT_ENABLE
+    bool "Use osal event"
+    default "y"
+    help
+        use xf_osal event API
+
+config XF_OSAL_MUTEX_ENABLE
+    bool "Use osal mutex"
+    default "y"
+    help
+        use xf_osal mutex API
+
+config XF_OSAL_SEMAPHORE_ENABLE
+    bool "Use osal semaphore"
+    default "y"
+    help
+        use xf_osal semaphore API
+
+config XF_OSAL_QUEUE_ENABLE
+    bool "Use osal queue"
+    default "y"
+    help
+        use xf_osal queue API
+
+choice
+    prompt "OSAL Port"
+    default XF_OSAL_NO_OSAL
+
+config XF_OSAL_NO_OSAL
+    bool "No OSAL"
+    help
+        Use this option if you don't want to use any OS abstraction layer.
+
+config XF_OSAL_FREERTOS
+    bool "FreeRTOS OSAL"
+    help
+        Use this option if you are using FreeRTOS as the OS abstraction layer.
+
+config XF_OSAL_CMSIS
+    bool "CMSIS OSAL"
+    help
+        Use this option if you are using CMSIS as the OS abstraction layer.
+
+endchoice
+
+config XF_OSAL_PORT_VALUE
+    int
+    default 0 if OSAL_NO_OSAL
+    default 1 if OSAL_FREERTOS
+    default 2 if OSAL_CMSIS

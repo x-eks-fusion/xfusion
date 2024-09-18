@@ -194,7 +194,11 @@ static int port_gpio_write(xf_hal_dev_t *dev, const void *buf, size_t count)
 {
     bool level = *(bool *)buf;
     esp_err_t ret = gpio_set_level(dev->id, level);
-    XF_CHECK(ret != XF_OK, -ret, "error code:%d", -ret);
+    if (ret != XF_OK)
+    {
+        return -ret;
+    }
+
     return XF_OK;
 }
 

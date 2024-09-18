@@ -19,3 +19,6 @@
 [submodule "docs/doxygen-awesome-css"]
 	path = docs/doxygen-awesome-css
 	url = https://github.com/Im-eks-dev/doxygen-awesome-css.git
+[submodule "components/xf_osal/xf_osal"]
+	path = components/xf_osal/xf_osal
+	url = https://github.com/x-eks-fusion/xf_osal.git
