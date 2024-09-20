@@ -8,15 +8,15 @@ import sys
 from pathlib import Path
 
 # 默认目标
-DEFAULT_TARGET = "ws63-liteos-app"
+DEFAULT_TARGET = "bs21e-sle-ble-slp-central-peripheral"
 # SDK 路径
-SDK_PATH: Path = api.XF_ROOT / "sdks/fbb_ws63/src"
+SDK_PATH: Path = api.XF_ROOT / "sdks/bs2x_1.0.11_internal/"
 # SDK 编译输出的路径
-SDK_OUTPUT_PATH: Path = SDK_PATH / "output"
+SDK_BUILD_OUTPUT_PATH: Path = SDK_PATH / "output"
 XF_PROJECT_BUILD_PATH: Path = api.PROJECT_BUILD_PATH
 
 hookimpl = xf_build.get_hookimpl()
-class ws63():
+class bs21():
     @hookimpl
     def build(self, args):
         project_cmake_file: Path = XF_PROJECT_BUILD_PATH / "build_environ.cmake"
@@ -38,7 +38,7 @@ class ws63():
         api.exec_cmd(["python", "build.py", "-c -nhso -release", target])
 
         # 尝试将 output 下 fwpkg 目录复制到工程目录下的 build 目录下的 sdk 目录（如无则创建）
-        str_path_sdk_fw_list = glob.glob(f"{SDK_OUTPUT_PATH}/*/fwpkg") 
+        str_path_sdk_fw_list = glob.glob(f"{SDK_BUILD_OUTPUT_PATH}/*/fwpkg") 
         for str_path_fw in str_path_sdk_fw_list:
             try:
                 shutil.copytree(str_path_fw, XF_PROJECT_BUILD_PATH / "sdk/fwpkg")
@@ -47,8 +47,8 @@ class ws63():
           
     @hookimpl
     def clean(self, args):
-        if SDK_OUTPUT_PATH.exists() == True:
-            shutil.rmtree(SDK_OUTPUT_PATH)
+        if SDK_BUILD_OUTPUT_PATH.exists() == True:
+            shutil.rmtree(SDK_BUILD_OUTPUT_PATH)
 
     @hookimpl
     def flash(self, args):

@@ -125,18 +125,18 @@ typedef struct {
 
 
 typedef enum {
-    XF_SLE_SEEK_EVT_START,
+    XF_SLE_SEEK_EVT_START = _XF_SLE_SSAP_COMMON_EVT_MAX,
     XF_SLE_SEEK_EVT_STOP,
     XF_SLE_SEEK_EVT_RESULT,
 
 
-    XF_SLE_SSAPS_EVT_FIND_STRUCT,
-    XF_SLE_SSAPS_EVT_FIND_STRUCT_CMPL,
-    XF_SLE_SSAPS_EVT_FIND_PROPERTY,
-    XF_SLE_SSAPS_EVT_RECV_WRITE_CFM,
-    XF_SLE_SSAPS_EVT_RECV_READ_CFM,
-    XF_SLE_SSAPS_EVT_NOTIFICATION,
-
+    XF_SLE_SSAPC_EVT_FIND_STRUCT,
+    XF_SLE_SSAPC_EVT_FIND_STRUCT_CMPL,
+    XF_SLE_SSAPC_EVT_FIND_PROPERTY,
+    XF_SLE_SSAPC_EVT_RECV_WRITE_CFM,
+    XF_SLE_SSAPC_EVT_RECV_READ_CFM,
+    XF_SLE_SSAPC_EVT_NOTIFICATION,
+    XF_SLE_SSAPC_EVT_INDICATION,
 } xf_sle_ssapc_event_t;
 
 
@@ -160,6 +160,7 @@ typedef struct {
     uint16_t supervision_timeout;           /*!< 超时时间，单位10ms */
 } xf_sle_evt_param_conn_param_update;
 
+/* TODO supervision_timeout 改 timeout */
 typedef struct {
     uint16_t conn_id;
     uint16_t interval_min;          /*!< 链路调度间隔，单位slot */
@@ -198,6 +199,17 @@ typedef struct {
     uint8_t  type;      /*!< @if Eng property type.
                              @else   属性类型。 @endif */
 } xf_sle_evt_param_req_write_cfm;
+
+typedef struct {
+    uint16_t conn_id;
+    uint16_t handle;    /*!< @if Eng property handle.
+                             @else   属性句柄。 @endif */
+    uint8_t  type;      /*!< @if Eng property type.
+                             @else   属性类型。 @endif */
+    uint16_t data_len;  /*!< @if Eng Data Length.
+                             @else   数据长度。 @endif */
+    uint8_t  *data;     /*!< @if Eng Data. */
+} xf_sle_evt_param_ntf_t, xf_sle_evt_param_ind_t;
 
 typedef union _xf_sle_ssapc_evt_cb_param_t {
     // XF_SLE_CONN_EVT_CONNECT,
@@ -242,6 +254,8 @@ typedef union _xf_sle_ssapc_evt_cb_param_t {
     xf_sle_evt_param_req_write_cfm req_write;
     // XF_SLE_SSAPS_EVT_MTU_CHANGED
 
+    xf_sle_evt_param_ntf_t ntf;
+    xf_sle_evt_param_ind_t ind;
 } xf_sle_ssapc_evt_cb_param_t;
 
 /* ==================== [Global Prototypes] ================================= */

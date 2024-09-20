@@ -5,6 +5,7 @@
 #include "xf_sle_device_discovery.h"
 #include "xf_sle_ssap_client.h"
 #include "string.h"
+#include "xf_task.h"
 
 /* ==================== [Defines] =========================================== */
 
@@ -13,10 +14,14 @@
 #define SAMPLE_SLE_SEEK_INTERVAL    100
 #define SAMPLE_SLE_SEEK_WINDOW      100
 
+#define TASK_PRIORITY   5
+#define TASK_DELAY_MS   500
+
 /* ==================== [Typedefs] ========================================== */
 
 /* ==================== [Static Prototypes] ================================= */
 
+static void sle_client_task(xf_task_t task);
 static xf_err_t sample_ssapc_event_cb(
     xf_sle_ssapc_event_t event,
     xf_sle_ssapc_evt_cb_param_t *param);
@@ -79,50 +84,55 @@ void xf_main(void)
              "xf_sle_start_seek error:%#X", ret);
     XF_LOGI(TAG, ">> STAR seek CMPL");
 
-    while (1) {
-        if (is_need_discovery == true) {
-            is_need_discovery = false;
-            ret = xf_sle_ssapc_discover_service(s_app_id, s_conn_id, &service_struct);
-            if (ret != XF_OK) {
-                XF_LOGE(TAG, ">> FIND service error: %d", ret);
-                break;
-            }
-            XF_LOGI(TAG, "service:uuid:%#X,hdl[%d,%d]", service_struct.uuid.uuid16,
-                    service_struct.start_hdl, service_struct.end_hdl);
-            is_discovery_cmpl = true;
-        }
-        if (is_discovery_cmpl == true) {
-            is_discovery_cmpl = false;
-            /* 向对端服务端发送 写请求 */
-            is_write_cmpl = false;
-            XF_LOGI(TAG, ">> request write data,app_id:%d,conn_id:%d,hdl:%u",
-                    s_app_id, s_conn_id, prop_struct.start_hdl);
-            uint8_t data_write[] = "I M SSAPC WRITE REQ!";
-            ret = xf_sle_ssapc_request_write_data(s_app_id, s_conn_id,
-                                                  XF_SLE_SSAP_PROPERTY_TYPE_VALUE, prop_struct.start_hdl,
-                                                  data_write, sizeof(data_write));
-            if (ret != XF_OK) {
-                XF_LOGE(TAG, ">> request write cmd error: %#X", ret);
-                break;
-            }
-        }
-        else if(is_write_cmpl == true)
-        {
-            /* 向对端服务端发送 读请求 */
-            XF_LOGI(TAG, ">> request read,app_id:%d,conn_id:%d,hdl:%u",
-                    s_app_id, s_conn_id, prop_struct.start_hdl);
-            ret = xf_sle_ssapc_request_read_by_handle(s_app_id, s_conn_id,
-                  XF_SLE_SSAP_PROPERTY_TYPE_VALUE, prop_struct.start_hdl);
-            if (ret != XF_OK) {
-                XF_LOGE(TAG, ">> request write cmd error: %#X", ret);
-                break;
-            }
-            is_write_cmpl = false;
-        }
-    }
+    xf_ntask_create_loop(sle_client_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
+    
 }
 
 /* ==================== [Static Functions] ================================== */
+
+static void sle_client_task(xf_task_t task)
+{
+    xf_err_t ret;
+    if (is_need_discovery == true) {
+        is_need_discovery = false;
+        ret = xf_sle_ssapc_discover_service(s_app_id, s_conn_id, &service_struct);
+        if (ret != XF_OK) {
+            XF_LOGE(TAG, ">> FIND service error: %d", ret);
+            return;
+        }
+        XF_LOGI(TAG, "service:uuid:%#X,hdl[%d,%d]", service_struct.uuid.uuid16,
+                service_struct.start_hdl, service_struct.end_hdl);
+        is_discovery_cmpl = true;
+    }
+    if (is_discovery_cmpl == true) {
+        is_discovery_cmpl = false;
+        /* 向对端服务端发送 写请求 */
+        is_write_cmpl = false;
+        XF_LOGI(TAG, ">> request write data,app_id:%d,conn_id:%d,hdl:%u",
+                s_app_id, s_conn_id, prop_struct.start_hdl);
+        uint8_t data_write[] = "I M SSAPC WRITE REQ!";
+        ret = xf_sle_ssapc_request_write_data(s_app_id, s_conn_id,
+                                                XF_SLE_SSAP_PROPERTY_TYPE_VALUE, prop_struct.start_hdl,
+                                                data_write, sizeof(data_write));
+        if (ret != XF_OK) {
+            XF_LOGE(TAG, ">> request write cmd error: %#X", ret);
+            return;
+        }
+    }
+    else if(is_write_cmpl == true)
+    {
+        /* 向对端服务端发送 读请求 */
+        XF_LOGI(TAG, ">> request read,app_id:%d,conn_id:%d,hdl:%u",
+                s_app_id, s_conn_id, prop_struct.start_hdl);
+        ret = xf_sle_ssapc_request_read_by_handle(s_app_id, s_conn_id,
+                XF_SLE_SSAP_PROPERTY_TYPE_VALUE, prop_struct.start_hdl);
+        if (ret != XF_OK) {
+            XF_LOGE(TAG, ">> request write cmd error: %#X", ret);
+            return;
+        }
+        is_write_cmpl = false;
+    }
+}
 
 static void sample_sle_set_seek_param(void)
 {
@@ -158,17 +168,17 @@ static xf_err_t sample_ssapc_event_cb(
     case XF_SLE_SEEK_EVT_RESULT: {
         ssaps_event_seek_result_cb(&param->seek_result);
     } break;
-    case XF_SLE_SSAPS_EVT_RECV_WRITE_CFM: {
+    case XF_SLE_SSAPC_EVT_RECV_WRITE_CFM: {
         XF_LOGI(TAG, "EV:WRITE confirm:conn_id:%d,hdl:%d",
                 param->req_write.conn_id, param->req_read.handle);
         is_write_cmpl = true;
     } break;
-    case XF_SLE_SSAPS_EVT_RECV_READ_CFM: {
+    case XF_SLE_SSAPC_EVT_RECV_READ_CFM: {
         XF_LOGI(TAG, "EV:READ confirm:conn_id:%d,hdl:%d",
                 param->req_read.conn_id, param->req_read.handle);
         XF_LOG_BUFFER_HEXDUMP_ESCAPE(param->req_read.data, param->req_read.data_len);
     } break;
-    case XF_SLE_SSAPS_EVT_NOTIFICATION: {
+    case XF_SLE_SSAPC_EVT_NOTIFICATION: {
         XF_LOGI(TAG, "EV:RECV NTF or IND:conn_id:%d,hdl:%d",
                 param->req_read.conn_id, param->req_read.handle);
         XF_LOG_BUFFER_HEXDUMP_ESCAPE(param->req_read.data, param->req_read.data_len);

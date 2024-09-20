@@ -110,7 +110,7 @@ typedef struct _xf_sle_ssaps_service_t {
 } xf_sle_ssaps_service_t;
 
 typedef enum {
-    XF_SLE_ADV_EVT_ENABLE,
+    XF_SLE_ADV_EVT_ENABLE = _XF_SLE_SSAP_COMMON_EVT_MAX,
     XF_SLE_ADV_EVT_DISABLE,
     XF_SLE_ADV_EVT_TERMINAL,
 

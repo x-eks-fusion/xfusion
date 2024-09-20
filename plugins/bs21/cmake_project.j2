@@ -1,0 +1,49 @@
+set(XF_PRJ_NAME {{project_name}})
+set(XF_PRJ_PATH {{user_main.path}}/..)
+set(XF_PRJ_BUILD_PATH {{user_main.path}}/../build)
+
+set(XF_INCS_STR
+    {{config_path -}} 
+    {% for inc_dir in user_main.inc_dirs -%}            {# user_main #}
+    {{inc_dir}} 
+    {%- endfor %} 
+    {%- for key, cmpnt in public_components.items() %}  {# public_components #}
+        {%- for inc_dir in cmpnt.inc_dirs %} 
+    {{inc_dir}} 
+        {%- endfor %}
+    {%- endfor %}
+    {%- for key, cmpnt in user_components.items() %}    {# user_components #}
+        {%- for inc_dir in cmpnt.inc_dirs %} 
+    {{inc_dir}} 
+        {%- endfor %}
+    {%- endfor %}
+    {%- for key, cmpnt in other_components.items() %}    {# other_components #}
+        {%- for inc_dir in cmpnt.inc_dirs %} 
+    {{inc_dir}} 
+        {%- endfor %}
+    {%- endfor %}
+)
+
+set(XF_SRCS_STR
+    {%- for src in user_main.srcs -%}                   {# user_main #}
+    {{src}} 
+    {%- endfor %} 
+    {%- for key, cmpnt in public_components.items() %}  {# public_components #}
+        {%- for src in cmpnt.srcs %} 
+    {{src}} 
+        {%- endfor %}
+    {%- endfor %}
+    {%- for key, cmpnt in user_components.items() %}    {# user_components #}
+        {%- for src in cmpnt.srcs %} 
+    {{src}} 
+        {%- endfor %}
+    {%- endfor %}
+    {%- for key, cmpnt in other_components.items() %}    {# other_components #}
+        {%- for src in cmpnt.srcs %} 
+    {{src}} 
+        {%- endfor %}
+    {%- endfor %}
+)
+
+list(REMOVE_DUPLICATES XF_INCS_STR)
+list(REMOVE_DUPLICATES XF_SRCS_STR)

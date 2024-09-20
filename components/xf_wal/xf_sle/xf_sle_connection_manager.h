@@ -52,6 +52,25 @@ xf_err_t xf_sle_get_pair_list(
 xf_err_t xf_sle_get_bond_list(
     int *max_num, xf_sle_addr_t *dev_list);
 
+// 获取对端设备 RSSI
+xf_err_t xf_sle_get_peer_rssi(uint16_t conn_id, int8_t *rssi);
+
+// 设置 PHY 参数
+xf_err_t xf_sle_set_phy_params(uint16_t conn_id, xf_sle_set_phy_t *sle_phy);
+
+// 设置 调制与编码策略（  Modulation and Coding Scheme ）
+xf_err_t xf_sle_set_mcs(uint16_t conn_id, uint8_t mcs);
+
+// 设置连接链路上所偏好的最大传输 payload 字节数
+xf_err_t xf_sle_set_data_len(uint16_t conn_id, uint16_t tx_octets);
+
+// 设置 sle 默认连接参数
+xf_err_t xf_sle_set_default_conn_params(
+    xf_sle_conn_param_def_t *conn_param_def);
+
+// 配置定制化信息
+xf_err_t xf_sle_set_max_pwr(int8_t ble_pwr, int8_t sle_pwr);
+
 /* ==================== [Macros] ============================================ */
 
 #ifdef __cplusplus

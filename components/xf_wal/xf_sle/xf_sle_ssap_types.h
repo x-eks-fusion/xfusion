@@ -301,7 +301,7 @@ typedef enum {
     // XF_SLE_CONN_EVT_READ_RSSI,
     // XF_SLE_CONN_EVT_LOW_LATENCY,
     // XF_SLE_CONN_EVT_SET_PHY,
-
+    _XF_SLE_SSAP_COMMON_EVT_MAX,
 } xf_sle_ssap_common_event_t;
 
 /* ==================== [Global Prototypes] ================================= */
