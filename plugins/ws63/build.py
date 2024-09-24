@@ -16,13 +16,15 @@ SDK_OUTPUT_PATH: Path = SDK_PATH / "output"
 XF_PROJECT_BUILD_PATH: Path = api.PROJECT_BUILD_PATH
 
 hookimpl = xf_build.get_hookimpl()
+
+
 class ws63():
     @hookimpl
     def build(self, args):
         project_cmake_file: Path = XF_PROJECT_BUILD_PATH / "build_environ.cmake"
         api.apply_template("cmake_project.j2", project_cmake_file)
         os.chdir(SDK_PATH.resolve())
-        
+
         target = DEFAULT_TARGET
         # 第一个拓展参数为 help 时 显示 SDK 侧 编译时的可选目标
         """
@@ -38,13 +40,14 @@ class ws63():
         api.exec_cmd(["python", "build.py", "-c -nhso -release", target])
 
         # 尝试将 output 下 fwpkg 目录复制到工程目录下的 build 目录下的 sdk 目录（如无则创建）
-        str_path_sdk_fw_list = glob.glob(f"{SDK_OUTPUT_PATH}/*/fwpkg") 
+        str_path_sdk_fw_list = glob.glob(f"{SDK_OUTPUT_PATH}/*/fwpkg")
         for str_path_fw in str_path_sdk_fw_list:
             try:
-                shutil.copytree(str_path_fw, XF_PROJECT_BUILD_PATH / "sdk/fwpkg")
+                shutil.copytree(
+                    str_path_fw, XF_PROJECT_BUILD_PATH / "sdk/fwpkg", dirs_exist_ok=True)
             except:
                 print(f"copy sdk firmware failed!", sys.exc_info())
-          
+
     @hookimpl
     def clean(self, args):
         if SDK_OUTPUT_PATH.exists() == True:
