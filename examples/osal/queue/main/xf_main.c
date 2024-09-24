@@ -42,7 +42,7 @@ void xf_main(void)
     };
     xf_osal_thread_attr_t attr2 = {
         .name = "task2",
-        .priority = XF_OSAL_PRIORITY_LOW,
+        .priority = XF_OSAL_PRIORITY_ABOVE_NORMAL,
         .stack_size = 1024 * 2,
     };
 

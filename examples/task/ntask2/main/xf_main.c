@@ -56,16 +56,16 @@ static void ntask1(xf_task_t task)
         }
 
         XF_LOGI(TAG, "num:%d", *num);
-        xf_ntask_delay(task, 1000);
+        xf_ntask_delay(1000);
     }
-    XF_NTASK_END(task);
+    XF_NTASK_END();
 }
 
 static void ntask2(xf_task_t task)
 {
     XF_NTASK_BEGIN(task);
     XF_LOGI(TAG, "ntask 2 init");
-    xf_ntask_sem_wait(task, &sem);
+    xf_ntask_sem_wait(&sem);
     XF_LOGI(TAG, "ntask 2 init");
-    XF_NTASK_END(task);
+    XF_NTASK_END();
 }

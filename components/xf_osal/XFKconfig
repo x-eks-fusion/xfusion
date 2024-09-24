@@ -55,8 +55,84 @@ config XF_OSAL_CMSIS
 
 endchoice
 
-config XF_OSAL_PORT_VALUE
-    int
-    default 0 if OSAL_NO_OSAL
-    default 1 if OSAL_FREERTOS
-    default 2 if OSAL_CMSIS
+menu "CMSIS config"
+depends on XF_OSAL_CMSIS
+
+config XF_CMSIS_KERNEL_GET_INFO_ENABLE
+    bool "Use kernel get info"
+    default "y"
+    depends on XF_OSAL_CMSIS
+    help
+        use cmsis-os2 osKernelGetInfo() function
+
+config XF_CMSIS_KERNEL_GET_STATE_ENABLE
+    bool "Use kernel get state"
+    default "y"
+    depends on XF_OSAL_CMSIS
+    help
+        use cmsis-os2 osKernelGetState() function
+
+config XF_CMSIS_KERNEL_LOCK_ENABLE
+    bool "Use kernel lock"
+    default "y"
+    depends on XF_OSAL_CMSIS
+    help
+        use cmsis-os2 osKernelLock() function
+
+config XF_CMSIS_KERNEL_UNLOCK_ENABLE
+    bool "Use kernel unlock"
+    default "y"
+    depends on XF_OSAL_CMSIS
+    help
+        use cmsis-os2 osKernelUnlock() function
+
+config XF_CMSIS_THREAD_GET_NAME_ENABLE
+    bool "Use thread get name"
+    default "y"
+    depends on XF_OSAL_CMSIS
+    help
+        use cmsis-os2 osThreadGetName() function
+
+config XF_CMSIS_THREAD_SET_PRIORITY_ENABLE
+    bool "Use thread set priority"
+    default "y"
+    depends on XF_OSAL_CMSIS
+    help
+        use cmsis-os2 osThreadSetPriority() function
+
+config XF_CMSIS_THREAD_YIELD_ENABLE
+    bool "Use thread yield"
+    default "y"
+    depends on XF_OSAL_CMSIS
+    help
+        use cmsis-os2 osThreadYield() function
+
+config XF_CMSIS_THREAD_GET_COUNT_ENABLE
+    bool "Use thread get count"
+    default "y"
+    depends on XF_OSAL_CMSIS
+    help
+        use cmsis-os2 osThreadGetCount() function
+
+config XF_CMSIS_THREAD_GET_ACTIVE_COUNT_ENABLE
+    bool "Use thread get active count"
+    default "y"
+    depends on XF_OSAL_CMSIS
+    help
+        use cmsis-os2 osThreadEnumerate() function
+
+config XF_CMSIS_THREAD_NOTIFY_ENABLE
+    bool "Use thread notify"
+    default "y"
+    depends on XF_OSAL_CMSIS
+    help
+        use cmsis-os2 osThreadFlagsxxx() function
+
+config XF_CMSIS_TIMER_GET_NAME_ENABLE
+    bool "Use timer get name"
+    default "y"
+    depends on XF_OSAL_CMSIS
+    help
+        use cmsis-os2 osTimerGetName() function
+
+endmenu
