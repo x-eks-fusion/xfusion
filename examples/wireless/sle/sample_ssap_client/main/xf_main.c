@@ -168,17 +168,17 @@ static xf_err_t sample_ssapc_event_cb(
     case XF_SLE_SEEK_EVT_RESULT: {
         ssaps_event_seek_result_cb(&param->seek_result);
     } break;
-    case XF_SLE_SSAPS_EVT_RECV_WRITE_CFM: {
+    case XF_SLE_SSAPC_EVT_RECV_WRITE_CFM: {
         XF_LOGI(TAG, "EV:WRITE confirm:conn_id:%d,hdl:%d",
                 param->req_write.conn_id, param->req_read.handle);
         is_write_cmpl = true;
     } break;
-    case XF_SLE_SSAPS_EVT_RECV_READ_CFM: {
+    case XF_SLE_SSAPC_EVT_RECV_READ_CFM: {
         XF_LOGI(TAG, "EV:READ confirm:conn_id:%d,hdl:%d",
                 param->req_read.conn_id, param->req_read.handle);
         XF_LOG_BUFFER_HEXDUMP_ESCAPE(param->req_read.data, param->req_read.data_len);
     } break;
-    case XF_SLE_SSAPS_EVT_NOTIFICATION: {
+    case XF_SLE_SSAPC_EVT_NOTIFICATION: {
         XF_LOGI(TAG, "EV:RECV NTF or IND:conn_id:%d,hdl:%d",
                 param->req_read.conn_id, param->req_read.handle);
         XF_LOG_BUFFER_HEXDUMP_ESCAPE(param->req_read.data, param->req_read.data_len);
