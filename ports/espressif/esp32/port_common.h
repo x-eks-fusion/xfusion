@@ -14,6 +14,12 @@
 
 /* ==================== [Includes] ========================================== */
 
+#include "esp_log.h"
+#include "esp_err.h"
+#include "esp_wifi.h"
+
+#include "xf_utils.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -25,7 +31,11 @@ extern "C" {
 
 /* ==================== [Typedefs] ========================================== */
 
+typedef esp_err_t pf_err_t;
+
 /* ==================== [Global Prototypes] ================================= */
+
+xf_err_t port_convert_pf2xf_err(pf_err_t esp_err);
 
 /* ==================== [Macros] ============================================ */
 
