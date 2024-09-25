@@ -63,11 +63,19 @@ typedef struct port_xf_wifi_context_s {
     bool b_ap_netif_is_inited;
     bool b_sta_netif_is_inited;
 
-    esp_event_handler_instance_t instance_ap_event;
-    esp_event_handler_instance_t instance_sta_event;
+    /* ap 事件 */
+    esp_event_handler_instance_t instance_ap;
 
-    esp_event_handler_instance_t instance_ap_ip_event;
-    esp_event_handler_instance_t instance_sta_ip_event;
+    /* ap ip 事件 */
+    esp_event_handler_instance_t instance_ap_ip_staipassigned;
+
+    /* sta 事件 */
+    esp_event_handler_instance_t instance_sta;
+
+    /* sta ip 事件 */
+    esp_event_handler_instance_t instance_sta_ip_got_ip;
+    esp_event_handler_instance_t instance_sta_ip_lost_ip;
+    esp_event_handler_instance_t instance_sta_ip_got_ip6;
 
     wifi_config_t sta_cfg;
 } port_xf_wifi_context_t;
