@@ -98,7 +98,6 @@ static void task1(void *argument)
             XF_LOGI(TAG, "Task1: Mutex owner: %d", thread);
         }
     }
-
 }
 
 static void task2(void *argument)

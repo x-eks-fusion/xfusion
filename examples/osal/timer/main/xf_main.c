@@ -90,5 +90,4 @@ void timer2(void *argument)
     if (count == 40) {
         xf_osal_timer_delete(timer);
     }
-
 }

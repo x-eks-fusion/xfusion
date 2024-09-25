@@ -103,6 +103,5 @@ static void task2(void *argument)
         } else {
             XF_LOGI(TAG, "task2 timeout");
         }
-
     }
 }

@@ -85,7 +85,6 @@ void xf_main(void)
         XF_LOGE(TAG, "xf queue delete error");
         return;
     }
-
 }
 
 /* ==================== [Static Functions] ================================== */
@@ -112,5 +111,4 @@ static void task2(void *argument)
         }
         xf_osal_delay_ms(1500);
     }
-
 }
