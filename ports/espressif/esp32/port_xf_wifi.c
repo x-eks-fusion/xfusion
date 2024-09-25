@@ -35,22 +35,6 @@
 #define EXAMPLE_MAX_STA_CONN        8       /*!< ap 默认最大站点连接数 */
 #define EXAMPLE_BEACON_INTERVAL     100     /*!< 信标间隔默认 100, @ref wifi_ap_config_t.beacon_interval */
 
-#define PORT_AP_CARE_ID             (WIFI_EVENT_SCAN_DONE | \
-                                     WIFI_EVENT_AP_START | \
-                                     WIFI_EVENT_AP_STOP | \
-                                     WIFI_EVENT_AP_STACONNECTED | \
-                                     WIFI_EVENT_AP_STADISCONNECTED)
-#define PORT_AP_IP_CARE_ID          (IP_EVENT_AP_STAIPASSIGNED)
-
-#define PORT_STA_CARE_ID            (WIFI_EVENT_SCAN_DONE | \
-                                     WIFI_EVENT_STA_START | \
-                                     WIFI_EVENT_STA_STOP | \
-                                     WIFI_EVENT_STA_CONNECTED | \
-                                     WIFI_EVENT_STA_DISCONNECTED)
-#define PORT_STA_IP_CARE_ID         (IP_EVENT_STA_GOT_IP | \
-                                     IP_EVENT_STA_LOST_IP | \
-                                     IP_EVENT_GOT_IP6)
-
 /* ==================== [Typedefs] ========================================== */
 
 /**
@@ -885,18 +869,20 @@ static void port_ap_netif_init(void)
     }
     ctx_w()->b_ap_netif_is_inited = true;
     ctx_w()->netif_ap.esp_netif = esp_netif_create_default_wifi_ap();
-    ESP_ERROR_CHECK(esp_event_handler_instance_register(
-                        WIFI_EVENT,
-                        PORT_AP_CARE_ID,
-                        &port_wifi_ap_event_handler,
-                        NULL,
-                        &ctx_w()->instance_ap_event));
-    ESP_ERROR_CHECK(esp_event_handler_instance_register(
-                        IP_EVENT,
-                        PORT_AP_IP_CARE_ID,
-                        &port_wifi_ap_ip_event_handler,
-                        NULL,
-                        &ctx_w()->instance_ap_ip_event));
+
+#define __AP_EVENT_REGISTER(id, instance) \
+    esp_event_handler_instance_register( \
+        WIFI_EVENT, (id), &port_wifi_ap_event_handler, NULL, (instance))
+    /* AP 事件注册 */
+    __AP_EVENT_REGISTER(ESP_EVENT_ANY_ID,               &ctx_w()->instance_ap);
+#undef __AP_EVENT_REGISTER
+
+#define __AP_IP_EVENT_REGISTER(id, instance) \
+    esp_event_handler_instance_register( \
+        IP_EVENT, (id), &port_wifi_ap_ip_event_handler, NULL, (instance))
+    /* AP IP 事件注册 */
+    __AP_IP_EVENT_REGISTER(IP_EVENT_AP_STAIPASSIGNED,   &ctx_w()->instance_ap_ip_staipassigned);
+#undef __AP_IP_EVENT_REGISTER
 }
 
 static void port_ap_netif_deinit(void)
@@ -905,14 +891,19 @@ static void port_ap_netif_deinit(void)
         return;
     }
     ctx_w()->b_ap_netif_is_inited = false;
-    ESP_ERROR_CHECK(esp_event_handler_instance_unregister(
-                        WIFI_EVENT,
-                        PORT_AP_CARE_ID,
-                        ctx_w()->instance_ap_event));
-    ESP_ERROR_CHECK(esp_event_handler_instance_unregister(
-                        IP_EVENT,
-                        PORT_AP_IP_CARE_ID,
-                        ctx_w()->instance_ap_ip_event));
+
+#define __AP_EVENT_UNREGISTER(id, instance) \
+    esp_event_handler_instance_unregister(WIFI_EVENT, (id), (instance))
+    /* AP 事件反注册 */
+    __AP_EVENT_UNREGISTER(ESP_EVENT_ANY_ID,                 ctx_w()->instance_ap);
+#undef __AP_EVENT_REGISTER
+
+#define __AP_IP_EVENT_UNREGISTER(id, instance) \
+    esp_event_handler_instance_unregister(IP_EVENT, (id), (instance))
+    /* AP IP 事件反注册 */
+    __AP_IP_EVENT_UNREGISTER(IP_EVENT_AP_STAIPASSIGNED,     ctx_w()->instance_ap_ip_staipassigned);
+#undef __AP_IP_EVENT_REGISTER
+
     esp_netif_destroy_default_wifi(ctx_w()->netif_ap.esp_netif);
     ctx_w()->netif_ap.esp_netif = NULL;
 }
@@ -925,18 +916,22 @@ static void port_sta_netif_init(void)
     }
     ctx_w()->b_sta_netif_is_inited = true;
     ctx_w()->netif_sta.esp_netif = esp_netif_create_default_wifi_sta();
-    ESP_ERROR_CHECK(esp_event_handler_instance_register(
-                        WIFI_EVENT,
-                        PORT_STA_CARE_ID,
-                        &port_wifi_sta_event_handler,
-                        NULL,
-                        &ctx_w()->instance_sta_event));
-    ESP_ERROR_CHECK(esp_event_handler_instance_register(
-                        IP_EVENT,
-                        PORT_STA_IP_CARE_ID,
-                        &port_wifi_sta_ip_event_handler,
-                        NULL,
-                        &ctx_w()->instance_sta_ip_event));
+
+#define __STA_EVENT_REGISTER(id, instance) \
+    esp_event_handler_instance_register( \
+        WIFI_EVENT, (id), &port_wifi_sta_event_handler, NULL, (instance))
+    /* STA 事件注册 */
+    __STA_EVENT_REGISTER(ESP_EVENT_ANY_ID,              &ctx_w()->instance_sta);
+#undef __STA_EVENT_REGISTER
+
+#define __STA_IP_EVENT_REGISTER(id, instance) \
+    esp_event_handler_instance_register( \
+        IP_EVENT, (id), &port_wifi_sta_ip_event_handler, NULL, (instance))
+    /* STA IP 事件注册 */
+    __STA_IP_EVENT_REGISTER(IP_EVENT_STA_GOT_IP,        &ctx_w()->instance_sta_ip_got_ip);
+    __STA_IP_EVENT_REGISTER(IP_EVENT_STA_LOST_IP,       &ctx_w()->instance_sta_ip_lost_ip);
+    __STA_IP_EVENT_REGISTER(IP_EVENT_GOT_IP6,           &ctx_w()->instance_sta_ip_got_ip6);
+#undef __STA_IP_EVENT_REGISTER
 }
 
 static void port_sta_netif_deinit(void)
@@ -945,14 +940,22 @@ static void port_sta_netif_deinit(void)
         return;
     }
     ctx_w()->b_sta_netif_is_inited = false;
-    ESP_ERROR_CHECK(esp_event_handler_instance_unregister(
-                        WIFI_EVENT,
-                        PORT_STA_CARE_ID,
-                        ctx_w()->instance_sta_event));
-    ESP_ERROR_CHECK(esp_event_handler_instance_unregister(
-                        IP_EVENT,
-                        PORT_STA_IP_CARE_ID,
-                        ctx_w()->instance_sta_ip_event));
+
+#define __STA_EVENT_UNREGISTER(id, instance) \
+    esp_event_handler_instance_unregister(WIFI_EVENT, (id), (instance))
+    /* STA 事件反注册 */
+    __STA_EVENT_UNREGISTER(ESP_EVENT_ANY_ID,                ctx_w()->instance_sta);
+#undef __STA_EVENT_UNREGISTER
+
+#define __STA_IP_EVENT_UNREGISTER(id, instance) \
+    esp_event_handler_instance_unregister(IP_EVENT, (id), (instance))
+    /* STA IP 事件反注册 */
+    __STA_IP_EVENT_UNREGISTER(IP_EVENT_STA_GOT_IP,          ctx_w()->instance_sta_ip_got_ip);
+    __STA_IP_EVENT_UNREGISTER(IP_EVENT_STA_LOST_IP,         ctx_w()->instance_sta_ip_lost_ip);
+    /* TODO IP_EVENT_GOT_IP6 事件被 wifi 和 eth 共享 */
+    __STA_IP_EVENT_UNREGISTER(IP_EVENT_GOT_IP6,             ctx_w()->instance_sta_ip_got_ip6);
+#undef __STA_IP_EVENT_UNREGISTER
+
     esp_netif_destroy_default_wifi(ctx_w()->netif_sta.esp_netif);
     ctx_w()->netif_sta.esp_netif = NULL;
 }
