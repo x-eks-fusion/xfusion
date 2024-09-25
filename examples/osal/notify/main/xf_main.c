@@ -13,8 +13,6 @@
 
 #include "xf_hal.h"
 #include "xf_osal.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
 
 /* ==================== [Defines] =========================================== */
 
