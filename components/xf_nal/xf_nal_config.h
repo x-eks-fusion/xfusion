@@ -1,24 +1,20 @@
 /**
- * @file port_common.h
- * @author cangyu (sky.kirto@qq.com)
- * @brief
+ * @file xf_nal_config.h
+ * @author catcatBlue (catcatblue@qq.com)
+ * @brief 使用 xfusion 菜单配置 xf_nal 内部配置。
  * @version 0.1
- * @date 2024-05-23
+ * @date 2024-09-24
  *
- * @copyright Copyright (c) 2024, CorAL. All rights reserved.
+ * Copyright (c) 2024, CorAL. All rights reserved.
  *
  */
 
-#ifndef __PORT_COMMON_H__
-#define __PORT_COMMON_H__
+#ifndef __XF_NAL_CONFIG_H__
+#define __XF_NAL_CONFIG_H__
 
 /* ==================== [Includes] ========================================== */
 
-#include "esp_log.h"
-#include "esp_err.h"
-#include "esp_wifi.h"
-
-#include "xf_utils.h"
+#include "xfconfig.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -26,16 +22,9 @@ extern "C" {
 
 /* ==================== [Defines] =========================================== */
 
-#define PORT_GPIO_TOPIC_ID  (uint32_t)(-1)
-#define PORT_TIM_TOPIC_ID   (uint32_t)(-2)
-
 /* ==================== [Typedefs] ========================================== */
 
-typedef esp_err_t pf_err_t;
-
 /* ==================== [Global Prototypes] ================================= */
-
-xf_err_t port_convert_pf2xf_err(pf_err_t esp_err);
 
 /* ==================== [Macros] ============================================ */
 
@@ -43,4 +32,4 @@ xf_err_t port_convert_pf2xf_err(pf_err_t esp_err);
 } /* extern "C" */
 #endif
 
-#endif // __PORT_COMMON_H__
+#endif // __XF_NAL_CONFIG_H__
