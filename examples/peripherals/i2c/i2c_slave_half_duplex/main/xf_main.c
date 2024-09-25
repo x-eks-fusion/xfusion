@@ -51,8 +51,8 @@ void xf_main(void)
 static void i2c_master_init(void)
 {
     xf_hal_i2c_init(DEFAULT_I2C_NUM, XF_HAL_I2C_HOSTS_SLAVE, DEFAULT_I2C_FREQ);
-    xf_hal_i2c_set_gpio(DEFAULT_I2C_NUM, 
-        DEFAULT_I2C_SCL_IO_NUM, DEFAULT_I2C_SDA_IO_NUM);
+    xf_hal_i2c_set_gpio(DEFAULT_I2C_NUM,
+                        DEFAULT_I2C_SCL_IO_NUM, DEFAULT_I2C_SDA_IO_NUM);
     xf_hal_i2c_set_address(DEFAULT_I2C_NUM, DEFAULT_I2C_DEV_ADDR);
     xf_hal_i2c_enable(DEFAULT_I2C_NUM);
 }
@@ -64,17 +64,15 @@ static void i2c_task(xf_task_t task)
     uint8_t wbuf[] = "I M Slave";
     uint8_t rbuf[32] = {0};
     ret = xf_hal_i2c_read(DEFAULT_I2C_NUM, rbuf, sizeof(rbuf), 2000);
-    if(ret < 0)
-    {
+    if (ret < 0) {
         return;
     }
     XF_LOGI(TAG, "READ CMPL:%s", rbuf);
     ret = xf_hal_i2c_write(DEFAULT_I2C_NUM, wbuf, sizeof(wbuf), 200);
-    if(ret < 0)
-    {
+    if (ret < 0) {
         return;
     }
     XF_LOGI(TAG, "WRITE CMPL");
-    
+
 }
 

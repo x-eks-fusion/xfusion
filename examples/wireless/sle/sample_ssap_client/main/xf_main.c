@@ -85,7 +85,7 @@ void xf_main(void)
     XF_LOGI(TAG, ">> STAR seek CMPL");
 
     xf_ntask_create_loop(sle_client_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
-    
+
 }
 
 /* ==================== [Static Functions] ================================== */
@@ -112,20 +112,18 @@ static void sle_client_task(xf_task_t task)
                 s_app_id, s_conn_id, prop_struct.start_hdl);
         uint8_t data_write[] = "I M SSAPC WRITE REQ!";
         ret = xf_sle_ssapc_request_write_data(s_app_id, s_conn_id,
-                                                XF_SLE_SSAP_PROPERTY_TYPE_VALUE, prop_struct.start_hdl,
-                                                data_write, sizeof(data_write));
+                                              XF_SLE_SSAP_PROPERTY_TYPE_VALUE, prop_struct.start_hdl,
+                                              data_write, sizeof(data_write));
         if (ret != XF_OK) {
             XF_LOGE(TAG, ">> request write cmd error: %#X", ret);
             return;
         }
-    }
-    else if(is_write_cmpl == true)
-    {
+    } else if (is_write_cmpl == true) {
         /* 向对端服务端发送 读请求 */
         XF_LOGI(TAG, ">> request read,app_id:%d,conn_id:%d,hdl:%u",
                 s_app_id, s_conn_id, prop_struct.start_hdl);
         ret = xf_sle_ssapc_request_read_by_handle(s_app_id, s_conn_id,
-                XF_SLE_SSAP_PROPERTY_TYPE_VALUE, prop_struct.start_hdl);
+              XF_SLE_SSAP_PROPERTY_TYPE_VALUE, prop_struct.start_hdl);
         if (ret != XF_OK) {
             XF_LOGE(TAG, ">> request write cmd error: %#X", ret);
             return;
@@ -197,7 +195,7 @@ static xf_err_t ssaps_event_seek_result_cb(
 
     uint8_t *adv_data_all = result->data;
     uint16_t adv_size_all = result->data_len;
-    
+
     uint8_t *adv_pos = adv_data_all;
     uint8_t *adv_end = adv_data_all + adv_size_all;
     while (adv_pos <= adv_end) {

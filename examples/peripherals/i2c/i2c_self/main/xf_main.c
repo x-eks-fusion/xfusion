@@ -56,7 +56,7 @@ static void i2c_slave_init(void)
 {
     xf_hal_i2c_init(DEFAULT_I2C_SLAVE_NUM, XF_HAL_I2C_HOSTS_SLAVE, DEFAULT_I2C_SLAVE_FREQ);
     xf_hal_i2c_set_gpio(DEFAULT_I2C_SLAVE_NUM,
-        DEFAULT_I2C_SLAVE_SCL_IO_NUM, DEFAULT_I2C_SLAVE_SDA_IO_NUM);
+                        DEFAULT_I2C_SLAVE_SCL_IO_NUM, DEFAULT_I2C_SLAVE_SDA_IO_NUM);
     xf_hal_i2c_set_address(DEFAULT_I2C_SLAVE_NUM, DEFAULT_I2C_SLAVE_DEV_ADDR);
     xf_hal_i2c_enable(DEFAULT_I2C_SLAVE_NUM);
 }
@@ -65,7 +65,7 @@ static void i2c_master_init(void)
 {
     xf_hal_i2c_init(DEFAULT_I2C_MASTER_NUM, XF_HAL_I2C_HOSTS_MASTER, DEFAULT_I2C_MASTER_FREQ);
     xf_hal_i2c_set_gpio(DEFAULT_I2C_MASTER_NUM,
-        DEFAULT_I2C_MASTER_SCL_IO_NUM, DEFAULT_I2C_MASTER_SDA_IO_NUM);
+                        DEFAULT_I2C_MASTER_SCL_IO_NUM, DEFAULT_I2C_MASTER_SDA_IO_NUM);
     xf_hal_i2c_set_address(DEFAULT_I2C_MASTER_NUM, DEFAULT_I2C_MASTER_DEV_ADDR);
     xf_hal_i2c_enable(DEFAULT_I2C_MASTER_NUM);
 }

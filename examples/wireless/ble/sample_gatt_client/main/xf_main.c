@@ -119,8 +119,8 @@ static xf_err_t sample_ble_gattc_event_cb(
     case XF_BLE_GATTC_EVT_READ_COMPLETE: {
         if (param.read_cmpl.chara_value_len != 0) {
             XF_LOGI(TAG, "EV:read CMPL:handle:%d", param.read_cmpl.chara_handle);
-            XF_LOG_BUFFER_HEXDUMP(param.read_cmpl.chara_value, 
-                param.read_cmpl.chara_value_len);
+            XF_LOG_BUFFER_HEXDUMP(param.read_cmpl.chara_value,
+                                  param.read_cmpl.chara_value_len);
             is_read_cmpl = true;
         }
     } break;
@@ -132,8 +132,8 @@ static xf_err_t sample_ble_gattc_event_cb(
     case XF_BLE_GATTC_EVT_RECV_NOTIFICATION_OR_INDICATION: {
         if (param.read_cmpl.chara_value_len != 0) {
             XF_LOGI(TAG, "EV:read ntf/ind:chara_handle:%d", param.notify.handle);
-            XF_LOG_BUFFER_HEXDUMP(param.notify.value, 
-                param.notify.value_len);
+            XF_LOG_BUFFER_HEXDUMP(param.notify.value,
+                                  param.notify.value_len);
         }
     } break;
     default:
@@ -206,7 +206,7 @@ static void discovery_task(xf_task_t task)
         ret = xf_ble_gattc_discover_service(s_app_id, s_conn_id,
                                             NULL, &service_found_set);
         XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG, "discover service failed:%#X app_id:%d",
-                    ret, s_app_id);
+                 ret, s_app_id);
 
         XF_LOGI(TAG, "discover chara:service_found_set cnt:%u", service_found_set->cnt);
         uint16_t cnt_service = service_found_set->cnt;
@@ -216,9 +216,9 @@ static void discovery_task(xf_task_t task)
             // XF_LOGI(TAG, ">> service[%d]", cnt_service);
             service->chara_set_info = NULL;
             ret = xf_ble_gattc_discover_chara(s_app_id, s_conn_id,
-                                                service->start_hdl, service->end_hdl, NULL, &service->chara_set_info);
+                                              service->start_hdl, service->end_hdl, NULL, &service->chara_set_info);
             XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
-                        "discover chara failed:%#X app_id:%d", ret, s_app_id);
+                     "discover chara failed:%#X app_id:%d", ret, s_app_id);
 
             uint16_t cnt_chara = service->chara_set_info->cnt;
 
@@ -249,7 +249,7 @@ static void read_write_task(xf_task_t task)
 
         xf_err_t ret = XF_OK;
 
-        xf_ble_gattc_service_found_t *service = 
+        xf_ble_gattc_service_found_t *service =
             &service_found_set->set[DEFAULT_SERVICE_INDEX];
 
         XF_LOGI(TAG, "REQ READ(uuid) and WRITE(handle):"
@@ -258,32 +258,31 @@ static void read_write_task(xf_task_t task)
                 service->uuid.uuid16,
                 s_app_id, s_conn_id,
                 service->chara_set_info->set[DEFAULT_CHARA_READ_INDEX].uuid.uuid16
-                );
+               );
         /* 向对端服务端发送 读请求 第1次 */
         is_read_cmpl = false;
         ret = xf_ble_gattc_request_read_by_handle(s_app_id, s_conn_id,
-                service->chara_set_info->set[DEFAULT_CHARA_READ_INDEX].value_handle);
+              service->chara_set_info->set[DEFAULT_CHARA_READ_INDEX].value_handle);
         if (ret != XF_OK) {
             XF_LOGE(TAG, "REQ READ:failed:%#X", ret);
         }
         /* 向对端服务端发送 读请求 第2次 */
         is_read_cmpl = false;
         ret = xf_ble_gattc_request_read_by_handle(s_app_id, s_conn_id,
-                service->chara_set_info->set[DEFAULT_CHARA_READ_INDEX].value_handle);
+              service->chara_set_info->set[DEFAULT_CHARA_READ_INDEX].value_handle);
         if (ret != XF_OK) {
             XF_LOGE(TAG, "REQ READ:failed:%#X", ret);
         }
     }
-    if(is_read_cmpl == true)
-    {
-        xf_ble_gattc_service_found_t *service = 
+    if (is_read_cmpl == true) {
+        xf_ble_gattc_service_found_t *service =
             &service_found_set->set[DEFAULT_SERVICE_INDEX];
 
         /* 向对端服务端发送 写请求 */
         xf_err_t ret = xf_ble_gattc_request_write(s_app_id, s_conn_id,
-                                            service->chara_set_info->set[DEFAULT_CHARA_WRITE_INDEX].value_handle,
-                                            write_req_data, sizeof(write_req_data),
-                                            XF_BLE_GATT_WRITE_TYPE_WITH_RSP);
+                       service->chara_set_info->set[DEFAULT_CHARA_WRITE_INDEX].value_handle,
+                       write_req_data, sizeof(write_req_data),
+                       XF_BLE_GATT_WRITE_TYPE_WITH_RSP);
         if (ret != XF_OK) {
             XF_LOGE(TAG, "REQ WRITE:failed:%#X", ret);
         }

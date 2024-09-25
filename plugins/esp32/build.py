@@ -46,7 +46,7 @@ class esp32():
     @hookimpl
     def flash(self, args):
         api.cd_to_target()
-        api.exec_cmd(["idf.py", "flash", "-b", "1500000", *args])
+        api.exec_cmd(["idf.py", "flash", *args])
 
     @hookimpl
     def export(self, args):

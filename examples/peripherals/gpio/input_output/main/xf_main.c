@@ -40,7 +40,7 @@ static void gpio_task(xf_task_t task);
 
 void xf_main(void)
 {
-    XF_LOGI(TAG,"gpio example");
+    XF_LOGI(TAG, "gpio example");
     xf_hal_gpio_init(OUTPUT_IO, XF_HAL_GPIO_DIR_OUT);
     xf_hal_gpio_init(INPUT_IO, XF_HAL_GPIO_DIR_IN);
     xf_hal_gpio_set_pull(INPUT_IO, INPUT_IO_MODE);
@@ -54,6 +54,6 @@ static void gpio_task(xf_task_t task)
 {
     UNUSED(task);
     bool level = xf_hal_gpio_get_level(INPUT_IO);
-    XF_LOGI(TAG,"gpio_task get level:%d", level);
+    XF_LOGI(TAG, "gpio_task get level:%d", level);
     xf_hal_gpio_set_level(OUTPUT_IO, level);
 }

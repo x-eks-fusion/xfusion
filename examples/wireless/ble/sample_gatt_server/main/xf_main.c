@@ -59,7 +59,8 @@ static xf_ble_gatts_service_t service_set[] = {
     {
         .service_uuid = XF_BLE_DECLARE_UUID16(DEFAULT_SERVICE_UUID),
         .service_type = XF_BLE_GATT_SERVICE_TYPE_PRIMARY,
-        .chara_set = (xf_ble_gatts_chara_t []) {
+        .chara_set = (xf_ble_gatts_chara_t [])
+        {
             {
                 .chara_uuid = XF_BLE_DECLARE_UUID16(DEFAULT_CHARA_UUID),
                 .chara_value = {
@@ -168,7 +169,7 @@ static xf_err_t sample_ble_gatts_event_cb(
                 app_id, param.write_req.conn_id, param.write_req.need_rsp,
                 param.write_req.handle);
         XF_LOG_BUFFER_HEXDUMP(param.write_req.value, param.write_req.value_len);
-        
+
         /* 如果是需要响应的请求类型->返回响应 */
         if (param.write_req.need_rsp == true) {
             xf_ble_gatts_ntf_ind_t indication_param = {
@@ -194,19 +195,19 @@ static xf_err_t sample_ble_gatts_event_cb(
                 app_id, param.connect.conn_id,
                 param.connect.peer_addr.type,
                 XF_BT_ADDR_EXPAND_TO_ARG(param.connect.peer_addr.addr));
-        
+
         xf_ble_sm_authen_req_t authen_req = XF_BLE_SM_AUTHEN_REQ_SC_MITM_BOND;
         xf_ble_sm_io_cap_t io_capability = XF_BLE_SM_IO_CAP_NONE;
         xf_ble_sm_authen_option_t authen_option = XF_BLE_SM_AUTHEN_OPTION_DISABLE;
         xf_err_t ret = XF_OK;
         ret = xf_ble_gap_set_security_param(
-            XF_BLE_SM_PARAM_AUTHEN_REQ_MODE, &authen_req, sizeof(authen_req));
+                  XF_BLE_SM_PARAM_AUTHEN_REQ_MODE, &authen_req, sizeof(authen_req));
         XF_CHECK(ret != XF_OK, ret, TAG,
-                     "set_security_param failed:%#X", ret);
+                 "set_security_param failed:%#X", ret);
         ret = xf_ble_gap_set_security_param(
-            XF_BLE_SM_PARAM_IO_CAP_MODE, &io_capability, sizeof(io_capability));
+                  XF_BLE_SM_PARAM_IO_CAP_MODE, &io_capability, sizeof(io_capability));
         XF_CHECK(ret != XF_OK, ret, TAG,
-                     "set_security_param failed:%#X", ret);
+                 "set_security_param failed:%#X", ret);
     } break;
     case XF_BLE_GAP_EVT_PAIR_END: {
         XF_LOGI(TAG, "EV:pair end:app_id:%d,conn_id:%d,"

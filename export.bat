@@ -80,7 +80,7 @@ if "%VENV_RESULT%"=="1" (
 )
 
 python.exe -m pip install --upgrade pip -i https://pypi.tuna.tsinghua.edu.cn/simple
-pip install xf_build==0.2.2 -i https://pypi.tuna.tsinghua.edu.cn/simple
+pip install xf_build==0.3.2 -i https://pypi.tuna.tsinghua.edu.cn/simple
 pip install windows-curses -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 echo XF_ROOT:           %XF_ROOT%
