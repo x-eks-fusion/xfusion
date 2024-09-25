@@ -60,9 +60,7 @@ static void uart_rx_task(xf_task_t task)
     int len = xf_hal_uart_read(UART_NUM, data, RX_SIZE_DEFAULT);
     if (len > 0) {
         XF_LOGI(TAG, ">>READ:size:%d,%s", len, data);
-    }
-    else
-    {
+    } else {
         XF_LOGI(TAG, ">>READ:NONE");
     }
 }
@@ -74,9 +72,7 @@ static void uart_tx_task(xf_task_t task)
     int len = xf_hal_uart_write(UART_NUM, (const uint8_t *) data, sizeof(data));
     if (len > 0) {
         XF_LOGI(TAG, ">>WRITE:size:%d", len);
-    }
-    else
-    {
+    } else {
         XF_LOGI(TAG, ">>WRITE:NONE");
     }
 }

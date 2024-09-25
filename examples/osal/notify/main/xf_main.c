@@ -68,10 +68,8 @@ static void task1(void *argument)
     err |= xf_osal_delay_ms(1000);
     err |= xf_osal_thread_notify_set(thread2, 0x01);
     XF_LOGI(TAG, "task1, err:%d", err);
-    while (1)
-    {
-        if (xf_osal_thread_notify_wait(0x01, XF_OSAL_WAIT_ALL, XF_OSAL_WAIT_FOREVER) == XF_OK)
-        {
+    while (1) {
+        if (xf_osal_thread_notify_wait(0x01, XF_OSAL_WAIT_ALL, XF_OSAL_WAIT_FOREVER) == XF_OK) {
             XF_LOGI(TAG, "task1 running");
             xf_osal_delay_ms(1000);
         }
@@ -87,20 +85,16 @@ static void task2(void *argument)
             uint32_t notify = xf_osal_thread_notify_get();
             XF_LOGI(TAG, "task2 running, notify:%d", notify);
             err = xf_osal_thread_notify_clear(0x01);
-            if (err != XF_OK)
-            {
+            if (err != XF_OK) {
                 XF_LOGE(TAG, "task2 error, %d", err);
             }
 
             err = xf_osal_thread_notify_set(thread1, 0x01);
-            if (err != XF_OK)
-            {
+            if (err != XF_OK) {
                 XF_LOGE(TAG, "task2 error, %d", err);
             }
             xf_osal_delay_ms(1000);
-        }
-        else
-        {
+        } else {
             XF_LOGE(TAG, "task2 error, %d", err);
         }
 

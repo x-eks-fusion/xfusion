@@ -87,8 +87,7 @@ void timer2(void *argument)
             xf_osal_timer_start(timer, 1000U);
         }
     }
-    if (count == 40)
-    {
+    if (count == 40) {
         xf_osal_timer_delete(timer);
     }
 

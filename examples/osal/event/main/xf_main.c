@@ -73,8 +73,7 @@ void xf_main(void)
         return;
     }
     xf_err_t err = xf_osal_event_delete(event1);
-    if (err != XF_OK)
-    {
+    if (err != XF_OK) {
         XF_LOGE(TAG, "xf event delete error");
         return;
     }
@@ -89,10 +88,8 @@ static void task1(void *argument)
     err |= xf_osal_delay_ms(1000);
     err |= xf_osal_event_set(event, 0x01);
     XF_LOGI(TAG, "task1, err:%d", err);
-    while (1)
-    {
-        if (xf_osal_event_wait(event, 0x01, XF_OSAL_WAIT_ALL, XF_OSAL_WAIT_FOREVER) == XF_OK)
-        {
+    while (1) {
+        if (xf_osal_event_wait(event, 0x01, XF_OSAL_WAIT_ALL, XF_OSAL_WAIT_FOREVER) == XF_OK) {
             XF_LOGI(TAG, "task1 running");
             xf_osal_delay_ms(1000);
         }
@@ -102,8 +99,7 @@ static void task1(void *argument)
 static void task2(void *argument)
 {
     XF_LOGI(TAG, "task2");
-    while (1)
-    {
+    while (1) {
         xf_err_t err = xf_osal_event_wait(event, 0x01, XF_OSAL_NO_CLEAR, XF_OSAL_WAIT_FOREVER);
         if (err == XF_OK) {
             uint32_t event_flag = xf_osal_event_get(event);
@@ -111,9 +107,7 @@ static void task2(void *argument)
             xf_osal_event_clear(event, 0x01);
             xf_osal_event_set(event, 0x01);
             xf_osal_delay_ms(1000);
-        }
-        else
-        {
+        } else {
             XF_LOGE(TAG, "task2 error, %d", err);
         }
     }

@@ -69,8 +69,7 @@ void xf_main(void)
     }
 
     xf_err_t err = xf_osal_queue_reset(queue);
-    if (err != XF_OK)
-    {
+    if (err != XF_OK) {
         XF_LOGE(TAG, "xf queue reset error");
         return;
     }
@@ -82,8 +81,7 @@ void xf_main(void)
     }
 
     err = xf_osal_queue_delete(queue1);
-    if (err != XF_OK)
-    {
+    if (err != XF_OK) {
         XF_LOGE(TAG, "xf queue delete error");
         return;
     }
@@ -95,8 +93,7 @@ void xf_main(void)
 static void task1(void *argument)
 {
     int32_t rxData;
-    while (1)
-    {
+    while (1) {
         if (xf_osal_queue_get(queue, &rxData, 0, XF_OSAL_WAIT_FOREVER) == XF_OK) {
             XF_LOGI(TAG, "xf queue recv %d", rxData);
         }
@@ -107,12 +104,10 @@ static void task1(void *argument)
 static void task2(void *argument)
 {
     int32_t txData = 0;
-    while (1)
-    {
+    while (1) {
         txData++;
         XF_LOGI(TAG, "xf queue send %d", txData);
-        if (xf_osal_queue_put(queue, &txData, 0, XF_OSAL_WAIT_FOREVER) != XF_OK)
-        {
+        if (xf_osal_queue_put(queue, &txData, 0, XF_OSAL_WAIT_FOREVER) != XF_OK) {
             XF_LOGI(TAG, "xf queue send error");
         }
         xf_osal_delay_ms(1500);

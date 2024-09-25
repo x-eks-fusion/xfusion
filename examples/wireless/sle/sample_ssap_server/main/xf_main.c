@@ -106,7 +106,7 @@ void xf_main(void)
     XF_LOGI(TAG, "property handle:[0]:%d,uuid:%#X",
             service_struct.prop_set[0].prop_handle,
             service_struct.prop_set[0].prop_uuid->uuid16);
-    
+
     // 启动服务
     ret = xf_sle_ssaps_start_service(s_aap_id, service_struct.service_handle);
     XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,

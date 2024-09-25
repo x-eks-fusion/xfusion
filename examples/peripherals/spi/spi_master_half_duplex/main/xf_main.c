@@ -70,26 +70,21 @@ void xf_main(void)
 static void spi_task(xf_task_t task)
 {
     UNUSED(task);
-    if(is_next == false)
-    {
+    if (is_next == false) {
         XF_LOGI(TAG, "SPI master write ... ...");
-        uint8_t wbuf[]="I M MASTER";
+        uint8_t wbuf[] = "I M MASTER";
         int ret = xf_hal_spi_write(DEFAULT_SPI_NUM, wbuf, sizeof(wbuf), 1000);
-        if(ret < 0)
-        {
+        if (ret < 0) {
             XF_LOGI(TAG, "WRITE failed!:%d", -ret);
             return;
         }
         is_next = true;
         XF_LOGI(TAG, "WRITE CMPL");
-    }
-    else if(is_next == true)
-    {
+    } else if (is_next == true) {
         XF_LOGI(TAG, "SPI master read ... ...");
-        uint8_t rbuf[32]={0};
+        uint8_t rbuf[32] = {0};
         int ret = xf_hal_spi_read(DEFAULT_SPI_NUM, rbuf, sizeof(rbuf), 1000);
-        if(ret < 0)
-        {
+        if (ret < 0) {
             XF_LOGI(TAG, "READ failed!:%d,%s", -ret, rbuf);
             return;
         }

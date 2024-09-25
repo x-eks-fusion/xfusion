@@ -46,12 +46,9 @@ static void ntask(xf_task_t task)
     num++;
     // 不断的创建任务（由于任务池的存在，所以不会申请内存，反而会回收已经使用完的任务）
     XF_LOGI(TAG, "ntask:%d", num);
-    if (num < 5)
-    {
+    if (num < 5) {
         xf_task_init_from_pool(npool, ntask, (void *)1, 1);
-    }
-    else
-    {
+    } else {
         xf_task_pool_delete(npool);
         XF_LOGI(TAG, "delete npool");
     }

@@ -56,15 +56,13 @@ void xf_main(void)
     }
 
     xf_osal_semaphore_t sem2 = xf_osal_semaphore_create(1, 0, &sem_attr);
-    if (sem2 == NULL)
-    {
+    if (sem2 == NULL) {
         XF_LOGE(TAG, "xf sem2 create error");
         return;
     }
 
     xf_err_t err = xf_osal_semaphore_delete(sem2);
-    if (err != XF_OK)
-    {
+    if (err != XF_OK) {
         XF_LOGE(TAG, "xf sem2 delete error");
         return;
     }
