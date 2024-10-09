@@ -11,7 +11,10 @@ incs = [
 ]
 
 reqs = [
-    "xf_utils"
+    "xf_utils",
+    "xf_osal",
+    "xf_sys",
+    "xf_log"
 ]
 
 xf_build.collect(srcs=srcs, inc_dirs=incs, requires=reqs)

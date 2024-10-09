@@ -28,7 +28,6 @@
 
 static size_t log_backend(
     char *p_buf, size_t buf_size, xf_log_backend_args_t *p_args);
-static uint32_t log_time(void);
 
 /* ==================== [Static Variables] ================================== */
 
@@ -39,7 +38,6 @@ static uint32_t log_time(void);
 void port_log_init(void)
 {
     xf_log_set_backend(log_backend);
-    xf_log_set_time_src(log_time);
     xf_printf_set_putchar(putchar);
 }
 
@@ -52,9 +50,4 @@ static size_t log_backend(char *p_buf, size_t buf_size, xf_log_backend_args_t *p
         return 0;
     }
     return printf("%.*s", (int)buf_size, p_buf);
-}
-
-static uint32_t log_time(void)
-{
-    return esp_log_timestamp();
 }

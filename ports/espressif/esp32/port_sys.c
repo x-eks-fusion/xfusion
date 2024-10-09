@@ -62,11 +62,10 @@ void xf_sys_reboot(void)
 
 static xf_us_t _port_xf_sys_get_us(void)
 {
-    int timer = esp_timer_get_time();
-    return timer;
+    return esp_timer_get_time();
 }
 
-static xf_err_t port_sys_init()
+static int port_sys_init()
 {
     xf_sys_time_init(_port_xf_sys_get_us);
     return XF_OK;
