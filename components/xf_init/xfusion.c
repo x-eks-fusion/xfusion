@@ -13,7 +13,9 @@
 
 #include "xfusion.h"
 #include "xf_task.h"
-#include "xf_log.h"
+#include "xf_osal.h"
+#include "xf_sys.h"
+#include "xf_log_port.h"
 
 /* ==================== [Defines] =========================================== */
 
@@ -22,13 +24,15 @@
 /* ==================== [Static Prototypes] ================================= */
 
 #if XF_TASK_MBUS_IS_ENABLE
-/**
- * @brief 发布订阅默认处理函数。
- *
- * @param task 当前任务句柄。
- */
-static void mbus_handle(xf_task_t task);
+    /**
+    * @brief 发布订阅默认处理函数。
+    *
+    * @param task 当前任务句柄。
+    */
+    static void mbus_handle(xf_task_t task);
 #endif
+
+static void xf_task_on_idle(unsigned long int max_idle_ms);
 
 /* ==================== [Static Variables] ================================== */
 
@@ -40,12 +44,22 @@ extern void xf_main(void);
 
 void xfusion_run(const xf_init_preinit_ops_t *const p_ops)
 {
+    xf_log_set_time_src((xf_log_time_func_t)xf_sys_time_get_ms);
+
     xf_init(p_ops);
+
+    xf_task_tick_init(xf_sys_time_get_ms);
+    xf_task_manager_default_init(xf_task_on_idle);
+
 #if XF_TASK_MBUS_IS_ENABLE
     xf_ntask_create_loop(mbus_handle, NULL, 0, 10);
 #endif
+
     xf_main();
-    xf_task_manager_run_default();
+
+    while (1) {
+        xf_task_manager_run_default();
+    }
 }
 
 /* ==================== [Static Functions] ================================== */
@@ -59,4 +73,12 @@ static void mbus_handle(xf_task_t task)
 }
 
 #endif
+
+
+static void xf_task_on_idle(unsigned long int max_idle_ms)
+{
+#if XF_OSAL_ENABLE
+    xf_osal_delay_ms(max_idle_ms);
+#endif
+}
 

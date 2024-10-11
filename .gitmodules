@@ -22,3 +22,6 @@
 [submodule "components/xf_osal/xf_osal"]
 	path = components/xf_osal/xf_osal
 	url = https://github.com/x-eks-fusion/xf_osal.git
+[submodule "components/xf_sys/xf_sys"]
+	path = components/xf_sys/xf_sys
+	url = https://github.com/x-eks-fusion/xf_sys.git

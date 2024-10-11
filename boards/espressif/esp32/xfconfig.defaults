@@ -1,0 +1,2 @@
+# Welcome to xfusion
+CONFIG_XF_OSAL_FREERTOS=y

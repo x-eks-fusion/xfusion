@@ -9,6 +9,7 @@ idf_component_register(
                         "xf_init"
                         "xf_hal"
                         "xf_wal"
+                        "xf_sys"
                         "esp_timer"
                         "esp_adc"
                         "driver"

@@ -1,47 +1,62 @@
+config XF_OSAL_ENABLE
+    bool "Use osal"
+    default "y"
+    help
+        use xf_osal API
+
 config XF_OSAL_KERNEL_ENABLE
     bool "Use osal kernel"
     default "y"
+    depends on XF_OSAL_ENABLE
     help
         use xf_osal kernel API
+
+config XF_OSAL_THREAD_ENABLE
+    bool "Use osal thread"
+    default "y"
+    depends on XF_OSAL_ENABLE
+    help
+        use xf_osal thread API
 
 config XF_OSAL_TIMER_ENABLE
     bool "Use osal timer"
     default "y"
+    depends on XF_OSAL_ENABLE
     help
         use xf_osal timer API
 
 config XF_OSAL_EVENT_ENABLE
     bool "Use osal event"
     default "y"
+    depends on XF_OSAL_ENABLE
     help
         use xf_osal event API
 
 config XF_OSAL_MUTEX_ENABLE
     bool "Use osal mutex"
     default "y"
+    depends on XF_OSAL_ENABLE
     help
         use xf_osal mutex API
 
 config XF_OSAL_SEMAPHORE_ENABLE
     bool "Use osal semaphore"
     default "y"
+    depends on XF_OSAL_ENABLE
     help
         use xf_osal semaphore API
 
 config XF_OSAL_QUEUE_ENABLE
     bool "Use osal queue"
     default "y"
+    depends on XF_OSAL_ENABLE
     help
         use xf_osal queue API
 
 choice
     prompt "OSAL Port"
-    default XF_OSAL_NO_OSAL
-
-config XF_OSAL_NO_OSAL
-    bool "No OSAL"
-    help
-        Use this option if you don't want to use any OS abstraction layer.
+    depends on XF_OSAL_ENABLE
+    default XF_OSAL_FREERTOS
 
 config XF_OSAL_FREERTOS
     bool "FreeRTOS OSAL"

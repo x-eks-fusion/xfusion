@@ -22,7 +22,15 @@ extern "C" {
 
 /* ==================== [Defines] =========================================== */
 
+#if defined(CONFIG_XF_OSAL_ENABLE) || CONFIG_XF_OSAL_ENABLE
+#define XF_OSAL_ENABLE (1)
+#else
+#define XF_OSAL_ENABLE (0)
+#endif
+
 #define XF_OSAL_KERNEL_ENABLE CONFIG_XF_OSAL_KERNEL_ENABLE
+
+#define XF_OSAL_THREAD_ENABLE CONFIG_XF_OSAL_THREAD_ENABLE
 
 #define XF_OSAL_TIMER_ENABLE CONFIG_XF_OSAL_TIMER_ENABLE
 
