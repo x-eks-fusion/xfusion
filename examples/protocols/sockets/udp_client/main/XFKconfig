@@ -1,0 +1,4 @@
+
+config EXAMPLE_PORT
+    int "socket port number."
+    default 3333

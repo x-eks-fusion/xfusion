@@ -214,6 +214,11 @@ xf_err_t xf_netif_dhcps_get_clients_by_mac(
                  (int)pair_array_size, (esp_netif_pair_mac_ip_t *)mac_ip_pair_array);
     xf_ret = port_convert_pf2xf_err(pf_err);
 
+    /* esp_netif_dhcps_get_clients_by_mac 传出的 ip 可能已经转换，此处转回去 */
+    for (size_t i = 0; i < pair_array_size; i++) {
+        mac_ip_pair_array[i].ip.addr = esp_netif_htonl(mac_ip_pair_array[i].ip.addr);
+    }
+
     return xf_ret;
 }
 
