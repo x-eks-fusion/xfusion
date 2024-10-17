@@ -1,0 +1,19 @@
+
+menu "xf_net_apps Configuration"
+
+    config XF_NET_APPS_ENABLE
+        bool "Enable xf_net_apps module."
+        default y
+
+    config XF_NET_APPS_IPERF_ENABLE
+        bool "Enable iperf."
+        default y
+        depends on XF_NET_APPS_ENABLE
+
+    config XF_NET_APPS_PING_ENABLE
+        bool "Enable ping."
+        default y
+        depends on XF_NET_APPS_ENABLE
+
+endmenu # xf_net_apps Configuration
+  
