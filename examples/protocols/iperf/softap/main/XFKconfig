@@ -1,0 +1,23 @@
+
+config EXAMPLE_IPERF_TIME
+    int "Set the iperf running time (unit: second)."
+    default 10
+
+config EXAMPLE_IPERF_AUTO_TEST
+    bool "iperf automatically switches roles and protocols for testing."
+    default y
+    help
+        iperf automatically switches roles and protocols for testing. 
+        If you select No, you need to manually select the role and protocol of iperf.
+
+if !EXAMPLE_IPERF_AUTO_TEST
+
+    config EXAMPLE_IPERF_SELECT_SERVER
+        bool "iperf selects the server. Otherwise, select the client."
+        default y
+
+    config EXAMPLE_IPERF_SELECT_UDP
+        bool "iperf Indicates the udp protocol. Otherwise, tcp is selected."
+        default y
+
+endif # !EXAMPLE_IPERF_AUTO_TEST

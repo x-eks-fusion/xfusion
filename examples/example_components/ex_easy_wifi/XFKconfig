@@ -1,0 +1,10 @@
+
+config EX_EASY_WIFI_SSID
+    string "SSID of WIFI."
+    default "myssid"
+    help
+        In AP mode, it is the broadcast SSID; in STA mode, it is the target SSID
+
+config EX_EASY_WIFI_PASSWORD
+    string "Password for WIFI."
+    default "mypassword"
