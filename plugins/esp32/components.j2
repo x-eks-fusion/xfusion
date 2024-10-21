@@ -5,3 +5,8 @@ idf_component_register(
     WHOLE_ARCHIVE
 )
 
+{% if cflags|default([]) %}
+target_compile_options(${COMPONENT_LIB} PRIVATE 
+    {% for cflag in cflags %} "{{cflag}}" {% endfor %}
+)
+{% endif %}

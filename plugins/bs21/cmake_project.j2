@@ -45,5 +45,15 @@ set(XF_SRCS_STR
     {%- endfor %}
 )
 
+{# TODO 目前 sdk 中的 xf_app 包含所有 xfusion 源码，共用 cflags, 暂不能每个组件单独配置 cflags #}
+set(XF_CFLAGS_STR
+    {%- for key, cmpnt in user_components.items() %}    {# user_components #}
+        {%- for cflag in cmpnt.cflags %}
+    {{cflag}}
+        {%- endfor %}
+    {%- endfor %}
+)
+
 list(REMOVE_DUPLICATES XF_INCS_STR)
 list(REMOVE_DUPLICATES XF_SRCS_STR)
+list(REMOVE_DUPLICATES XF_CFLAGS_STR)
