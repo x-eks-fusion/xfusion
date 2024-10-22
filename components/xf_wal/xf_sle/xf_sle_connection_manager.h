@@ -71,6 +71,9 @@ xf_err_t xf_sle_set_default_conn_params(
 // 配置定制化信息
 xf_err_t xf_sle_set_max_pwr(int8_t ble_pwr, int8_t sle_pwr);
 
+// 配置 SLE 最大功率档位（根据指定的最大功率）
+xf_err_t xf_sle_set_max_pwr_level_by_pwr(int8_t target_max_pwr);
+
 /* ==================== [Macros] ============================================ */
 
 #ifdef __cplusplus
