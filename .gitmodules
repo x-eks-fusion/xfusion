@@ -25,3 +25,6 @@
 [submodule "components/xf_sys/xf_sys"]
 	path = components/xf_sys/xf_sys
 	url = https://github.com/x-eks-fusion/xf_sys.git
+[submodule "components/xf_fal/xf_fal"]
+	path = components/xf_fal/xf_fal
+	url = https://github.com/x-eks-fusion/xf_fal.git
