@@ -15,7 +15,6 @@
 #include "xf_task.h"
 #include "xf_osal.h"
 #include "xf_sys.h"
-#include "xf_log_port.h"
 
 /* ==================== [Defines] =========================================== */
 
@@ -42,11 +41,11 @@ static void xf_task_on_idle(unsigned long int max_idle_ms);
 
 extern void xf_main(void);
 
-void xfusion_run(const xf_init_preinit_ops_t *const p_ops)
+void xfusion_init(void)
 {
-    xf_log_set_time_src((xf_log_time_func_t)xf_sys_time_get_ms);
+    xf_log_set_time_func((xf_log_time_func_t)xf_sys_time_get_ms);
 
-    xf_init(p_ops);
+    xf_init();
 
     xf_task_tick_init(xf_sys_time_get_ms);
     xf_task_manager_default_init(xf_task_on_idle);
@@ -56,11 +55,13 @@ void xfusion_run(const xf_init_preinit_ops_t *const p_ops)
 #endif
 
     xf_main();
-
-    while (1) {
-        xf_task_manager_run_default();
-    }
 }
+
+void xfusion_run(void)
+{
+    xf_task_manager_run_default();
+}
+
 
 /* ==================== [Static Functions] ================================== */
 

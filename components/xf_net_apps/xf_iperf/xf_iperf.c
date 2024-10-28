@@ -201,7 +201,7 @@ static void iperf_report_task(void *arg)
         s_ctx.cb_func(XF_IPERF_EVENT_REPORT, &s_ctx, s_ctx.user_args);
     }
     if (s_ctx.cfg.report_enabled) {
-        xf_printf("\n%16s %s\n", "Interval", "Bandwidth");
+        xf_log_printf("\n%16s %s\n", "Interval", "Bandwidth");
     }
 
     while (!s_ctx.finish) {
@@ -223,10 +223,10 @@ static void iperf_report_task(void *arg)
             s_ctx.cb_func(XF_IPERF_EVENT_REPORT, &s_ctx, s_ctx.user_args);
         }
         if (s_ctx.cfg.report_enabled) {
-            xf_printf("%4d-%4d sec       %d.%02d Mbits/sec\n",
-                      cur, cur + interval,
-                      iperf_get_float_int(actual_bandwidth),
-                      iperf_get_float_dec(actual_bandwidth));
+            xf_log_printf("%4d-%4d sec       %d.%02d Mbits/sec\n",
+                      (int)cur, (int)(cur + interval),
+                      (int)iperf_get_float_int(actual_bandwidth),
+                      (int)iperf_get_float_dec(actual_bandwidth));
         }
 
         cur += interval;
@@ -245,10 +245,10 @@ static void iperf_report_task(void *arg)
         s_ctx.cb_func(XF_IPERF_EVENT_END, &s_ctx, s_ctx.user_args);
     }
     if (s_ctx.cfg.report_enabled) {
-        xf_printf("%4d-%4d sec       %d.%02d Mbits/sec\n",
-                  0, time,
-                  iperf_get_float_int(average),
-                  iperf_get_float_dec(average));
+        xf_log_printf("%4d-%4d sec       %d.%02d Mbits/sec\n",
+                  0, (int)time,
+                  (int)iperf_get_float_int(average),
+                  (int)iperf_get_float_dec(average));
     }
 
     s_ctx.report_is_running = false;

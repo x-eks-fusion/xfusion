@@ -19,18 +19,7 @@
 
 /* ==================== [Static Prototypes] ================================= */
 
-static void _preinit(void);
-static void _predeinit(void);
-
-extern void port_log_init(void);
-
 /* ==================== [Static Variables] ================================== */
-
-static const xf_init_preinit_ops_t preinit_ops = {
-    .preinit        = _preinit,
-    .predeinit      = _predeinit,
-};
-
 
 /* ==================== [Macros] ============================================ */
 
@@ -38,17 +27,10 @@ static const xf_init_preinit_ops_t preinit_ops = {
 
 void app_main(void)
 {
-    xfusion_run(&preinit_ops);
+    xfusion_init();
+    while (1) {
+        xfusion_run();
+    }
 }
 
 /* ==================== [Static Functions] ================================== */
-
-static void _preinit(void)
-{
-    port_log_init();
-}
-
-static void _predeinit(void)
-{
-
-}

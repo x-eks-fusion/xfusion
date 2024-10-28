@@ -18,7 +18,6 @@
 #include "xf_init.h"
 
 #include "xf_log.h"
-#include "xf_log_port.h"
 
 /* ==================== [Defines] =========================================== */
 
@@ -26,28 +25,25 @@
 
 /* ==================== [Static Prototypes] ================================= */
 
-static size_t log_backend(
-    char *p_buf, size_t buf_size, xf_log_backend_args_t *p_args);
-
 /* ==================== [Static Variables] ================================== */
 
 /* ==================== [Macros] ============================================ */
 
 /* ==================== [Global Functions] ================================== */
 
-void port_log_init(void)
-{
-    xf_log_set_backend(log_backend);
-    xf_printf_set_putchar(putchar);
-}
-
 /* ==================== [Static Functions] ================================== */
 
-static size_t log_backend(char *p_buf, size_t buf_size, xf_log_backend_args_t *p_args)
+static void xf_log_out(const char *str, size_t len, void *arg)
 {
-    (void)(p_args);
-    if ((NULL == p_buf) || (0 == buf_size)) {
-        return 0;
+    if ((NULL == str) || (0 == len)) {
+        return;
     }
-    return printf("%.*s", (int)buf_size, p_buf);
+    printf("%.*s", (int)len, str);
 }
+
+int port_log_init(void)
+{
+    xf_log_register_obj(xf_log_out, NULL);
+    return 0;
+}
+XF_INIT_EXPORT_SETUP(port_log_init);

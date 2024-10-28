@@ -90,12 +90,12 @@ static void xf_ping_cb(
     UNUSED(user_args);
     switch (event_id) {
     case XF_PING_EVENT_SUCC: {
-        xf_printf("%d bytes from " XF_IPSTR " icmp_seq=%d ttl=%d time=%d ms" "\n",
+        xf_log_printf("%d bytes from " XF_IPSTR " icmp_seq=%d ttl=%d time=%d ms" "\n",
                   hdl->recv_len, XF_IP2STR(&hdl->recv_addr.u_addr.ip4),
                   hdl->packet_hdr->seqno, hdl->ttl, hdl->elapsed_time_ms);
     } break;
     case XF_PING_EVENT_TIMEOUT: {
-        xf_printf("From " XF_IPSTR " icmp_seq=%d timeout" "\n",
+        xf_log_printf("From " XF_IPSTR " icmp_seq=%d timeout" "\n",
                   XF_IP2STR(&hdl->recv_addr.u_addr.ip4), hdl->packet_hdr->seqno);
     } break;
     case XF_PING_EVENT_END: {
@@ -103,11 +103,11 @@ static void xf_ping_cb(
         if (IP_IS_V4(&hdl->recv_addr)) {
             struct in_addr ip4;
             ip4.s_addr = hdl->recv_addr.u_addr.ip4.addr;
-            xf_printf("\n--- %s ping statistics ---\n", inet_ntoa(ip4));
+            xf_log_printf("\n--- %s ping statistics ---\n", inet_ntoa(ip4));
         } else {
-            xf_printf("\n--- %s ping statistics ---\n", inet6_ntoa(*ip_2_ip6(&hdl->recv_addr)));
+            xf_log_printf("\n--- %s ping statistics ---\n", inet6_ntoa(*ip_2_ip6(&hdl->recv_addr)));
         }
-        xf_printf("%d packets transmitted, %d received, %d%% packet loss, time %dms" "\n",
+        xf_log_printf("%d packets transmitted, %d received, %d%% packet loss, time %dms" "\n",
                   hdl->transmitted, hdl->received, loss, hdl->total_time_ms);
         s_ping_done = true;
     } break;

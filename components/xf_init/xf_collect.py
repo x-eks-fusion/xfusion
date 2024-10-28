@@ -2,6 +2,8 @@ import xf_build
 
 srcs = [
     "xf_init/src/*.c",
+    "xf_init/src/section/*.c",
+    "xf_init/src/registry/*.c",
     "*.c",
 ]
 
