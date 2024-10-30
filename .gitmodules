@@ -28,3 +28,9 @@
 [submodule "components/xf_fal/xf_fal"]
 	path = components/xf_fal/xf_fal
 	url = https://github.com/x-eks-fusion/xf_fal.git
+[submodule "sdks/fbb_ws63"]
+	path = sdks/fbb_ws63
+	url = https://github.com/x-eks-fusion/fbb_ws63.git
+[submodule "sdks/bs2x_sdk"]
+	path = sdks/bs2x_sdk
+	url = https://github.com/Im-eks-dev/bs2x_sdk.git
