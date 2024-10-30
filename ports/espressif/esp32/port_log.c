@@ -41,7 +41,7 @@ static void xf_log_out(const char *str, size_t len, void *arg)
     printf("%.*s", (int)len, str);
 }
 
-int port_log_init(void)
+static int port_log_init(void)
 {
     xf_log_register_obj(xf_log_out, NULL);
     return 0;
