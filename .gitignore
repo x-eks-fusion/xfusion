@@ -48,8 +48,5 @@ __pycache__
 xf.egg-info
 xf_build.egg-info
 
-# sdk 内的厂商支持包
-sdks/*
-!sdks/README.md
 
 boards/XFKconfig
