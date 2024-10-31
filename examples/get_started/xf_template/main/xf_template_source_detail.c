@@ -317,17 +317,17 @@ int g_xf_templ_global_data2_no_in_head = 0; /*!< 没有在头文件中声明的�
 /**
  * @brief 关于条件编译。
  *
- * 1. 需要在对应的 #else 后追加相应的的条件（如：`!defined(xf_printf)`），
- *    在 #endif 后标注 #if 的信息（如：`defined(xf_printf)`）。
+ * 1. 需要在对应的 #else 后追加相应的的条件（如：`!defined(xf_log_printf)`），
+ *    在 #endif 后标注 #if 的信息（如：`defined(xf_log_printf)`）。
  *
  * @note 如何宏需要缩进保持美观，请在'#'号后面缩进。如下缩进所示。
  */
 /* xf_template 输出接口 */
-#ifdef xf_printf
-#   define XF_TEMPL_PRINTF(_fmt, ...)   xf_printf(_fmt, ##__VA_ARGS__)
-#else /* !defined(xf_printf) */
+#ifdef xf_log_printf
+#   define XF_TEMPL_PRINTF(_fmt, ...)   xf_log_printf(_fmt, ##__VA_ARGS__)
+#else /* !defined(xf_log_printf) */
 #   define XF_TEMPL_PRINTF(_fmt, ...)
-#endif /* defined(xf_printf) */
+#endif /* defined(xf_log_printf) */
 
 #ifndef UNUSED
 #   define UNUSED(_x)                   ((void)(_x))     /*!< 未使用的变量 */

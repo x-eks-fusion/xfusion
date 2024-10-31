@@ -117,9 +117,7 @@ extern "C" {
 
 /* ==================== [Macros] ============================================ */
 
-#define xf_log_printf(format, ...)              xf_printf(format, ##__VA_ARGS__)
 #define xf_log_dump_printf(format, ...)         xf_log_printf(format, ##__VA_ARGS__)
-#define xf_log_level(level, tag, format, ...)   XF_LOG_WITH_EXTRA(level, tag, format, ##__VA_ARGS__)
 
 /**
  * @brief 使用xf_heap替代malloc

@@ -61,18 +61,18 @@ static void test_log_array(void *array, size_t size)
 
 static void test_log_level(void)
 {
-    xf_printf("测试输出等级" XF_LOG_NEWLINE);
+    xf_log_printf("测试输出等级" XF_LOG_NEWLINE);
     int lvl_backup = xf_log_get_global_level();
     for (int lvl = XF_LOG_VERBOSE; lvl > XF_LOG_NONE; --lvl) {
         xf_log_set_global_level(lvl);
-        xf_printf("--- 输出开始 --- lvl: %u ---" XF_LOG_NEWLINE, lvl);
+        xf_log_printf("--- 输出开始 --- lvl: %u ---" XF_LOG_NEWLINE, lvl);
         XF_LOGU(TAG, "hello");
         XF_LOGE(TAG, "hello");
         XF_LOGW(TAG, "hello");
         XF_LOGI(TAG, "hello");
         XF_LOGD(TAG, "hello");
         XF_LOGV(TAG, "hello");
-        xf_printf("--- 输出结束 ---------------" XF_LOG_NEWLINE XF_LOG_NEWLINE);
+        xf_log_printf("--- 输出结束 ---------------" XF_LOG_NEWLINE XF_LOG_NEWLINE);
     }
     xf_log_set_global_level(lvl_backup);
 }

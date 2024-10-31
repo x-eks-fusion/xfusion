@@ -33,13 +33,16 @@ extern "C" {
  */
 
 /**
- * @brief 运行 xfusion。
- * 
- * 含启动自动初始化、创建发布订阅服务任务、运行 `xf_main()` 等。
- * 
- * @param p_ops xf_init 预初始化函数操作集。见 @ref xf_init_preinit_ops_t.
+ * @brief 初始化 xfusion，包含log初始化，自动初始化等。
+ *
  */
-void xfusion_run(const xf_init_preinit_ops_t *const p_ops);
+void xfusion_init(void);
+
+/**
+ * @brief 运行 xfusion。需要将该函数放到循环里面调用。
+ *
+ */
+void xfusion_run(void);
 
 /**
  * End of group_xf_init_port
