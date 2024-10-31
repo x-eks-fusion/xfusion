@@ -132,7 +132,7 @@ __enter_virtualenv()
         source ~/.xfusion/${XF_VERSION}/bin/activate
     fi
     python3 -m pip install --upgrade pip -i https://pypi.tuna.tsinghua.edu.cn/simple
-    pip install xf_build==0.3.6 -i https://pypi.tuna.tsinghua.edu.cn/simple
+    pip install xf_build==0.3.7 -i https://pypi.tuna.tsinghua.edu.cn/simple
 }
 
 __print_value()
