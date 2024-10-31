@@ -17,6 +17,7 @@ class esp32():
         idf_components: Path = api.XF_TARGET_PATH / "components"
         public_components: Path = api.PROJECT_BUILD_PATH / "public_components"
         user_components: Path = api.PROJECT_BUILD_PATH / "user_components"
+        user_dirs: Path = api.PROJECT_BUILD_PATH / "user_dirs"
         user_main: Path = api.PROJECT_BUILD_PATH / "user_main"
         if idf_components.exists():
             shutil.rmtree(idf_components)
@@ -28,6 +29,10 @@ class esp32():
         # 复制user_components里面的文件夹到components下面
         if user_components.exists():
             for item in user_components.iterdir():
+                target_path = idf_components / item.name
+                shutil.copytree(item, target_path)
+        if user_dirs.exists():
+            for item in user_dirs.iterdir():
                 target_path = idf_components / item.name
                 shutil.copytree(item, target_path)
         # 复制user_main里面的文件夹到components下面
