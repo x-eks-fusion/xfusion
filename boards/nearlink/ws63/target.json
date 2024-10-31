@@ -1,6 +1,8 @@
 {
     "sdks":{
         "url": "https://github.com/x-eks-fusion/fbb_ws63",
-        "hash": "dddf3f38e396714cac5ac0a03b0876ff21de7b87"
+        "commit": "dddf3f38e396714cac5ac0a03b0876ff21de7b87",
+        "dir": "fbb_ws63",
+        "branch": "main"
     }
 }
