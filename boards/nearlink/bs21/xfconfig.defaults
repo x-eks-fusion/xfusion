@@ -1,2 +1,3 @@
 # Welcome to xfusion
+# CONFIG_XF_NET_APPS_ENABLE is not set
 CONFIG_XF_OSAL_CMSIS=y
