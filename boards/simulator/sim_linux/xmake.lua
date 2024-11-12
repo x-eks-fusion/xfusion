@@ -4,8 +4,6 @@ includes(path.join(os.getenv("XF_ROOT"),
 target(xf_project_name)
     set_kind("binary")
     add_includedirs(".")
-    add_includedirs("json")
-    add_files("./json/*.c")
     add_files("./main/*.c")
     add_deps("port_xf")
 

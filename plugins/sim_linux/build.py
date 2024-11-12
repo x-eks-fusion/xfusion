@@ -49,7 +49,8 @@ class sim_linux():
 
     @hookimpl
     def flash(self, args):
-        pass
+        api.cd_to_target()
+        api.exec_cmd(["xmake", "r"])
 
     @hookimpl
     def export(self, args):

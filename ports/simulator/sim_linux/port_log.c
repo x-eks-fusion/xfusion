@@ -36,10 +36,9 @@ static void xf_log_out(const char *str, size_t len, void *arg)
     }
     printf("%.*s", (int)len, str);
 }
-int tttttttttttttttest = 0;
+
 static int port_log_init(void)
 {
-    tttttttttttttttest += 2;
     xf_log_register_obj(xf_log_out, NULL);
     return 0;
 }
