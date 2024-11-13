@@ -32,7 +32,6 @@ int main(void)
     websocket_init();
     websocket_wait_start();
     xfusion_init();
-    printf("开始执行服务\n");
     while (1) {
         xfusion_run();
         websocket_service();

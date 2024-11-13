@@ -61,6 +61,7 @@ static int port_pwm_open(xf_hal_dev_t *dev)
     pwm->json_str = NULL;
     dev->platform_data = pwm;
 
+    cJSON_AddNumberToObject(json, "id", pwm->id);
     cJSON_AddBoolToObject(json, "enable", 0);
     cJSON_AddNumberToObject(json, "io_num", 0);
     cJSON_AddNumberToObject(json, "freq", 0);
@@ -114,13 +115,13 @@ static int port_pwm_ioctl(xf_hal_dev_t *dev, uint32_t cmd, void *config)
 static int port_pwm_read(xf_hal_dev_t *dev, void *buf, size_t count)
 {
     // no need
-    return XF_ERR_NOT_SUPPORTED;
+    return -XF_ERR_NOT_SUPPORTED;
 }
 
 static int port_pwm_write(xf_hal_dev_t *dev, const void *buf, size_t count)
 {
     // no need
-    return XF_ERR_NOT_SUPPORTED;
+    return -XF_ERR_NOT_SUPPORTED;
 }
 
 static int port_pwm_close(xf_hal_dev_t *dev)

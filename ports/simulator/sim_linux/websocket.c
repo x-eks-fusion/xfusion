@@ -13,6 +13,7 @@
 
 #include "websocket.h"
 #include <libwebsockets.h>
+#include "port_common.h"
 
 /* ==================== [Defines] =========================================== */
 
@@ -27,10 +28,11 @@ static int websocket_callback(struct lws *wsi,
                               void *user, void *in, size_t len);
 
 static struct lws *s_wsi = NULL;
-static void (*s_websocket_recv_cb)(void *in, size_t len) = NULL;
 static struct lws_context *s_context = NULL;
-static size_t s_head_size = sizeof(unsigned int) + sizeof(size_t);
 static unsigned char s_is_start = 0;
+static void *s_recv_data = NULL;
+static size_t s_recv_len = 0;
+static unsigned char s_is_recv = 0;
 
 /* ==================== [Static Variables] ================================== */
 
@@ -65,7 +67,7 @@ void websocket_init(void)
 
     struct lws_client_connect_info i = {0};
     i.context = s_context;
-    i.address = "localhost";
+    i.address = "127.0.0.1";
     i.port = 8000;
     i.path = "/ws/send";
     i.host = i.address;
@@ -96,7 +98,7 @@ int websocket_service(void)
 
 void websocket_send(unsigned int id, unsigned char *msg, size_t msg_len)
 {
-    size_t len = s_head_size + msg_len;
+    size_t len = sizeof(unsigned int) + sizeof(size_t) + msg_len;
     unsigned char buffer[BUFFER_LEN] = {0};
     *((unsigned int *)buffer) = id;
     *((size_t *)(buffer + sizeof(unsigned int))) = msg_len;
@@ -104,9 +106,14 @@ void websocket_send(unsigned int id, unsigned char *msg, size_t msg_len)
     lws_write(s_wsi, (unsigned char *)buffer, len, LWS_WRITE_BINARY);
 }
 
-void websocket_recv(void (*recv_cb)(void *in, size_t len))
+size_t websocket_recv(void *in)
 {
-    s_websocket_recv_cb = recv_cb;
+    while (s_is_recv == 0) {
+        lws_service(s_context, 0);
+    }
+    memcpy(in, s_recv_data, s_recv_len);
+    s_is_recv = 1;
+    return s_recv_len;
 }
 
 /* ==================== [Static Functions] ================================== */
@@ -118,17 +125,16 @@ static int websocket_callback(struct lws *wsi,
 {
     switch (reason) {
     case LWS_CALLBACK_CLIENT_ESTABLISHED:
-        printf("连接建立成功\n");
         s_is_start = 1;
         break;
 
     case LWS_CALLBACK_CLIENT_RECEIVE:
-        printf("收到消息: %s\n", (char *)in);
-        s_websocket_recv_cb(in, len);
+        s_is_recv = 1;
+        s_recv_data = in;
+        s_recv_len = len;
         break;
 
     case LWS_CALLBACK_CLIENT_CLOSED:
-        printf("连接关闭\n");
         break;
 
     default:

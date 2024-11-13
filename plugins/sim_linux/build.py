@@ -15,6 +15,7 @@ XF_PROJECT_NAME = os.environ.get("XF_PROJECT")
 
 hookimpl = xf_build.get_hookimpl()
 
+
 class sim_linux():
     @hookimpl
     def build(self, args):
@@ -40,7 +41,7 @@ class sim_linux():
                     dirs_exist_ok=True,
                 )
             except:
-                print(f"copy sdk firmware failed!", sys.exc_info())
+                print("copy sdk firmware failed!", sys.exc_info())
 
     @hookimpl
     def clean(self, args):
@@ -50,7 +51,7 @@ class sim_linux():
     @hookimpl
     def flash(self, args):
         api.cd_to_target()
-        api.exec_cmd(["xmake", "r"])
+        os.system("xmake r")
 
     @hookimpl
     def export(self, args):
