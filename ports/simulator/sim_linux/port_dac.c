@@ -26,6 +26,8 @@
 
 /* ==================== [Defines] =========================================== */
 
+#define TAG "port_dac"
+
 #define XF_HAL_DAC_DEFAULT_ENABLE       false
 #define XF_HAL_DAC_DEFAULT_RESOLUTION   10
 #define XF_HAL_DAC_DEFAULT_SPEED        1000000

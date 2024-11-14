@@ -26,6 +26,8 @@
 
 /* ==================== [Defines] =========================================== */
 
+#define TAG "port_uart"
+
 #define XF_HAL_UART_DEFAULT_DATA_BITS       XF_HAL_UART_DATA_BIT_8
 #define XF_HAL_UART_DEFAULT_STOP_BITS       XF_HAL_UART_STOP_BIT_1
 #define XF_HAL_UART_DEFAULT_PARITY_BITS     XF_HAL_UART_PARITY_BITS_NONE
@@ -55,8 +57,6 @@ static int port_uart_write(xf_hal_dev_t *dev, const void *buf, size_t count);
 static xf_err_t port_uart_close(xf_hal_dev_t *dev);
 
 /* ==================== [Static Variables] ================================== */
-
-#define TAG "port_uart"
 
 /* ==================== [Macros] ============================================ */
 

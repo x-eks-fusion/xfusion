@@ -26,6 +26,8 @@
 
 /* ==================== [Defines] =========================================== */
 
+#define TAG "port_i2c"
+
 #define XF_HAL_I2C_DEFAULT_HOSTS            XF_HAL_I2C_HOSTS_MASTER
 #define XF_HAL_I2C_DEFAULT_ENABLE           false
 #define XF_HAL_I2C_DEFAULT_ADDRESS_WIDTH    XF_HAL_I2C_ADDRESS_WIDTH_7BIT
@@ -66,8 +68,6 @@ static int esp_i2c_write_mem(xf_hal_dev_t *dev, xf_hal_i2c_config_t *i2c_config,
                              const void *buf, size_t count);
 
 /* ==================== [Static Variables] ================================== */
-
-#define TAG "port_i2c"
 
 /* ==================== [Macros] ============================================ */
 

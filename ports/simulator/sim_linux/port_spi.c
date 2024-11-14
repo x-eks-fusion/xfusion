@@ -26,6 +26,8 @@
 
 /* ==================== [Defines] =========================================== */
 
+#define TAG "port_spi"
+
 #define XF_HAL_SPI_DEFAULT_HOSTS                1
 #define XF_HAL_SPI_DEFAULT_BIT_ORDER            XF_HAL_SPI_BIT_ORDER_MSB_FIRST
 #define XF_HAL_SPI_DEFAULT_MODE                 XF_HAL_SPI_HOSTS_MASTER
@@ -61,8 +63,6 @@ static int port_spi_write(xf_hal_dev_t *dev, const void *buf, size_t count);
 static xf_err_t port_spi_close(xf_hal_dev_t *dev);
 
 /* ==================== [Static Variables] ================================== */
-
-#define TAG "port_spi"
 
 /* ==================== [Macros] ============================================ */
 
