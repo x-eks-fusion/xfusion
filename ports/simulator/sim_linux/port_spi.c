@@ -49,7 +49,6 @@ typedef struct _port_spi_t {
     uint32_t id;
     cJSON *json;
     char *json_str;
-    xf_hal_spi_config_t *spi_config;
 } port_spi_t;
 
 /* ==================== [Static Prototypes] ================================= */
@@ -126,7 +125,6 @@ static xf_err_t port_spi_ioctl(xf_hal_dev_t *dev, uint32_t cmd, void *config)
         spi_config->prev_cb.user_data   = XF_HAL_SPI_DEFAULT_PREV_CB_USER_DATA;
         spi_config->post_cb.callback    = XF_HAL_SPI_DEFAULT_POST_CB_CALLBACK;
         spi_config->post_cb.user_data   = XF_HAL_SPI_DEFAULT_POST_CB_USER_DATA;
-        spi->spi_config                 = spi_config;
 
         return XF_OK;
     }
@@ -141,17 +139,17 @@ static xf_err_t port_spi_ioctl(xf_hal_dev_t *dev, uint32_t cmd, void *config)
     }
 
     CJSON_SET_VAL_WITH_STRUCT(cJSON_SetBoolValue,   spi->json, spi_config, enable);
-    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue,   spi->json, spi_config, bit_order);
-    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue,   spi->json, spi_config, mode);
-    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue,   spi->json, spi_config, data_width);
-    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue,   spi->json, spi_config, timeout_ms);
-    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue,   spi->json, spi_config, speed);
-    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue,   spi->json, spi_config, gpio.sclk_num);
-    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue,   spi->json, spi_config, gpio.cs_num);
-    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue,   spi->json, spi_config, gpio.mosi_num);
-    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue,   spi->json, spi_config, gpio.miso_num);
-    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue,   spi->json, spi_config, gpio.quadhd_num);
-    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue,   spi->json, spi_config, gpio.quadwp_num);
+    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, spi->json, spi_config, bit_order);
+    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, spi->json, spi_config, mode);
+    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, spi->json, spi_config, data_width);
+    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, spi->json, spi_config, timeout_ms);
+    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, spi->json, spi_config, speed);
+    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, spi->json, spi_config, gpio.sclk_num);
+    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, spi->json, spi_config, gpio.cs_num);
+    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, spi->json, spi_config, gpio.mosi_num);
+    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, spi->json, spi_config, gpio.miso_num);
+    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, spi->json, spi_config, gpio.quadhd_num);
+    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, spi->json, spi_config, gpio.quadwp_num);
 
     spi->json_str = cJSON_PrintUnformatted(spi->json);
     unsigned int size = strlen(spi->json_str);
@@ -164,7 +162,7 @@ static int port_spi_read(xf_hal_dev_t *dev, void *buf, size_t count)
     port_spi_t *spi = (port_spi_t *)dev->platform_data;
     
     char req_read[64] = {0};
-    snprintf(req_read, sizeof(req_read),"{\"id\":%u,\"len\":%u}", spi->id, count);
+    snprintf(req_read, sizeof(req_read),"{\"id\":%d,\"len\":%ld}", spi->id, count);
     websocket_send(XF_HAL_GET_ID, req_read, strlen(req_read));
     count = websocket_recv(buf);
     return count;

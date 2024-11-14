@@ -166,7 +166,7 @@ static int port_i2c_read(xf_hal_dev_t *dev, void *buf, size_t count)
     }
 
     char req_read[64] = {0};
-    snprintf(req_read, sizeof(req_read),"{\"id\":%u,\"len\":%u}", i2c->id, count);
+    snprintf(req_read, sizeof(req_read),"{\"id\":%d,\"len\":%ld}", i2c->id, count);
     websocket_send(XF_HAL_GET_ID, req_read, strlen(req_read));
     count = websocket_recv(buf);
     return count;
