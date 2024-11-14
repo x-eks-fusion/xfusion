@@ -30,11 +30,9 @@
 int main(void)
 {
     websocket_init();
-    websocket_wait_start();
     xfusion_init();
     while (1) {
         xfusion_run();
-        websocket_service();
     }
 }
 

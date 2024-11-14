@@ -92,7 +92,7 @@ static int port_pwm_ioctl(xf_hal_dev_t *dev, uint32_t cmd, void *config)
 
     if (cmd & XF_HAL_PWM_CMD_ENABLE) {
         if (pwm->json_str != NULL) {
-            free(pwm->json_str);
+            cJSON_free(pwm->json_str);
             pwm->json_str = NULL;
         }
 
@@ -128,7 +128,7 @@ static int port_pwm_close(xf_hal_dev_t *dev)
 {
     port_pwm_t *pwm = (port_pwm_t *)dev->platform_data;
     if (pwm->json_str != NULL) {
-        free(pwm->json_str);
+        cJSON_free(pwm->json_str);
         pwm->json_str = NULL;
     }
     cJSON_Delete(pwm->json);

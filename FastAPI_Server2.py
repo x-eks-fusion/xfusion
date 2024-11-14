@@ -18,13 +18,13 @@ def pack_tlv(type_value, data):
     if isinstance(data, str):
         data_bytes = data.encode()  # 如果输入是字符串，则编码成字节
     elif isinstance(data, int):
-        data_bytes = data.to_bytes(
-            (data.bit_length() + 7) // 8, byteorder='big', signed=False)
+        data_bytes = data.to_bytes((data.bit_length() + 7) // 8 or 1,
+                                   byteorder='little', signed=False)
 
     length = len(data_bytes)
 
     # 构建 TLV 格式的二进制流
-    tlv = struct.pack('>I Q', type_value, length) + data_bytes
+    tlv = struct.pack('<I Q', type_value, length) + data_bytes
 
     return tlv
 
@@ -35,11 +35,12 @@ def get_io_level(id):
         return
     res = 0
     if device[id].get("data"):
-        res = int.from_bytes(device[id]["data"], byteorder='big')
+        res = int.from_bytes(device[id]["data"], byteorder='little')
+        print(res)
     elif device[id].get("config") and device[id]["config"].get("pull") != None:
         if device[id]["config"]["pull"] == 1:
             res = 1
-        elif device[id]["config"]["pull"] == 0:
+        elif device[id]["config"]["pull"] == 2:
             res = 0
     return res
 
@@ -69,7 +70,8 @@ async def websocket_endpoint(websocket: WebSocket):
                 json_str = json.dumps(json_object, indent=4)
                 content = Syntax(json_str, "json", theme="monokai",
                                  line_numbers=False)
-                await websocket.send_bytes(pack_tlv(type, get_io_level(json_object["id"])))
+                tlv_data = pack_tlv(type, get_io_level(json_object["id"]))
+                await websocket.send_bytes(tlv_data)
             else:
                 device[f"{type}"]["data"] = context
                 content = Text(f"data:{context}")
