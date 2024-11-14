@@ -12,6 +12,9 @@
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal_port.h"
+
+#if XF_HAL_PWM_IS_ENABLE
+
 #include "xf_init.h"
 #include "xf_utils.h"
 #include "cJSON.h"
@@ -150,3 +153,5 @@ static int xf_hal_pwm_reg(void)
 }
 
 XF_INIT_EXPORT_PREV(xf_hal_pwm_reg);
+
+#endif  // XF_HAL_PWM_IS_ENABLE
