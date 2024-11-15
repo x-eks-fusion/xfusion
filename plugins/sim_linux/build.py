@@ -25,8 +25,9 @@ class sim_linux():
         project_xmake_file: Path = XF_BUILD_DESC_FILE_PATH / "xmake.lua"
         api.apply_template("xmake_project.j2", project_xmake_file)
         api.cd_to_target()
-
-        api.exec_cmd(["xmake", "b"])
+        
+        api.exec_cmd(["xmake", "f -m debug"])
+        api.exec_cmd(["xmake", "-b"])
 
         # 尝试将构建输出的文件复制到工程目录下的 build/sdk 目录（如无则创建）
         list_path_sdk_exec_file = glob.glob(

@@ -1,5 +1,7 @@
-includes(path.join(os.getenv("XF_TARGET_PATH"),
-    ".xfusion/xmake.lua"))
+add_rules("mode.debug", "mode.release")
+
+includes(path.join("../../../",
+    "boards/simulator/sim_linux/.xfusion/xmake.lua"))
 
 target("port_xf")
     set_kind("static")

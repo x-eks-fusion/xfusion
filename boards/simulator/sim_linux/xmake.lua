@@ -1,4 +1,7 @@
-includes(path.join(os.getenv("XF_ROOT"),
+
+add_rules("mode.debug", "mode.release")
+
+includes(path.join("../../../",
     "/ports/simulator/sim_linux/xmake.lua"))
 
 target(xf_project_name)
