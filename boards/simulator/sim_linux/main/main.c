@@ -13,7 +13,7 @@
 
 #include <stdio.h>
 #include "xfusion.h"
-#include "websocket.h"
+#include "tcp.h"
 
 /* ==================== [Defines] =========================================== */
 
@@ -29,9 +29,10 @@
 
 int main(void)
 {
-    websocket_init();
+    tcp_init();
     xfusion_init();
     while (1) {
+        tcp_run();
         xfusion_run();
     }
 }

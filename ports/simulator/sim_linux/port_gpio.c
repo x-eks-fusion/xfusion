@@ -16,7 +16,7 @@
 #include "xf_utils.h"
 #include "cJSON.h"
 #include "cJSON_Utils.h"
-#include "websocket.h"
+#include "tcp.h"
 #include "port_common.h"
 
 /* ==================== [Defines] =========================================== */
@@ -108,7 +108,7 @@ static int port_gpio_ioctl(xf_hal_dev_t *dev, uint32_t cmd, void *config)
     gpio->json_str = cJSON_PrintUnformatted(gpio->json);
     unsigned int size = strlen(gpio->json_str);
 
-    websocket_send(XF_HAL_CONFIG_ID, gpio->json_str, size);
+    tcp_send(XF_HAL_CONFIG_ID, gpio->json_str, size);
 
     return XF_OK;
 }
@@ -117,15 +117,14 @@ static int port_gpio_read(xf_hal_dev_t *dev, void *buf, size_t count)
 {
     unsigned char msg[128];
     port_gpio_t *gpio = (port_gpio_t *)dev->platform_data;
-    size_t size = websocket_get(gpio->id, msg, count, 10);
-    *(char*)buf = msg[12];
+    size_t size = tcp_get(gpio->id, buf, count);
     return count;
 }
 
 static int port_gpio_write(xf_hal_dev_t *dev, const void *buf, size_t count)
 {
     port_gpio_t *gpio = (port_gpio_t *)dev->platform_data;
-    websocket_send(gpio->id, (unsigned char *)buf, count);
+    tcp_send(gpio->id, (unsigned char *)buf, count);
     return count;
 }
 
