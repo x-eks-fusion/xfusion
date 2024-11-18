@@ -39,6 +39,9 @@ extern "C" {
 
 /* ==================== [Macros] ============================================ */
 
+#define ID_WITH_TYPE_AND_INDEX(type, index)  \
+    (type) << 24 | (index);
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
