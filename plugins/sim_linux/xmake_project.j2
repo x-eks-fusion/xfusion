@@ -1,7 +1,11 @@
+add_rules("mode.debug", "mode.release")
+add_rules("plugin.compile_commands.autoupdate", {outputdir = ".vscode"})
+
 xf_project_name = "{{project_name}}"
 
 target("xf_build_desc")
     set_kind("static")
+    set_optimize("none")
 
     {%- set all_inc_dirs = [] %}
     {%- set _ = all_inc_dirs.append('"' ~ config_path ~ '"') %}

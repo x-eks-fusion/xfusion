@@ -1,5 +1,7 @@
-includes(path.join(os.getenv("XF_TARGET_PATH"),
-    ".xfusion/xmake.lua"))
+add_rules("mode.debug", "mode.release")
+add_rules("plugin.compile_commands.autoupdate", {outputdir = ".vscode"})
+
+includes(path.join("../../../boards/simulator/sim_linux/.xfusion/xmake.lua"))
 
 target("port_xf")
     set_kind("static")
@@ -8,4 +10,8 @@ target("port_xf")
     add_includedirs("json")
     add_files("*.c")
     add_files("json/*.c")
+    add_files("osal/xf_osal_thread.c")
+    add_files("osal/xf_osal_kernel.c")
     add_ldflags("-lwebsockets")
+    add_ldflags("-lpthread")
+    set_optimize("none")
