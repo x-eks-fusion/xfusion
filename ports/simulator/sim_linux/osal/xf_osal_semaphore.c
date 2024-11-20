@@ -26,7 +26,6 @@
 
 typedef sem_t osal_semaphore_internal_t;
 
-
 /* ==================== [Static Prototypes] ================================= */
 
 /* ==================== [Static Variables] ================================== */
