@@ -1,12 +1,12 @@
 /**
  * @file xf_osal_internal.h
  * @author dotc (dotchan@qq.com)
- * @brief 
+ * @brief
  * @version 0.1
  * @date 2024-11-19
- * 
+ *
  * @copyright Copyright (c) 2024
- * 
+ *
  */
 
 #ifndef __XF_OSAL_INTERNAL_H__
@@ -21,6 +21,14 @@ extern "C" {
 #endif
 
 /* ==================== [Defines] =========================================== */
+
+#define PORT_OSAL_ASSERT_ENABLE 1
+
+#if PORT_OSAL_ASSERT_ENABLE
+#define PORT_OSAL_ASSERT(condition, retval, tag, format, ...)  XF_ASSERT(condition, retval, tag, format, ##__VA_ARGS__)
+#else
+#define PORT_OSAL_ASSERT(condition, retval, tag, format, ...)
+#endif
 
 /* ==================== [Typedefs] ========================================== */
 
