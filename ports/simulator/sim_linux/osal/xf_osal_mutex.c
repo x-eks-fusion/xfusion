@@ -58,16 +58,16 @@ xf_osal_mutex_t xf_osal_mutex_create(const xf_osal_mutex_attr_t *attr)
     }
     if (attr->attr_bits & XF_OSAL_MUTEX_PRIO_INHERIT) {
         ret = pthread_mutexattr_setprotocol(&mutex_attr, PTHREAD_PRIO_INHERIT);
-        PORT_OSAL_ASSERT(ret == 0, NULL, TAG, "ret == 0");
+        XF_CHECK(ret != 0, NULL, TAG, "pthread_mutexattr_setprotocol err:%d", errno);
     }
     if (attr->attr_bits & XF_OSAL_MUTEX_ROBUST) {
         ret = pthread_mutexattr_setrobust(&mutex_attr, PTHREAD_MUTEX_ROBUST);
-        PORT_OSAL_ASSERT(ret == 0, NULL, TAG, "ret == 0");
+        XF_CHECK(ret != 0, NULL, TAG, "pthread_mutexattr_setrobust err:%d", errno);
     }
 
     // 初始化互斥锁
     ret = pthread_mutex_init(&osal_mutex->mutex, &mutex_attr);
-    PORT_OSAL_ASSERT(ret == 0, NULL, TAG, "ret == 0");
+    XF_CHECK(ret != 0, NULL, TAG, "pthread_mutex_init err:%d", errno);
 
     return osal_mutex;
 }
@@ -115,7 +115,7 @@ xf_err_t xf_osal_mutex_delete(xf_osal_mutex_t mutex)
     PORT_OSAL_ASSERT(mutex != NULL, XF_ERR_INVALID_ARG, TAG, "mutex != NULL");
     osal_mutex_internal_t *osal_mutex = (osal_mutex_internal_t *)mutex;
     int ret = pthread_mutex_destroy(&osal_mutex->mutex);
-    PORT_OSAL_ASSERT(ret == 0, XF_ERR_INVALID_ARG, TAG, "ret == 0");
+    XF_CHECK(ret != 0, XF_ERR_INVALID_ARG, TAG, "pthread_mutex_destroy err:%d", errno);
 
     free(mutex);
     return 0;

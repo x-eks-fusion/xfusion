@@ -17,6 +17,7 @@
 
 #include <pthread.h>
 #include <unistd.h>
+#include <errno.h>
 
 /* ==================== [Defines] =========================================== */
 
@@ -78,9 +79,10 @@ xf_osal_thread_t xf_osal_thread_create(xf_osal_thread_func_t func, void *argumen
     //     pthread_attr_setschedparam(&thread_attr, &sched_param);
     // }
 
-    int result = pthread_create(&osal_thread->pid, &thread_attr, (void *(*)(void *))func, argument);
+    int ret = pthread_create(&osal_thread->pid, &thread_attr, (void *(*)(void *))func, argument);
 
-    if (result != 0) {
+    if (ret != 0) {
+        XF_LOGE(TAG, "pthread_create err:%d", errno);
         free(osal_thread);
         return NULL;
     }
@@ -151,12 +153,11 @@ xf_err_t xf_osal_thread_delete(xf_osal_thread_t thread)
     pthread_mutex_lock(&s_mutex_list);
     xf_list_del(&osal_thread->link);
     pthread_mutex_unlock(&s_mutex_list);
-    int result = pthread_cancel(osal_thread->pid);
-    if (result == 0) {
-        free(osal_thread);
-        return XF_OK;
-    }
-    return XF_FAIL;
+    int ret = pthread_cancel(osal_thread->pid);
+    XF_CHECK(ret != 0, NULL, TAG, "pthread_cancel err:%d", errno);
+    
+    free(osal_thread);
+    return XF_OK;
 }
 
 xf_err_t xf_osal_delay_ms(uint32_t ms)

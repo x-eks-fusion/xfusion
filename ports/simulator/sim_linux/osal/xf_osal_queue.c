@@ -1,11 +1,11 @@
 /**
  * @file xf_osal_queue.c
- * @author cangyu (sky.kirto@qq.com)
+ * @author dotc (dotchan@qq.com)
  * @brief
  * @version 0.1
- * @date 2024-09-11
+ * @date 2024-11-20
  *
- * @copyright Copyright (c) 2024, CorAL. All rights reserved.
+ * @copyright Copyright (c) 2024
  *
  */
 

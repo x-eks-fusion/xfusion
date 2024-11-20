@@ -17,6 +17,7 @@
 
 #include <semaphore.h>
 #include <time.h>
+#include <errno.h>
 
 /* ==================== [Defines] =========================================== */
 
@@ -41,7 +42,8 @@ xf_osal_semaphore_t xf_osal_semaphore_create(uint32_t max_count, uint32_t initia
     if (osal_sem == NULL) {
         return NULL;
     }
-    sem_init(osal_sem, 0, initial_count);
+    int ret = sem_init(osal_sem, 0, initial_count);
+    XF_CHECK(ret != 0, NULL, TAG, "sem_init err:%d", errno);
     return (xf_osal_semaphore_t)osal_sem;
 }
 
@@ -52,21 +54,24 @@ xf_err_t xf_osal_semaphore_acquire(xf_osal_semaphore_t semaphore, uint32_t timeo
     int ret;
     if (timeout == 0) {
         ret = sem_wait(osal_sem);
+        XF_CHECK(ret != 0, XF_ERR_INVALID_STATE, TAG, "sem_wait err:%d", errno);
     } else {
         struct timespec ts;
         clock_gettime(CLOCK_REALTIME, &ts);
         ts.tv_sec += timeout / 1000;
         ts.tv_nsec += (timeout % 1000) * 1000000;
         ret = sem_timedwait(osal_sem, &ts);
+        XF_CHECK(ret != 0, XF_ERR_INVALID_STATE, TAG, "sem_timedwait err:%d", errno);
     }
-    return ret;
+    return XF_OK;
 }
 xf_err_t xf_osal_semaphore_release(xf_osal_semaphore_t semaphore)
 {
     PORT_OSAL_ASSERT(semaphore != NULL, XF_ERR_INVALID_ARG, TAG, "semaphore != NULL");
     osal_semaphore_internal_t *osal_sem = (osal_semaphore_internal_t *)semaphore;
     int ret = sem_post(osal_sem);
-    return ret;
+    XF_CHECK(ret != 0, XF_ERR_INVALID_STATE, TAG, "sem_getvalue err:%d", errno);
+    return XF_OK;
 }
 
 uint32_t xf_osal_semaphore_get_count(xf_osal_semaphore_t semaphore)
@@ -75,7 +80,7 @@ uint32_t xf_osal_semaphore_get_count(xf_osal_semaphore_t semaphore)
     osal_semaphore_internal_t *osal_sem = (osal_semaphore_internal_t *)semaphore;
     uint32_t cnt = 0;
     int ret = sem_getvalue(osal_sem, &cnt);
-    XF_CHECK(ret != 0, 0, TAG, "sem_getvalue != 0");
+    XF_CHECK(ret != 0, 0, TAG, "sem_getvalue err:%d", errno);
     return cnt;
 }
 
@@ -84,6 +89,7 @@ xf_err_t xf_osal_semaphore_delete(xf_osal_semaphore_t semaphore)
     PORT_OSAL_ASSERT(semaphore != NULL, XF_ERR_INVALID_ARG, TAG, "semaphore != NULL");
     osal_semaphore_internal_t *osal_sem = (osal_semaphore_internal_t *)semaphore;
     int ret = sem_destroy(osal_sem);
+    XF_CHECK(ret != 0, NULL, TAG, "sem_destroy err:%d", errno);
     free(osal_sem);
     return ret;
 }
