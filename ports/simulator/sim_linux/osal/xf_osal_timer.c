@@ -78,7 +78,6 @@ const char *xf_osal_timer_get_name(xf_osal_timer_t timer)
 {
     PORT_OSAL_ASSERT(timer != NULL, NULL, TAG, "timer != NULL");
     osal_timer_internal_t *osal_timer = (osal_timer_internal_t *)timer;
-    // 由于POSIX定时器没有直接支持名称，这里返回NULL或自定义名称
     return osal_timer->name;
 }
 
