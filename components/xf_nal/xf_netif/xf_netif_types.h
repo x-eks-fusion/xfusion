@@ -69,7 +69,7 @@ typedef enum _xf_netif_dns_type_t {
  * @brief DNS 服务器信息。
  */
 typedef struct _xf_netif_dns_info_t {
-    xf_ip_addr_t ip; /*!< DNS 服务器的 IPV4 地址 */
+    xf_ip_addr_t ip; /*!< DNS 服务器地址 */
 } xf_netif_dns_info_t;
 
 /**
