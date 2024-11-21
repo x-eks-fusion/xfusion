@@ -224,9 +224,9 @@ static void iperf_report_task(void *arg)
         }
         if (s_ctx.cfg.report_enabled) {
             xf_log_printf("%4d-%4d sec       %d.%02d Mbits/sec\n",
-                      (int)cur, (int)(cur + interval),
-                      (int)iperf_get_float_int(actual_bandwidth),
-                      (int)iperf_get_float_dec(actual_bandwidth));
+                          (int)cur, (int)(cur + interval),
+                          (int)iperf_get_float_int(actual_bandwidth),
+                          (int)iperf_get_float_dec(actual_bandwidth));
         }
 
         cur += interval;
@@ -246,9 +246,9 @@ static void iperf_report_task(void *arg)
     }
     if (s_ctx.cfg.report_enabled) {
         xf_log_printf("%4d-%4d sec       %d.%02d Mbits/sec\n",
-                  0, (int)time,
-                  (int)iperf_get_float_int(average),
-                  (int)iperf_get_float_dec(average));
+                      0, (int)time,
+                      (int)iperf_get_float_int(average),
+                      (int)iperf_get_float_dec(average));
     }
 
     s_ctx.report_is_running = false;
@@ -416,7 +416,7 @@ static xf_err_t iperf_run_tcp_server(void)
     } else if (s_ctx.cfg.type == IPERF_IP_TYPE_IPV4) {
         listen_addr4.sin_family = AF_INET;
         listen_addr4.sin_port = htons(s_ctx.cfg.sport);
-        listen_addr4.sin_addr.s_addr = s_ctx.cfg.source_ip4;
+        listen_addr4.sin_addr.s_addr = s_ctx.cfg.sip.u_addr.ip4.addr;
 
         listen_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
         XF_ASSERT_RET_GOTO((listen_socket >= 0), XF_FAIL, l_exit, TAG, "Unable to create socket: errno %d", errno);
@@ -474,7 +474,7 @@ static xf_err_t iperf_run_tcp_client(void)
         client_socket = socket(AF_INET6, SOCK_STREAM, IPPROTO_IPV6);
         XF_ASSERT_RET_GOTO((client_socket >= 0), XF_FAIL, l_exit, TAG, "Unable to create socket: errno %d", errno);
 
-        inet6_aton(s_ctx.cfg.destination_ip6, &dest_addr6.sin6_addr);
+        xf_memcpy(&dest_addr6.sin6_addr, s_ctx.cfg.dip.u_addr.ip6.addr, sizeof(struct in6_addr));
         dest_addr6.sin6_family = AF_INET6;
         dest_addr6.sin6_port = htons(s_ctx.cfg.dport);
 
@@ -489,7 +489,7 @@ static xf_err_t iperf_run_tcp_client(void)
 
         dest_addr4.sin_family = AF_INET;
         dest_addr4.sin_port = htons(s_ctx.cfg.dport);
-        dest_addr4.sin_addr.s_addr = s_ctx.cfg.destination_ip4;
+        dest_addr4.sin_addr.s_addr = s_ctx.cfg.dip.u_addr.ip4.addr;
 
         err = connect(client_socket, (struct sockaddr *)&dest_addr4, sizeof(struct sockaddr_in));
         XF_ASSERT_RET_GOTO((err == 0), XF_FAIL, l_exit, TAG, "Socket unable to connect: errno %d", errno);
@@ -543,7 +543,7 @@ static xf_err_t iperf_run_udp_server(void)
     } else if (s_ctx.cfg.type == IPERF_IP_TYPE_IPV4) {
         listen_addr4.sin_family = AF_INET;
         listen_addr4.sin_port = htons(s_ctx.cfg.sport);
-        listen_addr4.sin_addr.s_addr = s_ctx.cfg.source_ip4;
+        listen_addr4.sin_addr.s_addr = s_ctx.cfg.sip.u_addr.ip4.addr;
 
         listen_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
         XF_ASSERT_RET_GOTO((listen_socket >= 0), XF_FAIL, l_exit, TAG, "Unable to create socket: errno %d", errno);
@@ -587,13 +587,14 @@ static xf_err_t iperf_run_udp_client(void)
                        XF_FAIL, l_exit, TAG, "Ivalid AF types");
 
     if (s_ctx.cfg.type == IPERF_IP_TYPE_IPV6) {
-        inet6_aton(s_ctx.cfg.destination_ip6, &dest_addr6.sin6_addr);
+        xf_memcpy(&dest_addr6.sin6_addr, s_ctx.cfg.dip.u_addr.ip6.addr, sizeof(struct in6_addr));
         dest_addr6.sin6_family = AF_INET6;
         dest_addr6.sin6_port = htons(s_ctx.cfg.dport);
 
         client_socket = socket(AF_INET6, SOCK_DGRAM, IPPROTO_IPV6);
         XF_ASSERT_RET_GOTO((client_socket >= 0), XF_FAIL, l_exit, TAG, "Unable to create socket: errno %d", errno);
-        XF_LOGI(TAG, "Socket created, sending to %s:%d", s_ctx.cfg.destination_ip6, s_ctx.cfg.dport);
+        XF_LOGI(TAG, "Socket created, sending to " XF_IPV6STR ":%d",
+                XF_IPV62STR(s_ctx.cfg.dip.u_addr.ip6), s_ctx.cfg.dport);
 
         setsockopt(client_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
 
@@ -601,12 +602,12 @@ static xf_err_t iperf_run_udp_client(void)
     } else if (s_ctx.cfg.type == IPERF_IP_TYPE_IPV4) {
         dest_addr4.sin_family = AF_INET;
         dest_addr4.sin_port = htons(s_ctx.cfg.dport);
-        dest_addr4.sin_addr.s_addr = s_ctx.cfg.destination_ip4;
+        dest_addr4.sin_addr.s_addr = s_ctx.cfg.dip.u_addr.ip4.addr;
 
         client_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
         XF_ASSERT_RET_GOTO((client_socket >= 0), XF_FAIL, l_exit, TAG, "Unable to create socket: errno %d", errno);
         XF_LOGI(TAG, "Socket created, sending to " XF_IPSTR ":%d",
-                XF_IP2STR((xf_ip4_addr_t *)&s_ctx.cfg.destination_ip4), s_ctx.cfg.dport);
+                XF_IP2STR((xf_ip4_addr_t *)&s_ctx.cfg.dip.u_addr.ip4.addr), s_ctx.cfg.dport);
 
         setsockopt(client_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
 
