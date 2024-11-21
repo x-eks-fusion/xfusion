@@ -63,6 +63,27 @@ extern "C" {
     xf_ip4_addr3_16(ipaddr), \
     xf_ip4_addr4_16(ipaddr)
 
+#define XF_IP6_ADDR_BLOCK1(ip6addr) ((uint16_t)((xf_netif_htonl((ip6addr)->addr[0]) >> 16) & 0xffff))
+#define XF_IP6_ADDR_BLOCK2(ip6addr) ((uint16_t)((xf_netif_htonl((ip6addr)->addr[0])) & 0xffff))
+#define XF_IP6_ADDR_BLOCK3(ip6addr) ((uint16_t)((xf_netif_htonl((ip6addr)->addr[1]) >> 16) & 0xffff))
+#define XF_IP6_ADDR_BLOCK4(ip6addr) ((uint16_t)((xf_netif_htonl((ip6addr)->addr[1])) & 0xffff))
+#define XF_IP6_ADDR_BLOCK5(ip6addr) ((uint16_t)((xf_netif_htonl((ip6addr)->addr[2]) >> 16) & 0xffff))
+#define XF_IP6_ADDR_BLOCK6(ip6addr) ((uint16_t)((xf_netif_htonl((ip6addr)->addr[2])) & 0xffff))
+#define XF_IP6_ADDR_BLOCK7(ip6addr) ((uint16_t)((xf_netif_htonl((ip6addr)->addr[3]) >> 16) & 0xffff))
+#define XF_IP6_ADDR_BLOCK8(ip6addr) ((uint16_t)((xf_netif_htonl((ip6addr)->addr[3])) & 0xffff))
+
+#define XF_IPV6STR "%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x"
+
+#define XF_IPV62STR(ipaddr) \
+    XF_IP6_ADDR_BLOCK1(&(ipaddr)), \
+    XF_IP6_ADDR_BLOCK2(&(ipaddr)), \
+    XF_IP6_ADDR_BLOCK3(&(ipaddr)), \
+    XF_IP6_ADDR_BLOCK4(&(ipaddr)), \
+    XF_IP6_ADDR_BLOCK5(&(ipaddr)), \
+    XF_IP6_ADDR_BLOCK6(&(ipaddr)), \
+    XF_IP6_ADDR_BLOCK7(&(ipaddr)), \
+    XF_IP6_ADDR_BLOCK8(&(ipaddr))
+
 #define XF_IPADDR_TYPE_V4                0U
 #define XF_IPADDR_TYPE_V6                6U
 #define XF_IPADDR_TYPE_ANY               46U

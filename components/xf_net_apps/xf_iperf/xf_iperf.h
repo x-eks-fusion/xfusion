@@ -25,6 +25,7 @@
 
 #include "xf_utils.h"
 #include "xf_osal.h"
+#include "xf_netif.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -122,14 +123,8 @@ typedef struct _xf_iperf_cfg_t {
     uint32_t flag;                  /*!< 设定客户端或服务端/协议的标志，
                                      *   见 @ref IPERF_FLAG_CLIENT, @ref IPERF_FLAG_TCP.
                                      */
-    union {
-        uint32_t destination_ip4;   /*!< 目标 ipv4 地址。 */
-        char    *destination_ip6;   /*!< 目标 ipv6 地址。 */
-    };
-    union {
-        uint32_t source_ip4;        /*!< 源 ipv4 地址。 */
-        char    *source_ip6;        /*!< 源 ipv6 地址。 */
-    };
+    xf_ip_addr_t dip;               /*!< 目标地址。 */
+    xf_ip_addr_t sip;               /*!< 源地址。 TODO 不支持 IPv6 */
     uint8_t type;                   /*!< 源和目标的地址类型。 */
     uint16_t dport;                 /*!< 目标端口。 */
     uint16_t sport;                 /*!< 源端口。 */
@@ -154,8 +149,8 @@ typedef struct _xf_iperf_cfg_t {
  */
 #define XF_IPERF_DEFAULT_CONFIG() (xf_iperf_cfg_t) { \
         .flag = 0, \
-        .destination_ip4 = 0, \
-        .source_ip4 = 0, \
+        .dip = {}, \
+        .sip = {}, \
         .type = IPERF_IP_TYPE_IPV4, \
         .dport = IPERF_DEFAULT_PORT, \
         .sport = IPERF_DEFAULT_PORT, \
