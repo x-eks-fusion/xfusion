@@ -149,8 +149,8 @@ typedef struct _xf_iperf_cfg_t {
  */
 #define XF_IPERF_DEFAULT_CONFIG() (xf_iperf_cfg_t) { \
         .flag = 0, \
-        .dip = {0}, \
-        .sip = {0}, \
+        .dip = {}, \
+        .sip = {}, \
         .type = IPERF_IP_TYPE_IPV4, \
         .dport = IPERF_DEFAULT_PORT, \
         .sport = IPERF_DEFAULT_PORT, \
