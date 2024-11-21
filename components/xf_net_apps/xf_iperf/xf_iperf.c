@@ -648,7 +648,7 @@ static void iperf_task_traffic(void *arg)
 static uint32_t iperf_get_buffer_len(void)
 {
     if (iperf_is_udp_client()) {
-#ifdef CONFIG_LWIP_IPV6
+#ifdef CONFIG_XF_NET_APPS_ENABLE_IPV6
         if (s_ctx.cfg.len_send_buf) {
             return s_ctx.cfg.len_send_buf;
         } else if (s_ctx.cfg.type == IPERF_IP_TYPE_IPV6) {

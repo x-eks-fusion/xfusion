@@ -121,13 +121,13 @@ xf_err_t xf_ping_new_session(
 
     /* 创建 socket */
     if (IP_IS_V4(&p_cfg->target_addr)
-#if CONFIG_LWIP_IPV6
+#if CONFIG_XF_NET_APPS_ENABLE_IPV6
             || ip6_addr_isipv4mappedipv6(ip_2_ip6(&p_cfg->target_addr))
 #endif
        ) {
         ctx->sock = socket(AF_INET, SOCK_RAW, IP_PROTO_ICMP);
     }
-#if CONFIG_LWIP_IPV6
+#if CONFIG_XF_NET_APPS_ENABLE_IPV6
     else {
         ctx->sock = socket(AF_INET6, SOCK_RAW, IP6_NEXTH_ICMP6);
     }
@@ -161,7 +161,7 @@ xf_err_t xf_ping_new_session(
         inet_addr_from_ip4addr(&to4->sin_addr, ip_2_ip4(&p_cfg->target_addr));
         ctx->packet_hdr->type = ICMP_ECHO;
     }
-#if CONFIG_LWIP_IPV6
+#if CONFIG_XF_NET_APPS_ENABLE_IPV6
     if (IP_IS_V6(&p_cfg->target_addr)) {
         struct sockaddr_in6 *to6 = (struct sockaddr_in6 *)&ctx->target_addr;
         to6->sin6_family = AF_INET6;
@@ -309,7 +309,7 @@ static int xf_ping_receive(xf_ping_ctx_t *ctx)
             IP_SET_TYPE_VAL(ctx->recv_addr, IPADDR_TYPE_V4);
             data_head = (uint16_t)(sizeof(struct ip_hdr) + sizeof(struct icmp_echo_hdr));
         }
-#if CONFIG_LWIP_IPV6
+#if CONFIG_XF_NET_APPS_ENABLE_IPV6
         else {
             // IPv6
             struct sockaddr_in6 *from6 = (struct sockaddr_in6 *)&from;
@@ -330,7 +330,7 @@ static int xf_ping_receive(xf_ping_ctx_t *ctx)
                     return len;
                 }
             }
-#if CONFIG_LWIP_IPV6
+#if CONFIG_XF_NET_APPS_ENABLE_IPV6
             else if (IP_IS_V6_VAL(ctx->recv_addr)) {
                 struct ip6_hdr *iphdr = (struct ip6_hdr *)buf;
                 struct icmp6_echo_hdr *iecho6 = (struct icmp6_echo_hdr *)(buf + sizeof(struct ip6_hdr)); /*!< IPv6 头长度为 40 */
