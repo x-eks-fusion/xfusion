@@ -101,10 +101,13 @@ xf_err_t xf_ping_new_session(
         ctx->cb_func    = cb_func;
         ctx->user_args  = user_args;
     }
+    ctx->auto_delete_flag   = p_cfg->auto_delete_flag;
     ctx->recv_addr          = p_cfg->target_addr;
     ctx->target_addr_type   = p_cfg->target_addr.type;
     ctx->count              = p_cfg->count;
     ctx->interval_ms        = p_cfg->interval_ms;
+    ctx->tos                = p_cfg->tos;
+    ctx->ttl                = p_cfg->ttl;
     ctx->icmp_pkt_size      = sizeof(struct icmp_echo_hdr) + p_cfg->data_size;
     ctx->packet_hdr         = xf_malloc(ctx->icmp_pkt_size);
     XF_GOTO_ON_FALSE(ctx->packet_hdr, XF_ERR_NO_MEM, l_err,
@@ -152,8 +155,8 @@ xf_err_t xf_ping_new_session(
     timeout.tv_sec  = p_cfg->timeout_ms / 1000;
     timeout.tv_usec = (p_cfg->timeout_ms % 1000) * 1000;
     setsockopt(ctx->sock, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
-    setsockopt(ctx->sock, IPPROTO_IP, IP_TOS, &p_cfg->tos, sizeof(p_cfg->tos));
-    setsockopt(ctx->sock, IPPROTO_IP, IP_TTL, &p_cfg->ttl, sizeof(p_cfg->ttl));
+    setsockopt(ctx->sock, IPPROTO_IP, IP_TOS, &ctx->tos, sizeof(ctx->tos));
+    setsockopt(ctx->sock, IPPROTO_IP, IP_TTL, &ctx->ttl, sizeof(ctx->ttl));
 
     if (IP_IS_V4(&p_cfg->target_addr)) {
         struct sockaddr_in *to4 = (struct sockaddr_in *)&ctx->target_addr;
@@ -224,6 +227,87 @@ xf_err_t xf_ping_start(xf_ping_t hdl)
     xf_ping_ctx_t *ctx = (xf_ping_ctx_t *)hdl;
     XF_GOTO_ON_FALSE(ctx, XF_ERR_INVALID_ARG, l_err,
                      TAG, "hdl-%s", xf_err_to_name(XF_ERR_INVALID_ARG));
+
+    BITS_SET1(ctx->flags, PING_FLAGS_RUN);
+    xf_osal_thread_notify_set(ctx->task_hdl, THREAD_NOTIFY_BIT);
+
+    return XF_OK;
+l_err:
+    return ret;
+}
+
+xf_err_t xf_ping_restart(
+    xf_ping_t hdl, const xf_ping_cfg_t *p_cfg, xf_ping_cfg_update_flags_t *p_flags)
+{
+    xf_err_t ret = XF_OK;
+    xf_ping_ctx_t *ctx = (xf_ping_ctx_t *)hdl;
+    XF_GOTO_ON_FALSE(ctx, XF_ERR_INVALID_ARG, l_err,
+                     TAG, "hdl-%s", xf_err_to_name(XF_ERR_INVALID_ARG));
+
+    bool b_running = false;
+    b_running = xf_ping_is_running(hdl);
+    XF_GOTO_ON_FALSE(false == b_running, XF_ERR_BUSY, l_err,
+                     TAG, "hdl-%s", xf_err_to_name(XF_ERR_BUSY));
+
+    if ((NULL == p_cfg) || (NULL == p_flags)) {
+        goto l_skip_recfg;
+    }
+
+    if (p_flags->b_count) {
+        ctx->count              = p_cfg->count;
+    }
+    if (p_flags->b_interval_ms) {
+        ctx->interval_ms        = p_cfg->interval_ms;
+    }
+    if (p_flags->b_timeout_ms) {
+        struct timeval timeout;
+        timeout.tv_sec  = p_cfg->timeout_ms / 1000;
+        timeout.tv_usec = (p_cfg->timeout_ms % 1000) * 1000;
+        setsockopt(ctx->sock, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+    }
+    if (p_flags->b_tos) {
+        ctx->tos                = p_cfg->tos;
+        setsockopt(ctx->sock, IPPROTO_IP, IP_TOS, &ctx->tos, sizeof(ctx->tos));
+    }
+    if (p_flags->b_ttl) {
+        ctx->ttl                = p_cfg->ttl;
+        setsockopt(ctx->sock, IPPROTO_IP, IP_TTL, &ctx->ttl, sizeof(ctx->ttl));
+    }
+    if (p_flags->b_target_addr) {
+        ctx->recv_addr          = p_cfg->target_addr;
+        ctx->target_addr_type   = p_cfg->target_addr.type;
+        if (IP_IS_V4(&p_cfg->target_addr)) {
+            struct sockaddr_in *to4 = (struct sockaddr_in *)&ctx->target_addr;
+            to4->sin_family = AF_INET;
+            inet_addr_from_ip4addr(&to4->sin_addr, ip_2_ip4(&p_cfg->target_addr));
+            ctx->packet_hdr->type = ICMP_ECHO;
+        }
+#if CONFIG_XF_NET_APPS_ENABLE_IPV6
+        if (IP_IS_V6(&p_cfg->target_addr)) {
+            struct sockaddr_in6 *to6 = (struct sockaddr_in6 *)&ctx->target_addr;
+            to6->sin6_family = AF_INET6;
+            inet6_addr_from_ip6addr(&to6->sin6_addr, ip_2_ip6(&p_cfg->target_addr));
+            ctx->packet_hdr->type = ICMP6_TYPE_EREQ;
+        }
+#endif
+    }
+    if (p_flags->b_interface) {
+        struct ifreq iface;
+        if (netif_index_to_name(p_cfg->interface, iface.ifr_name) == NULL) {
+            XF_LOGE(TAG, "fail to find interface name with netif index %d",
+                    p_cfg->interface);
+            goto l_err;
+        }
+        if (setsockopt(ctx->sock, SOL_SOCKET, SO_BINDTODEVICE, &iface, sizeof(iface)) != 0) {
+            XF_LOGE(TAG, "fail to setsockopt SO_BINDTODEVICE");
+            goto l_err;
+        }
+    }
+    if (p_flags->b_auto_delete_flag) {
+        ctx->auto_delete_flag   = p_cfg->auto_delete_flag;
+    }
+
+l_skip_recfg:;
 
     BITS_SET1(ctx->flags, PING_FLAGS_RUN);
     xf_osal_thread_notify_set(ctx->task_hdl, THREAD_NOTIFY_BIT);
@@ -418,7 +502,12 @@ static void xf_ping_thread(void *args)
         if (ctx->cb_func) {
             ctx->cb_func(XF_PING_EVENT_END, (void *)ctx, ctx->user_args);
         }
-    }
+
+        if (ctx->auto_delete_flag) {
+            break;
+        }
+    } /* for */
+
     if (ctx->packet_hdr) {
         xf_free(ctx->packet_hdr);
     }
@@ -426,6 +515,15 @@ static void xf_ping_thread(void *args)
         closesocket(ctx->sock);
     }
     ctx->task_exit_flag = true;
-    /* ctx 在 xf_ping_delete_session() 内释放 */
+
+    if (ctx->cb_func) {
+        ctx->cb_func(XF_PING_EVENT_DELETE, (void *)ctx, ctx->user_args);
+    }
+
+    if (ctx->auto_delete_flag) {
+        xf_free(ctx);
+    }
+
+    /* 如果未设置自动释放，则 ctx 需手动调用 xf_ping_delete_session() 释放 */
     xf_osal_thread_delete(NULL);
 }
