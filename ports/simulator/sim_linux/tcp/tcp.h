@@ -1,20 +1,18 @@
 /**
- * @file websocket.h
+ * @file tcp.h
  * @author cangyu (sky.kirto@qq.com)
  * @brief
  * @version 0.1
- * @date 2024-11-11
+ * @date 2024-11-15
  *
  * @copyright Copyright (c) 2024, CorAL. All rights reserved.
  *
  */
 
-#ifndef __WEBSOCKET_H__
-#define __WEBSOCKET_H__
+#ifndef __TCP_H__
+#define __TCP_H__
 
 /* ==================== [Includes] ========================================== */
-
-#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -26,11 +24,10 @@ extern "C" {
 
 /* ==================== [Global Prototypes] ================================= */
 
-void websocket_init(void);
-void websocket_wait_start(void);
-int websocket_service(void);
-void websocket_send(unsigned int id, unsigned char *msg, size_t msg_len);
-size_t websocket_recv(void *in);
+void tcp_init(void);
+void tcp_run(void);
+void tcp_send(unsigned int id, unsigned char *msg, size_t msg_len);
+size_t tcp_get(unsigned int id, unsigned char *msg, size_t msg_len);
 
 /* ==================== [Macros] ============================================ */
 
@@ -38,4 +35,4 @@ size_t websocket_recv(void *in);
 } /* extern "C" */
 #endif
 
-#endif // __WEBSOCKET_H__
+#endif // __TCP_H__

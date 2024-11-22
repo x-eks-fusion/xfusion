@@ -19,7 +19,7 @@
 #include "xf_utils.h"
 #include "cJSON.h"
 #include "cJSON_Utils.h"
-#include "websocket.h"
+#include "tcp.h"
 #include "port_common.h"
 
 /* ==================== [Defines] =========================================== */
@@ -95,7 +95,7 @@ static int port_pwm_ioctl(xf_hal_dev_t *dev, uint32_t cmd, void *config)
 
     if (cmd & XF_HAL_PWM_CMD_ENABLE) {
         if (pwm->json_str != NULL) {
-            free(pwm->json_str);
+            cJSON_free(pwm->json_str);
             pwm->json_str = NULL;
         }
 
@@ -107,7 +107,7 @@ static int port_pwm_ioctl(xf_hal_dev_t *dev, uint32_t cmd, void *config)
         pwm->json_str = cJSON_PrintUnformatted(pwm->json);
         unsigned int size = strlen(pwm->json_str);
 
-        websocket_send(XF_HAL_CONFIG_ID, pwm->json_str, size);
+        tcp_send(XF_HAL_CONFIG_ID, pwm->json_str, size);
 
         return XF_OK;
     }
@@ -131,7 +131,7 @@ static int port_pwm_close(xf_hal_dev_t *dev)
 {
     port_pwm_t *pwm = (port_pwm_t *)dev->platform_data;
     if (pwm->json_str != NULL) {
-        free(pwm->json_str);
+        cJSON_free(pwm->json_str);
         pwm->json_str = NULL;
     }
     cJSON_Delete(pwm->json);

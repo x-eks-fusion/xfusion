@@ -31,6 +31,7 @@ extern "C" {
 
 #define XF_HAL_CONFIG_ID 0
 #define XF_HAL_GET_ID 1
+#define XF_HAL_ISR_ID 2
 
 /* ==================== [Typedefs] ========================================== */
 

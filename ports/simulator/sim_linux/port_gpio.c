@@ -19,7 +19,7 @@
 #include "xf_utils.h"
 #include "cJSON.h"
 #include "cJSON_Utils.h"
-#include "websocket.h"
+#include "tcp.h"
 #include "port_common.h"
 
 /* ==================== [Defines] =========================================== */
@@ -68,7 +68,7 @@ static int port_gpio_open(xf_hal_dev_t *dev)
     dev->platform_data = gpio;
 
     cJSON_AddNumberToObject(json, "id", gpio->id);
-    cJSON_AddBoolToObject(json, "direction", 0);
+    cJSON_AddNumberToObject(json, "direction", 0);
     cJSON_AddNumberToObject(json, "pull", 0);
     cJSON_AddNumberToObject(json, "speed", 0);
     cJSON_AddNumberToObject(json, "intr_enable", 0);
@@ -99,11 +99,11 @@ static int port_gpio_ioctl(xf_hal_dev_t *dev, uint32_t cmd, void *config)
     }
 
     if (gpio->json_str != NULL) {
-        free(gpio->json_str);
+        cJSON_free(gpio->json_str);
         gpio->json_str = NULL;
     }
 
-    cJSON_SetBoolValue(cJSONUtils_GetPointer(gpio->json, "/direction"), io_config->direction);
+    cJSON_SetNumberValue(cJSONUtils_GetPointer(gpio->json, "/direction"), io_config->direction);
     cJSON_SetNumberValue(cJSONUtils_GetPointer(gpio->json, "/pull"), io_config->pull);
     cJSON_SetNumberValue(cJSONUtils_GetPointer(gpio->json, "/speed"), io_config->speed);
     cJSON_SetNumberValue(cJSONUtils_GetPointer(gpio->json, "/intr_enable"), io_config->intr_enable);
@@ -111,27 +111,23 @@ static int port_gpio_ioctl(xf_hal_dev_t *dev, uint32_t cmd, void *config)
     gpio->json_str = cJSON_PrintUnformatted(gpio->json);
     unsigned int size = strlen(gpio->json_str);
 
-    websocket_send(XF_HAL_CONFIG_ID, gpio->json_str, size);
+    tcp_send(XF_HAL_CONFIG_ID, gpio->json_str, size);
 
     return XF_OK;
 }
 
 static int port_gpio_read(xf_hal_dev_t *dev, void *buf, size_t count)
 {
+    unsigned char msg[128];
     port_gpio_t *gpio = (port_gpio_t *)dev->platform_data;
-    char data[128] = {0};
-    sprintf(data, "{\"id\":%d}", gpio->id);
-    websocket_send(XF_HAL_GET_ID, data, strlen(data));
-    memset(data, 0, sizeof(data));
-    size_t num = websocket_recv(data);
-    *(char*)buf = data[12];
+    size_t size = tcp_get(gpio->id, buf, count);
     return count;
 }
 
 static int port_gpio_write(xf_hal_dev_t *dev, const void *buf, size_t count)
 {
     port_gpio_t *gpio = (port_gpio_t *)dev->platform_data;
-    websocket_send(gpio->id, (unsigned char *)buf, count);
+    tcp_send(gpio->id, (unsigned char *)buf, count);
     return count;
 }
 
@@ -139,7 +135,7 @@ static int port_gpio_close(xf_hal_dev_t *dev)
 {
     port_gpio_t *gpio = (port_gpio_t *)dev->platform_data;
     if (gpio->json_str != NULL) {
-        free(gpio->json_str);
+        cJSON_free(gpio->json_str);
         gpio->json_str = NULL;
     }
     cJSON_Delete(gpio->json);
