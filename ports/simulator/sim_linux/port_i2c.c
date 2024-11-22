@@ -20,7 +20,6 @@
 #include "cJSON.h"
 #include "cJSON_Utils.h"
 #include "port_utils.h"
-#include "websocket.h"
 #include "port_common.h"
 #include "xf_heap.h"
 
