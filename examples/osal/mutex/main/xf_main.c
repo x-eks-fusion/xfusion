@@ -85,6 +85,7 @@ void xf_main(void)
 
 static void task1(void *argument)
 {
+    XF_LOGI(TAG,"%s:%p", __func__, xf_osal_thread_get_current());
     while (1) {
         if (xf_osal_mutex_acquire(mutex, 100) == XF_OK) {
             XF_LOGI(TAG, "Task1: Accessing shared resource...");
@@ -95,13 +96,14 @@ static void task1(void *argument)
         } else {
             XF_LOGI(TAG, "Task1: Acquire mutex timeout");
             xf_osal_thread_t thread = xf_osal_mutex_get_owner(mutex);
-            XF_LOGI(TAG, "Task1: Mutex owner: %d", thread);
+            XF_LOGI(TAG, "Task1: Mutex owner: %p", thread);
         }
     }
 }
 
 static void task2(void *argument)
 {
+    XF_LOGI(TAG,"%s:%p", __func__, xf_osal_thread_get_current());
     while (1) {
         if (xf_osal_mutex_acquire(mutex, XF_OSAL_WAIT_FOREVER) == XF_OK) {
             XF_LOGI(TAG, "Task2: Accessing shared resource...");

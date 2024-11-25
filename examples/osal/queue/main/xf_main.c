@@ -50,28 +50,16 @@ void xf_main(void)
         .name = "queue",
     };
 
-    xf_osal_thread_t thread1 = xf_osal_thread_create(task1, NULL, &attr1);
-    if (thread1 == NULL) {
-        XF_LOGE(TAG, "xf thread1 create error");
-        return;
-    }
-
-    xf_osal_thread_t thread2 = xf_osal_thread_create(task2, NULL, &attr2);
-    if (thread2 == NULL) {
-        XF_LOGE(TAG, "xf thread2 create error");
-        return;
-    }
-
     queue = xf_osal_queue_create(5, sizeof(int32_t), &queue_attr);
     if (queue == NULL) {
         XF_LOGE(TAG, "xf queue create error");
         return;
     }
-
-    xf_err_t err = xf_osal_queue_reset(queue);
+    
+    xf_err_t err;
+    xf_osal_queue_reset(queue);
     if (err != XF_OK) {
-        XF_LOGE(TAG, "xf queue reset error");
-        return;
+        XF_LOGW(TAG, "xf queue reset error:%d", err);
     }
 
     xf_osal_queue_t queue1 = xf_osal_queue_create(5, sizeof(int32_t), &queue_attr);
@@ -83,6 +71,18 @@ void xf_main(void)
     err = xf_osal_queue_delete(queue1);
     if (err != XF_OK) {
         XF_LOGE(TAG, "xf queue delete error");
+        return;
+    }
+
+    xf_osal_thread_t thread1 = xf_osal_thread_create(task1, NULL, &attr1);
+    if (thread1 == NULL) {
+        XF_LOGE(TAG, "xf thread1 create error");
+        return;
+    }
+
+    xf_osal_thread_t thread2 = xf_osal_thread_create(task2, NULL, &attr2);
+    if (thread2 == NULL) {
+        XF_LOGE(TAG, "xf thread2 create error");
         return;
     }
 }
