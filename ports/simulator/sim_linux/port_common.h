@@ -28,6 +28,7 @@ extern "C" {
 #define XF_HAL_SPI_TYPE 6
 #define XF_HAL_ADC_TYPE 7
 #define XF_HAL_DAC_TYPE 8
+#define XF_HAL_LOG_TYPE 9
 
 #define XF_HAL_CONFIG_ID 0
 #define XF_HAL_GET_ID 1
