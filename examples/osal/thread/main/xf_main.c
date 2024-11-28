@@ -58,6 +58,7 @@ void xf_main(void)
         .priority = XF_OSAL_PRIORITY_BELOW_NORMAL,
         .stack_size = 1024 * 2,
     };
+    XF_OSAL_CHECK(xf_osal_kernel_lock());
     xf_osal_thread_t thread1 = xf_osal_thread_create(task1, NULL, &attr1);
     if (thread1 == NULL) {
         XF_LOGE(TAG, "xf thread1 create error");
@@ -73,6 +74,7 @@ void xf_main(void)
         XF_LOGE(TAG, "xf thread2 create error");
         return;
     }
+    XF_OSAL_CHECK(xf_osal_kernel_unlock());
 }
 
 /* ==================== [Static Functions] ================================== */
@@ -94,9 +96,29 @@ static void task1(void *argument)
     }
     xf_osal_priority_t priority = xf_osal_thread_get_priority(task);
     XF_LOGI(TAG, "thread priority: %d", priority);
-    XF_OSAL_CHECK(xf_osal_delay(1000));
-    XF_OSAL_CHECK(xf_osal_thread_resume(thread[0]));
-    XF_OSAL_CHECK(xf_osal_thread_yield());
+
+    XF_OSAL_CHECK(xf_osal_delay_ms(1000));
+
+    while (1) {
+        state = xf_osal_thread_get_state(thread[0]);
+        switch (state) {
+        case XF_OSAL_BLOCKED: {
+            XF_OSAL_CHECK(xf_osal_thread_resume(thread[0]));
+        } break;
+        case XF_OSAL_READY:
+        case XF_OSAL_RUNNING: {
+            XF_LOGI(TAG, "task1: task2 has resumed.");
+            goto l_end;
+        }
+        default: {
+            XF_LOGI(TAG, "task1: An error occurred while resuming task2.");
+            goto l_end;
+        } break;
+        }
+        XF_OSAL_CHECK(xf_osal_delay_ms(1000));
+    }
+
+l_end:;
     xf_osal_thread_delete(NULL); // 删除 task1
 }
 
@@ -110,10 +132,13 @@ static void task2(void *argument)
     while (1) {
         tick_count = xf_osal_kernel_get_tick_count();
         count = xf_osal_thread_get_count();
-        XF_LOGI(TAG, "task2 count: %ld", count);
-        count = xf_osal_thread_get_active_count(thread, 2);
         XF_LOGI(TAG, "task2 active count: %ld", count);
-        XF_OSAL_CHECK(xf_osal_delay_until(tick_count + 1000));
+        /* 
+            从 get_tick_count() 时刻开始，绝对延迟到 1000 ms 后，
+            意味着 XF_LOGI() 的耗时也属于延迟的一部分。
+         */
+        tick_count += xf_osal_kernel_ms_to_ticks(1000);
+        XF_OSAL_CHECK(xf_osal_delay_until(tick_count));
     }
 }
 
@@ -124,5 +149,6 @@ static void task3(void *argument)
     while (1) {
         XF_LOGI(TAG, "task3");
         xf_osal_delay_ms(1000);
+        xf_osal_thread_yield();
     }
 }
