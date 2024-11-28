@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example examples/task/ntask2/main/xf_main.c
+ * xf_task 无栈协程示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_task.h"

@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example examples/system/log/main/xf_main.c
+ * 日志示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_utils.h"

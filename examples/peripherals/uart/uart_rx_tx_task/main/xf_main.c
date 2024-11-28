@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/peripherals/uart/uart_rx_tx_task/main/xf_main.c
+ * xf_hal uart 读写示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"

@@ -1,3 +1,8 @@
+/**
+ * @example examples/wireless/ble/sample_gatt_client/main/xf_main.c
+ * xf_wal ble gatt 客户端 示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"

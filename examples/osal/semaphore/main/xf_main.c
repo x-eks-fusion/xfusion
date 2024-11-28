@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/osal/semaphore/main/xf_main.c
+ * xf_osal 信号量示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"

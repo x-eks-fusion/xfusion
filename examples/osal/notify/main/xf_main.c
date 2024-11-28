@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/osal/notify/main/xf_main.c
+ * xf_osal 线程通知示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"

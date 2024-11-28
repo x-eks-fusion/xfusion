@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example examples/wireless/wifi/get_started/softap/main/xf_main.c
+ * xf_wal wifi softap 示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_utils.h"

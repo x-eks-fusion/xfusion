@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/protocols/iperf/station/main/xf_main.c
+ * wifi iperf 示例(station)。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xfconfig.h"

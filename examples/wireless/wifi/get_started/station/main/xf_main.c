@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example examples/wireless/wifi/get_started/station/main/xf_main.c
+ * xf_wal wifi station 示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_utils.h"

@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example examples/wireless/wifi/scan/scan_and_connect/main/xf_main.c
+ * xf_wal wifi 扫描和连接 示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_utils.h"

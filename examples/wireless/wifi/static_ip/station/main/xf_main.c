@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example examples/wireless/wifi/static_ip/station/main/xf_main.c
+ * xf_wal wifi 静态 IP 示例(station)。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include <string.h>

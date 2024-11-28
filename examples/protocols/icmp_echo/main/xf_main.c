@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/protocols/icmp_echo/main/xf_main.c
+ * ping 示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include <string.h>

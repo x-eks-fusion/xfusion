@@ -1,3 +1,8 @@
+/**
+ * @example examples/wireless/sle/sample_ssap_client/main/xf_main.c
+ * xf_wal sle ssap 客户端 示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"

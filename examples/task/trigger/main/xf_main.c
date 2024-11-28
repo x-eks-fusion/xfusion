@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example examples/task/trigger/main/xf_main.c
+ * xf_task 外部触发任务示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_task.h"

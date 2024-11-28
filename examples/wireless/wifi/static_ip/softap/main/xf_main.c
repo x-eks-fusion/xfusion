@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example examples/wireless/wifi/static_ip/softap/main/xf_main.c
+ * xf_wal wifi 静态 IP 示例(softap)。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include <string.h>

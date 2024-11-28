@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/peripherals/gpio/interrupt/main/xf_main.c
+ * xf_hal gpio 外部中断示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"

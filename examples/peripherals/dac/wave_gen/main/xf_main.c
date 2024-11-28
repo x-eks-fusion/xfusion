@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/peripherals/dac/wave_gen/main/xf_main.c
+ * xf_hal dac 生成波形示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"
