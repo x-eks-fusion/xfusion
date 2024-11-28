@@ -6,7 +6,7 @@
 
 1.  首先安装 xfusion.
 
-    见 [快速入门 | XFusion (coralzone.github.io)](https://coralzone.github.io/document/zh_CN/get-started/#%E9%80%9A%E8%BF%87-git-%E9%93%BE%E6%8E%A5).
+    见 [快速入门 | XFusion](https://www.coral-zone.cc/#/document?path=/document/).
 
 1.  安装 doxygen 的 Linux 的二进制分发版本。
 
@@ -138,6 +138,7 @@ TODO linux 上生成 doxygen chm 文档。
 > [!NOTE]
 > 常用的官方文档如下：
 >
+> -   [(中文文档)Doxygen：概述 - Doxygen 文档生成工具](https://doxygen.cpp.org.cn/manual/index.html)
 > -   [Doxygen: Installation](https://www.doxygen.nl/manual/install.html#install_bin_unix)
 > -   [Doxygen: Configuration](https://www.doxygen.nl/manual/config.html)
 > -   [Doxygen: Special Commands](https://www.doxygen.nl/manual/commands.html)
