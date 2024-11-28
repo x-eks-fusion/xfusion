@@ -3,7 +3,7 @@ menu "xf_net_apps Configuration"
 
     config XF_NET_APPS_ENABLE
         bool "Enable xf_net_apps module."
-        default y
+        default n
 
     config XF_NET_APPS_IPERF_ENABLE
         bool "Enable iperf."
