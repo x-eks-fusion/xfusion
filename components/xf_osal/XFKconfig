@@ -139,8 +139,8 @@ config XF_CMSIS_THREAD_GET_COUNT_ENABLE
     help
         use cmsis-os2 osThreadGetCount() function
 
-config XF_CMSIS_THREAD_GET_ACTIVE_COUNT_ENABLE
-    bool "Use thread get active count"
+config XF_CMSIS_THREAD_ENUMERATE_ENABLE
+    bool "Use thread enumerate"
     default "y"
     depends on XF_OSAL_CMSIS
     help
