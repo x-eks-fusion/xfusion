@@ -122,6 +122,16 @@ config XF_CMSIS_THREAD_YIELD_ENABLE
     help
         use cmsis-os2 osThreadYield() function
 
+config XF_CMSIS_THREAD_DELETE_NULL_BASE_ON_TERMINATE_ENABLE
+    bool "Use osThreadTerminate() to remove NULL (the current task). Otherwise use osThreadExit()."
+    default "y"
+    depends on XF_OSAL_CMSIS
+    help
+        If the xf_osal_thread_delete() parameter is NULL, it is deleting the current task. 
+        There are two ways in cmsis os2, one is to use osThreadTerminate(osThreadGetId()); 
+        the other is to use osThreadExit() to delete the current task. 
+        By modifying this option you can specify how to delete the current task.
+        
 config XF_CMSIS_THREAD_GET_COUNT_ENABLE
     bool "Use thread get count"
     default "y"
