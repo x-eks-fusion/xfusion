@@ -16,6 +16,6 @@
  */
 
 /**
- * @defgroup group_components_internal components(内部)
+ * @defgroup group_components_internal components
  * @brief 内部组件可以直接使用。
  */
