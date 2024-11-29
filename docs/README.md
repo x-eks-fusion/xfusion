@@ -33,9 +33,15 @@
     sudo apt-get install graphviz
     ```
 
-1.  如果 xfusion/docs 中没有 doxygen 样式子模块 `doxygen-awesome-css`，请手动克隆到 `xfusion/docs/doxygen-awesome-css`.
+    目前使用的版本是 `dot - graphviz version 2.43.0 (0)`.
 
-    注意 `git checkout v2.3.3`.
+1.  如果 xfusion/docs 中没有 doxygen 样式子模块 `doxygen-awesome-css`，请更新子模块.
+
+    ```bash
+    cd <xfusion 根目录>
+    git submodule init
+    git submodule update
+    ```
 
 > [!NOTE]
 > 以下是一些 doxygen 教程，可以忽略。
@@ -149,8 +155,8 @@ TODO linux 上生成 doxygen chm 文档。
 
 ### 待办事项
 
-TODO 文档待办如下：
+-   [x] wal 文档及其注释
 
--   [ ] wal 文档及其注释
+    ~~注意，xf_wal 目前在 `docs/Doxyfile` 的 EXCLUDE 中，修改完毕注释后记得移除 EXCLUDE 中的 `../components/xf_wal`.~~
 
-    注意，xf_wal 目前在 `docs/Doxyfile` 的 EXCLUDE 中，修改完毕注释后记得移除 EXCLUDE 中的 `../components/xf_wal`.
+    已完成。
