@@ -79,6 +79,13 @@
         1.  示例见 `examples/wireless/wifi`.
             1.  已在 esp32, ws63 上测试可用。
 
+    1.  `xf_sle`
+
+        星闪接口抽象。
+
+        1.  修改
+            1.  调整参数顺序，不向前兼容。
+
 1.  `examples/protocols/sockets`
 
     socket 相关示例。
