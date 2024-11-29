@@ -38,8 +38,8 @@ extern "C" {
  * 'XF_SLE_ATTR_SET_END_FLAG' 表示结束。
  *
  * @note 由于结束标记的特殊性（NULL），用户构造时也可以
- * 对属性集合中表示结束的最后一个属性成员结构直接置 0，
- * 如： ([attr_set_type])
+ * 对属性集合中表示结束的最后一个属性成员结构直接置 0，如：
+ *      ([attr_set_type])
  *      {
  *          {...},
  *          {...},
@@ -47,112 +47,104 @@ extern "C" {
  *      }
  */
 #define XF_SLE_ATTR_SET_END_FLAG    NULL
+
 /**
- * @brief 特征描述符信息。
- *  特征描述符（不知道是不是属性）定义
- *  |标识：特征 UUID（特征声明中的）.                               【O】
- *  |权限：由高层 profile 指定（如服务）                            【O】
+ * @brief SLE SSAPS 特征描述符信息
  */
 typedef struct {
-    xf_sle_uuid_info_t *desc_uuid; /*!< @if Eng UUID of GATT descriptor.
-                                @else   GATT 描述符 UUID。 @endif */
-
-    xf_sle_ssap_permission_t permissions;
-
-
+    xf_sle_uuid_info_t *desc_uuid;          /*!< 特征描述符 UUID，见 @ref xf_sle_uuid_info_t */
+    xf_sle_ssap_permission_t permissions;   /*!< 特征描述符权限，见 @ref xf_sle_ssap_permission_t */
     xf_sle_ssap_operate_indication_t operate_indication;
-
-    xf_sle_ssap_desc_type_t desc_type;   // 描述符类型
-
-    uint8_t *value;        // chara value Attr - 属性值
-    uint16_t value_len;    // chara value Attr - 属性值长度
+                                            /*!< 操作指示，见 @ref xf_sle_ssap_operate_indication_t */
+    xf_sle_ssap_desc_type_t desc_type;      /*!< 特征描述符类型，见 @ref xf_sle_ssap_desc_type_t */
+    uint8_t *value;                         /*!< 属性值 */
+    uint16_t value_len;                     /*!< 属性值长度 */
 } xf_sle_ssaps_desc_t;
 
 /**
- * @if Eng
- * @brief Struct of add property information.
- * @else
- * @brief 添加特征信息。
- * @endif
+ * @brief SLE SSAPS 特征值信息。
  */
 typedef struct {
-    xf_sle_attr_handle_t prop_handle;
-    xf_sle_uuid_info_t *prop_uuid;    /*!< SSAP 特征 UUID */
-    xf_sle_ssap_permission_t permissions;   /*!< 特征权限 */
+    xf_sle_attr_handle_t prop_handle;       /*!< 特征句柄 ，见 @ref xf_sle_attr_handle_t */
+    xf_sle_uuid_info_t *prop_uuid;          /*!< 特征 UUID ，见 @ref xf_sle_uuid_info_t */
+    xf_sle_ssap_permission_t permissions;   /*!< 特征权限，见 @ref xf_sle_ssap_permission_t */
     xf_sle_ssap_operate_indication_t
-    operate_indication;         /*!< 操作指示 */
-    uint16_t value_len;             /*!< 响应的数据长度 */
-    uint8_t *value;                 /*!< 响应的数据 */
-
-    xf_sle_ssaps_desc_t *desc_set;
+    operate_indication;                     /*!< 操作指示，见 @ref xf_sle_ssap_operate_indication_t */
+    uint16_t value_len;                     /*!< 响应的数据长度 */
+    uint8_t *value;                         /*!< 响应的数据 */
+    xf_sle_ssaps_desc_t *desc_set;          /*!< 特征描述符集合，如无，则填 NULL，见 @ref xf_sle_ssaps_desc_t */
 } xf_sle_ssaps_property_t;
 
+/**
+ * @brief SLE SSAPS 服务信息
+ */
 typedef struct _xf_sle_ssaps_service_t xf_sle_ssaps_service_t;
 typedef struct _xf_sle_ssaps_service_t {
-    xf_sle_attr_handle_t service_handle;         /*<<<<<<<<<<<<<<<<<<<<<<<<*/
-
-    // 主要服务、次要服务  服务集结束标志
-    xf_sle_ssap_service_type_t service_type; // attr type
-
-    /**
-     * 指向服务 UUID 的指针；使用BLE_UUIDxx_DECLARE宏声明
-     */
-    xf_sle_uuid_info_t *service_uuid; // attr value
-
-
-    /* 以下为官方标准上的可选项，如需则填入 */
-
-    // 包含服务 集合（数组）
-    xf_sle_ssaps_service_t **include_set;
-
-    // 特征 集合（数组）
-    xf_sle_ssaps_property_t *prop_set;
+    xf_sle_attr_handle_t service_handle;    /*!< 服务句柄，见 @ref xf_sle_attr_handle_t */
+    xf_sle_ssap_service_type_t service_type;/*!< 服务类型，见 @ref xf_sle_ssap_service_type_t */
+    xf_sle_uuid_info_t *service_uuid;       /*!< 服务UUID ，见 @ref xf_sle_uuid_info_t */
+    xf_sle_ssaps_service_t **include_set;   /*!< 包含服务 (include service) 集合信息，见 @ref xf_sle_ssaps_service_t */
+    xf_sle_ssaps_property_t *prop_set;      /*!< 特征集合 ，见 @ref xf_sle_ssaps_property_t */
 } xf_sle_ssaps_service_t;
 
+/**
+ * @brief SLE SSAPS 事件
+ */
 typedef enum {
-    XF_SLE_ADV_EVT_ENABLE = _XF_SLE_SSAP_COMMON_EVT_MAX,
-    XF_SLE_ADV_EVT_DISABLE,
-    XF_SLE_ADV_EVT_TERMINAL,
-
-
-    XF_SLE_SSAPS_EVT_ADD_SERVICE,
-    XF_SLE_SSAPS_EVT_ADD_PROPERTY,
-    XF_SLE_SSAPS_EVT_ADD_DESC,
-    XF_SLE_SSAPS_EVT_SERVICE_START,
-    // XF_SLE_SSAPS_EVT_SERVICE_STOP,
-    XF_SLE_SSAPS_EVT_SERVICE_DEL_ALL,
-    XF_SLE_SSAPS_EVT_REQ_READ,
-    XF_SLE_SSAPS_EVT_REQ_WRITE,
-    XF_SLE_SSAPS_EVT_MTU_CHANGED
+    XF_SLE_ADV_EVT_ENABLE = _XF_SLE_SSAP_COMMON_EVT_MAX,/*!< 广播使能事件 */  
+    XF_SLE_ADV_EVT_DISABLE,                             /*!< 广播失能事件 */
+    XF_SLE_ADV_EVT_TERMINAL,                            
+    XF_SLE_SSAPS_EVT_ADD_SERVICE,                       /*!< 服务添加事件 */       
+    XF_SLE_SSAPS_EVT_ADD_PROPERTY,                      /*!< 特征添加事件 */
+    XF_SLE_SSAPS_EVT_ADD_DESC,                          /*!< 特征描述符事件 */
+    XF_SLE_SSAPS_EVT_SERVICE_START,                     /*!< 服务开启事件 */
+    XF_SLE_SSAPS_EVT_SERVICE_DEL_ALL,                   /*!< 删除所有服务事件 */
+    XF_SLE_SSAPS_EVT_REQ_READ,                          /*!< 接收到读请求事件 */
+    XF_SLE_SSAPS_EVT_REQ_WRITE,                         /*!< 接收到写请求事件 */
 } xf_sle_ssaps_event_t;
 
+
+/**
+ * @brief SLE SSAPS 服务端事件回调参数
+ */
 typedef union _xf_sle_ssaps_evt_cb_param_t {
     // XF_SLE_CONN_EVT_CONNECT,
+    /**
+     * @brief SLE SSAPS 连接事件的参数
+     */
     struct {
-        uint16_t conn_id;
-        xf_sle_addr_t peer_addr;
-        xf_sle_pair_state_t pair_state;
+        uint16_t conn_id;               /*!< 链接(连接) ID */
+        xf_sle_addr_t peer_addr;        /*!< 对端地址，见 @ref xf_sle_addr_t */
+        xf_sle_pair_state_t pair_state; /*!< 配对状态，见 @ref xf_sle_pair_state_t */
     } connect;
 
     // XF_SLE_CONN_EVT_DISCONNECT,
+    /**
+     * @brief SLE 断连事件的参数
+     */
     struct {
-        uint16_t conn_id;
-        xf_sle_addr_t peer_addr;
-        xf_sle_pair_state_t pair_state;
-        xf_sle_disconnect_reason_t reason;
+        uint16_t conn_id;                   /*!< 链接(连接) ID */
+        xf_sle_addr_t peer_addr;            /*!< 对端地址，见 @ref xf_sle_addr_t */
+        xf_sle_pair_state_t pair_state;     /*!< 配对状态，见 @ref xf_sle_pair_state_t */
+        xf_sle_disconnect_reason_t reason;  /*!< 断连原因，见 @ref xf_sle_disconnect_reason_t */
     } disconnect;
 
     // XF_SLE_CONN_EVT_CONN_PARAMS_UPDATE,
-
+    /**
+     * @brief SLE 断连事件的参数
+     */
     struct {
         uint16_t interval;              /*!< 链路调度间隔，单位slot */
         uint16_t latency;               /*!< 延迟周期，单位slot */
-        uint16_t supervision_timeout;           /*!< 超时时间，单位10ms */
+        uint16_t supervision_timeout;   /*!< 超时时间，单位10ms */
     } conn_param_update;
 
     // XF_SLE_CONN_EVT_REQ_CONN_PARAMS_UPDATE
+    /**
+     * @brief SLE 连接参数更新事件的参数
+     */
     struct {
-        uint16_t conn_id;
+        uint16_t conn_id;               /*!< 链接(连接) ID */
         uint16_t interval_min;          /*!< 链路调度间隔，单位slot */
         uint16_t interval_max;          /*!< 链路调度间隔，单位slot */
         uint16_t max_latency;           /*!< 延迟周期，单位slot */
@@ -160,78 +152,73 @@ typedef union _xf_sle_ssaps_evt_cb_param_t {
     } req_conn_param_update;
 
     // XF_SLE_ADV_EVT_ENABLE,
+    /**
+     * @brief SLE 广播开启事件的参数
+     */
     struct {
-        uint32_t announce_id;
+        uint32_t announce_id;       /*!< 广播 ID */
     } adv_enable;
 
     // XF_SLE_ADV_EVT_DISABLE,
+    /**
+     * @brief SLE 广播停止事件的参数
+     */
     struct {
-        uint32_t announce_id;
+        uint32_t announce_id;       /*!< 广播 ID */
     } adv_disable;
 
     // XF_SLE_ADV_EVT_TERMINAL,
+    /**
+     * @brief SLE 广播 TERMINAL 事件的参数
+     */
     struct {
-        uint32_t announce_id;
+        uint32_t announce_id;       /*!< 广播 ID */
     } adv_termial;
 
-    /* TODO 暂未支持 */
-    // XF_SLE_CONN_EVT_AUTH_CMPL,
-    // XF_SLE_CONN_EVT_PAIR_CMPL,
-
-    // XF_SLE_SSAPS_EVT_ADD_SERVICE,
-    // XF_SLE_SSAPS_EVT_ADD_PROPERTY,
-    // XF_SLE_SSAPS_EVT_ADD_DESC,
-    // XF_SLE_SSAPS_EVT_SERVICE_START,
-    // // XF_SLE_SSAPS_EVT_SERVICE_STOP,
-    // XF_SLE_SSAPS_EVT_SERVICE_DEL_ALL,
-    // XF_SLE_SSAPS_EVT_REQ_READ,
+    /**
+     * @brief SLE SSAPS 接收到读请求事件的参数
+     */
     struct {
-        uint16_t conn_id;
-        uint16_t trans_id;
-        uint16_t handle;
-        xf_sle_ssap_property_type_t type;
-        bool need_rsp;  // 是否需要发送响应
-        bool need_auth; // 是否需要授权
+        uint16_t conn_id;                   /*!< 链接 (连接) ID */
+        uint16_t trans_id;                  /*!< 传输 ID */
+        uint16_t handle;                    /*!< 属性句柄 */
+        xf_sle_ssap_property_type_t type;   /*!< 类型，见 @ref xf_sle_ssap_property_type_t */
+        bool need_rsp;                      /*!< 是否需要发送响应 */
+        bool need_auth;                     /*!< 是否需要授权 */
     } req_read;
 
     // XF_SLE_SSAPS_EVT_REQ_WRITE,
+    /**
+     * @brief SLE SSAPS 接收到写请求事件的参数
+     */
     struct {
-        uint16_t conn_id;
-        uint16_t trans_id;
-        uint16_t handle;
-        xf_sle_ssap_property_type_t type;
-        bool need_rsp;  // 是否需要发送响应
-        bool need_auth; // 是否需要授权
-        uint8_t *value;
-        uint16_t value_len;
-    } req_write;
-
-    // XF_SLE_SSAPS_EVT_MTU_CHANGED
-
+        uint16_t conn_id;                   /*!< 链接 (连接) ID */
+        uint16_t trans_id;                  /*!< 传输 ID */
+        uint16_t handle;                    /*!< 属性句柄 */
+        xf_sle_ssap_property_type_t type;   /*!< 类型，见 @ref xf_sle_ssap_property_type_t */
+        bool need_rsp;                      /*!< 是否需要发送响应 */
+        bool need_auth;                     /*!< 是否需要授权 */
+        uint8_t *value;                     /*!< 值 */
+        uint16_t value_len;                 /*!< 值长度 */
+    } req_write;    
 } xf_sle_ssaps_evt_cb_param_t;
 
+/**
+ * @brief SLE SSAPS 响应 (回应) 值信息
+ */
 typedef struct {
-    uint16_t value_len;  /*!< @if Eng Length of reponse data.
-                              @else   响应的数据长度。 @endif */
-    uint8_t *value;      /*!< @if Eng Reponse data.
-                              @else   响应的数据。 @endif */
+    uint16_t value_len;         /*!< 响应的值长度 */
+    uint8_t *value;             /*!< 响应的值 */
 } xf_sle_ssaps_response_value_t;
 
 /**
- * @if Eng
- * @brief Struct of send notification/indication information.
- * @else
- * @brief 发送通知/指示信息。
- * @endif
+ * @brief SLE SSAPS 发送通知或指示的信息
  */
 typedef struct {
-    uint16_t handle;      /*!< @if Eng Properity handle.
-                               @else   属性句柄。 @endif */
-    xf_sle_ssap_property_type_t type; /*!< 属性类型 */
-    uint16_t value_len;   /*!< @if Eng Length of notification/indication data.
-                               @else   通知/指示数据长度。 @endif */
-    uint8_t *value;       /*!< @if Eng Notification/indication data.
-                               @else   发送的通知/指示数据。 @endif */
+    uint16_t handle;                    /*!< 属性句柄 */
+    xf_sle_ssap_property_type_t type;   /*!< 属性类型，见 @ref xf_sle_ssap_property_type_t */
+    uint16_t value_len;                 /*!< 通知/指示的值长度 */
+    uint8_t *value;                     /*!< 发送的通知/指示的值 */
 } xf_sle_ssaps_ntf_ind_t;
 
 /* ==================== [Global Prototypes] ================================= */

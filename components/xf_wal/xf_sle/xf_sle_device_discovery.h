@@ -30,46 +30,151 @@ extern "C" {
 
 /* ==================== [Global Prototypes] ================================= */
 
+/**
+ * @brief SLE 功能开启
+ *
+ * @note 包含所有 SLE 开启前的处理
+ * @return xf_err_t
+ *      - XF_OK                 成功
+ *      - XF_FAIL               失败
+ *      - (OTHER)               @ref xf_err_t
+ */
 xf_err_t xf_sle_enable(void);
 
+/**
+ * @brief SLE 功能关闭
+ *
+ * @note 包含所有 SLE 关闭前的处理
+ * @return xf_err_t
+ *      - XF_OK                 成功
+ *      - XF_FAIL               失败
+ *      - (OTHER)               @ref xf_err_t
+ */
 xf_err_t xf_sle_disable(void);
 
-// 设置本地设备地址v
+/**
+ * @brief SLE 设置本端设备地址
+ *
+ * @param addr SLE 地址信息，见 @ref xf_sle_addr_t
+ * @return xf_err_t
+ *      - XF_OK                 成功
+ *      - XF_FAIL               失败
+ *      - XF_ERR_NOT_SUPPORTED  不支持
+ *      - (OTHER)               @ref xf_err_t
+ */
 xf_err_t xf_sle_set_local_addr(xf_sle_addr_t *addr);
 
-// 获取本地设备地址
+/**
+ * @brief SLE 获取本端设备地址
+ *
+ * @param addr SLE 地址信息，见 @ref xf_sle_addr_t
+ * @return xf_err_t
+ *      - XF_OK                 成功
+ *      - XF_FAIL               失败
+ *      - (OTHER)               @ref xf_err_t
+ */
 xf_err_t xf_sle_get_local_addr(xf_sle_addr_t *addr);
 
-// 设置本地设备名称
+/**
+ * @brief SLE 设置本端设备名称
+ *
+ * @param name 设备名
+ * @param len 设备名长度
+ * @return xf_err_t
+ *      - XF_OK                 成功
+ *      - XF_FAIL               失败
+ *      - (OTHER)               @ref xf_err_t
+ */
 xf_err_t xf_sle_set_local_name(const uint8_t *name, const uint8_t len);
 
-// 获取本地设备名称
+/**
+ * @brief SLE 获取本端设备名称
+ *
+ * @param[out] name 设备名
+ * @param len 设备名长度
+ * @return xf_err_t
+ *      - XF_OK                 成功
+ *      - XF_FAIL               失败
+ *      - (OTHER)               @ref xf_err_t
+ */
 xf_err_t xf_sle_get_local_name(uint8_t *name, uint8_t *len);
 
-// 设置设备公开（广播）数据
+/**
+ * @brief SLE 设置广播 (公开) 数据
+ *
+ * @param data 广播数据，见 @ref xf_sle_announce_data_t
+ * @return xf_err_t
+ *      - XF_OK                 成功
+ *      - XF_FAIL               失败
+ *      - (OTHER)               @ref xf_err_t
+ */
 xf_err_t xf_sle_set_announce_data(
     uint8_t announce_id, const xf_sle_announce_data_t *data);
 
-// 设置设备公开（广播）参数
+/**
+ * @brief SLE 设置广播 (公开) 参数
+ *
+ * @param param 广播参数，见 @ref xf_sle_announce_param_t
+ * @return xf_err_t
+ *      - XF_OK                 成功
+ *      - XF_FAIL               失败
+ *      - (OTHER)               @ref xf_err_t
+ */
 xf_err_t xf_sle_set_announce_param(
     uint8_t announce_id, const xf_sle_announce_param_t *param);
 
-// 开始设备公开（广播）
+/**
+ * @brief SLE 广播开启
+ * 
+ * @param announce_id 广播 ID
+ * @return xf_err_t
+ *      - XF_OK                 成功
+ *      - XF_FAIL               失败
+ *      - (OTHER)               @ref xf_err_t
+ */
 xf_err_t xf_sle_start_announce(uint8_t announce_id);
 
-// 停止设备公开（广播）
+/**
+ * @brief SLE 广播关闭
+ *
+ * @param announce_id 广播 ID
+ * @return xf_err_t
+ *      - XF_OK                 成功
+ *      - XF_FAIL               失败
+ *      - (OTHER)               @ref xf_err_t
+ */
 xf_err_t xf_sle_stop_announce(uint8_t announce_id);
 
-// // 删除广播
-// errcode_t sle_remove_announce(uint8_t announce_id);
 
-// 设置设备公开扫描参数
+/**
+ * @brief SLE 设置扫描参数
+ *
+ * @param param 扫描参数，见 @ref xf_sle_seek_param_t
+ * @return xf_err_t
+ *      - XF_OK                 成功
+ *      - XF_FAIL               失败
+ *      - (OTHER)               @ref xf_err_t
+ */
 xf_err_t xf_sle_set_seek_param(xf_sle_seek_param_t *param);
 
-//  开始设备公开扫描
+/**
+ * @brief SLE 扫描开启
+ *
+ * @return xf_err_t
+ *      - XF_OK                 成功
+ *      - XF_FAIL               失败
+ *      - (OTHER)               @ref xf_err_t
+ */
 xf_err_t xf_sle_start_seek(void);
 
-// 停止设备公开扫描
+/**
+ * @brief SLE 扫描停止
+ *
+ * @return xf_err_t
+ *      - XF_OK                 成功
+ *      - XF_FAIL               失败
+ *      - (OTHER)               @ref xf_err_t
+ */
 xf_err_t xf_sle_stop_seek(void);
 
 /* ==================== [Macros] ============================================ */

@@ -1,12 +1,12 @@
 /**
  * @file xf_ble_gatt_client_types.h
  * @author dotc (dotchan@qq.com)
- * @brief 
+ * @brief
  * @version 1.0
  * @date 2024-08-06
- * 
+ *
  * Copyright (c) 2024, CorAL. All rights reserved.
- * 
+ *
  */
 
 #ifndef __XF_BLE_GATT_CLIENT_TYPES_H__
@@ -31,189 +31,213 @@ extern "C" {
 /* ==================== [Typedefs] ========================================== */
 
 /**
-  * @brief Gatt write type
-  */
+ * @brief BLE GATTC 写请求的类型
+ */
 typedef enum {
-    XF_BLE_GATT_WRITE_TYPE_NO_RSP  =   1,                      /*!< Gatt write attribute need no response */
-    XF_BLE_GATT_WRITE_TYPE_WITH_RSP,                                /*!< Gatt write attribute need remote response */
+    XF_BLE_GATT_WRITE_TYPE_NO_RSP  =   1,   /*!< 无需 (对端) 响应 (写命令) */
+    XF_BLE_GATT_WRITE_TYPE_WITH_RSP,        /*!< 需要 (对端) 回应 (写请求) */
 } xf_ble_gattc_write_type_t;
 
 /**
- * @brief 搜寻到的特征描述符
+ * @brief BLE GATTC 搜寻到的特征描述符
  */
 typedef struct {
-    uint16_t handle;            // 特征描述符句柄
-    xf_bt_uuid_info_t uuid;             // 特征描述符uuid
+    uint16_t handle;                                /*!< 特征描述符句柄 */
+    xf_ble_uuid_info_t uuid;                         /*!< 特征描述符 UUID ，见 @ref xf_ble_gattc_desc_found_t */
 } xf_ble_gattc_desc_found_t;
 
 /**
- * @brief 搜寻到的特征描述符集合
+ * @brief BLE GATTC 搜寻到的特征描述符集合信息
  */
 typedef struct {
-    xf_ble_gattc_desc_found_t *set;        // 描述符集合
-    uint16_t cnt;
+    xf_ble_gattc_desc_found_t *set;         /*!< 描述符集合 ，见 @ref xf_ble_gattc_desc_found_t */
+    uint16_t cnt;                           /*!< 搜寻到的个数 */
 } xf_ble_gattc_desc_found_set_t;
 
 /**
- * @brief 搜寻到的特征
+ * @brief BLE GATTC 搜寻到的特征
  */
 typedef struct {
-    xf_bt_uuid_info_t uuid;                          // 特征uuid
-    xf_bt_attr_handle_t handle;                 // 特征句柄
-    xf_bt_attr_handle_t value_handle;           // 特征值句柄
-    xf_ble_gatt_chara_property_t properties;    //特征特性
-    xf_ble_gattc_desc_found_set_t *desc_set_info;
+    xf_ble_uuid_info_t uuid;                         /*!< 特征 UUID ，见 @ref xf_ble_uuid_info_t */
+    xf_ble_attr_handle_t handle;                     /*!< 特征句柄，见 @ref xf_ble_attr_handle_t */
+    xf_ble_attr_handle_t value_handle;               /*!< 特征值句柄，见 @ref xf_ble_attr_handle_t */
+    xf_ble_gatt_chara_property_t properties;        /*!< 特征特性，见 @ref xf_ble_gatt_chara_property_t */
+    xf_ble_gattc_desc_found_set_t
+    *desc_set_info;   /*!< 特征描述符集合信息，见 @ref xf_ble_gattc_desc_found_set_t */
 } xf_ble_gattc_chara_found_t;
 
 /**
- * @brief 搜寻到的特征集合
+ * @brief BLE GATTC 搜寻到的特征集合信息
  */
 typedef struct {
-    xf_ble_gattc_chara_found_t *set;      // 特征集合
-    uint16_t cnt;
+    xf_ble_gattc_chara_found_t *set;        /*!< 特征集合，见 @ref xf_ble_gattc_chara_found_t */
+    uint16_t cnt;                           /*!< 搜寻到的个数 */
 } xf_ble_gattc_chara_found_set_t;
 
 /**
- * @brief 搜寻到的服务
+ * @brief BLE GATTC 搜寻到的服务
  */
 typedef struct {
-    xf_bt_attr_handle_t start_hdl;  // 服务起始句柄
-    xf_bt_attr_handle_t end_hdl;    // 服务结束句柄
-    xf_bt_uuid_info_t uuid;              // 服务uuid
-    xf_ble_gattc_chara_found_set_t *chara_set_info;
+    xf_ble_attr_handle_t start_hdl;                  /*!< 服务起始句柄，见 @ref xf_ble_attr_handle_t */
+    xf_ble_attr_handle_t end_hdl;                    /*!< 服务结束句柄，见 @ref xf_ble_attr_handle_t */
+    xf_ble_uuid_info_t uuid;                         /*!< 服务 UUID ，见 @ref xf_ble_uuid_info_t */
+    xf_ble_gattc_chara_found_set_t *chara_set_info; /*!< 特征集合信息 ，见 @ref xf_ble_uuid_info_t */
 } xf_ble_gattc_service_found_t;
 
 /**
- * @brief 搜寻到的服务集合
+ * @brief BLE GATTC 搜寻到的服务集合信息
  */
 typedef struct {
-    xf_ble_gattc_service_found_t *set;
-    uint16_t cnt;
+    xf_ble_gattc_service_found_t *set;      /*!< 服务集合，见 @ref xf_ble_gattc_service_found_t */
+    uint16_t cnt;                           /*!< 搜寻到的个数 */
 } xf_ble_gattc_service_found_set_t;
-
-
-typedef enum {
-    XF_BLE_GAP_LINK_ROLE_MASTER = 0,
-    XF_BLE_GAP_LINK_ROLE_SLAVE  = 1
-} xf_ble_gap_link_role_type_t;
 
 /**
  * @brief Ble scan result event type, to indicate the
  *        result is scan response or advertising data or other
  */
+/**
+ * @brief BLE GAP 扫描结果中的事件类型，扫描响应、广播数据或其他类型
+ */
 typedef enum {
-    XF_BLE_GAP_SCANNED_ADV_TYPE_CONN            = 0x00,        /*!< Connectable undirected advertising (ADV_IND) */
-    XF_BLE_GAP_SCANNED_ADV_TYPE_CONN_DIR        = 0x01,        /*!< Connectable directed advertising (ADV_DIRECT_IND) */
-    XF_BLE_GAP_SCANNED_ADV_TYPE_SCAN            = 0x02,        /*!< Scannable undirected advertising (ADV_SCAN_IND) */
-    XF_BLE_GAP_SCANNED_ADV_TYPE_NONCONN         = 0x03,         /*!< Non connectable undirected advertising (ADV_NONCONN_IND) */
-    XF_BLE_GAP_SCANNED_ADV_TYPE_SCAN_RSP        = 0x04,        /*!< Scan Response (SCAN_RSP) */
+    XF_BLE_GAP_SCANNED_ADV_TYPE_CONN        = 0x00, /*!< Connectable undirected advertising (ADV_IND) */
+    XF_BLE_GAP_SCANNED_ADV_TYPE_CONN_DIR    = 0x01, /*!< Connectable directed advertising (ADV_DIRECT_IND) */
+    XF_BLE_GAP_SCANNED_ADV_TYPE_SCAN        = 0x02, /*!< Scannable undirected advertising (ADV_SCAN_IND) */
+    XF_BLE_GAP_SCANNED_ADV_TYPE_NONCONN     = 0x03, /*!< Non connectable undirected advertising (ADV_NONCONN_IND) */
+    XF_BLE_GAP_SCANNED_ADV_TYPE_SCAN_RSP    = 0x04, /*!< Scan Response (SCAN_RSP) */
 } xf_ble_gap_scanned_adv_type_t;
 
+/**
+ * @brief BLE GAP 扫描参数设置事件的参数
+ */
 typedef struct {
     xf_err_t status;
-    // esp_bt_status_t status;                     /*!< Indicate the set scan param operation success status */
-} xf_ble_evt_param_scan_t;            
+} xf_ble_evt_param_scan_t;
 
+/**
+ * @brief BLE GAP 收到扫描结果事件的参数
+ */
 typedef struct {
-    int rssi;                                   /*!< Searched device's RSSI */
-    xf_bt_dev_addr_t addr_scanned;              /*!< Bluetooth device address which has been searched */
-    xf_ble_gap_scanned_adv_type_t adv_type;     /*!< Ble scanned adv type */
-    uint8_t adv_data_len;                       /*!< Adv data length */
-    uint8_t *adv_data;                          /*!< Advertising data */
-    // search_evt;                              /*!< Search event type */
-    // int num_resps;                              /*!< Scan result number */
-    // uint8_t scan_rsp_len;                       /*!< Scan response length */
-    // uint8_t  ble_adv[];     /*!< Received EIR */
+    int rssi;                                   /*!< 扫到的设备的 RSSI 值 */
+    xf_ble_addr_t addr_scanned;              /*!< 扫到的设备的地址，见 @ref xf_ble_addr_t */
+    xf_ble_gap_scanned_adv_type_t adv_type;     /*!< 扫到的设备广播类型，见 @ref xf_ble_gap_scanned_adv_type_t */
+    uint8_t adv_data_len;                       /*!< 广播数据的长度 (指整个广播数据 AdvData ) */
+    uint8_t *adv_data;                          /*!< 广播数据 (指整个广播数据 AdvData ) */
 } xf_ble_evt_param_scan_result_t;
 
+/**
+ * @brief BLE GAP 连接事件的参数
+ */
 typedef struct {
-    uint16_t conn_id;               /*!< Connection id */
-    uint16_t conn_handle;           /*!< HCI connection handle */
-    xf_ble_gap_link_role_type_t link_role; /*!< Link role : master role = 0  ; slave role = 1*/
-    xf_bt_dev_addr_t peer_addr;       /*!< Remote bluetooth device address */
-    // conn_params; /*!< current connection parameters */
+    uint16_t conn_id;                       /*!< 链接(连接) ID */
+    uint16_t conn_handle;                   /*!< 链接的句柄 */
+    xf_ble_gap_link_role_type_t link_role;  /*!< 链路角色，见 @ref xf_ble_gap_link_role_type_t */
+    xf_ble_addr_t peer_addr;             /*!< 对端地址，见 @ref xf_ble_addr_t */
 } xf_ble_evt_param_connect_t;
 
+/**
+ * @brief BLE GAP 断连事件的参数
+ */
 typedef struct {
-    uint16_t conn_id;               /*!< Connection id */
-    xf_bt_dev_addr_t peer_addr;       /*!< Remote bluetooth device address */
-    xf_ble_gap_disconnect_reason_t reason;  /*!< disconnection reason */
+    uint16_t conn_id;                       /*!< 链接(连接) ID */
+    xf_ble_addr_t peer_addr;             /*!< 对端地址，见 @ref xf_ble_addr_t */
+    xf_ble_gap_disconnect_reason_t reason;  /*!< 断连原因，见 @ref xf_ble_gap_disconnect_reason_t */
 } xf_ble_evt_param_disconnect_t;
 
+/**
+ * @brief BLE GATTC 搜寻到服务结构事件的参数
+ */
 typedef struct {
-    uint8_t app_id;
-    // status;      /*!< Operation status */
-    uint16_t conn_id;              /*!< Connection id */
+    uint8_t app_id;                         /*!< 应用 ID */
+    uint16_t conn_id;                       /*!< 链接(连接) ID */
 } xf_ble_evt_param_gattc_service_found_t;
 
+/**
+ * @brief BLE GATTC MTU 改变事件的参数
+ */
 typedef struct {
-    uint8_t app_id;
-    // status;       /*!< Operation status */
-    uint16_t conn_id;               /*!< Connection id */
-    uint16_t mtu;                   /*!< MTU size */
+    uint8_t app_id;                         /*!< 应用 ID */
+    uint16_t conn_id;                       /*!< 链接(连接) ID */
+    uint16_t mtu;                           /*!< MTU 大小 */
 } xf_ble_evt_param_gattc_mtu_changed_t;
 
+/**
+ * @brief BLE GATTC 写完成事件的参数
+ */
 typedef struct {
-    uint8_t app_id;
-    // status;       /*!< Operation status */
-    uint16_t conn_id;               /*!< Connection id */
-    uint16_t handle;                /*!< The Characteristic or descriptor handle */
-    uint16_t offset;                /*!< The prepare write offset, this value is valid only when prepare write */
+    uint8_t app_id;                         /*!< 应用 ID */
+    uint16_t conn_id;                       /*!< 链接(连接) ID */
+    uint16_t handle;                        /*!< 特征或描述符的句柄 */
+    uint16_t offset;                        /*!< The prepare write offset, this value is valid only when prepare write */
 } xf_ble_evt_param_gattc_write_t;
 
+/**
+ * @brief BLE GATTC 读完成事件的参数
+ */
 typedef struct {
-    uint8_t app_id;
-    // status;       /*!< Operation status */
-    uint16_t conn_id;               /*!< Connection id */
-    uint16_t chara_handle;                /*!< Characteristic handle */
-    uint8_t *chara_value;                 /*!< Characteristic value */
-    uint16_t chara_value_len;             /*!< Characteristic value length */
+    uint8_t app_id;                         /*!< 应用 ID */
+    uint16_t conn_id;                       /*!< 链接(连接) ID */
+    uint16_t chara_handle;                  /*!< 特征句柄 */
+    uint8_t *chara_value;                   /*!< 特征值 */
+    uint16_t chara_value_len;               /*!< 特征值长度 */
 } xf_ble_evt_param_gattc_read_cmpl_t;
 
+/**
+ * @brief BLE GATTC 接收到通知或指示事件的参数
+ */
 typedef struct {
     uint8_t app_id;
-    uint16_t conn_id;               /*!< Connection id */
-    xf_bt_dev_addr_t peer_addr;       /*!< Remote bluetooth device address */
-    uint16_t handle;                /*!< The Characteristic or descriptor handle */
-    uint16_t value_len;             /*!< Notify attribute value */
-    uint8_t *value;                 /*!< Notify attribute value */
-    bool is_notify;                 /*!< True means notify, false means indicate */
+    uint16_t conn_id;                       /*!< 链接(连接) ID */
+    xf_ble_addr_t peer_addr;             /*!< 对端地址，见 @ref xf_ble_addr_t */
+    uint16_t handle;                        /*!< 特征或描述符的句柄 */
+    uint16_t value_len;                     /*!< 通知或指示的属性值长度 */
+    uint8_t *value;                         /*!< 通知或指示的属性值 */
+    bool is_ntf;                            /*!< 是否是通知，否则是指示 */
 } xf_ble_evt_param_gattc_notify_t;
 
 /**
- * @brief Gatt client callback parameters union
+ * @brief BLE GATTC 客户端事件回调参数
  */
 typedef union {
-
-    /**
-     * @brief XF_BLE_GAP_EVT_SCAN_PARAM_SET
-     */
-    xf_ble_evt_param_scan_t scan_param;
-    /**
-     * @brief XF_BLE_GAP_EVT_SCAN_RESULT
-     */
-    
-    xf_ble_evt_param_scan_result_t scan_result;
-
-    /* XF_BLE_GAP_EVT_CONNECT */
-    xf_ble_evt_param_connect_t connect;
-
-    /* XF_BLE_GAP_EVT_DISCONNECT */
-    xf_ble_evt_param_disconnect_t disconnect;
-
-    /* XF_BLE_GATTC_EVT_DISCOVER_SERVICE_COMPLETE */
+    xf_ble_evt_param_scan_t scan_param;         /*!< 扫描参数设置事件的参数，
+                                                 *  @ref xf_ble_evt_param_scan_t
+                                                 *  XF_BLE_GAP_EVT_SCAN_PARAM_SET
+                                                 */
+    xf_ble_evt_param_scan_result_t scan_result; /*!< 收到扫描结果事件的参数，
+                                                 *  @ref xf_ble_evt_param_scan_result_t
+                                                 *  XF_BLE_GAP_EVT_SCAN_RESULT
+                                                 */
+    xf_ble_evt_param_connect_t connect;         /*!< 连接事件的参数，
+                                                 *  @ref xf_ble_evt_param_connect_t
+                                                 *  XF_BLE_GAP_EVT_CONNECT
+                                                 */
+    xf_ble_evt_param_disconnect_t disconnect;   /*!< 断连事件的参数，
+                                                 *  @ref xf_ble_evt_param_disconnect_t
+                                                 *  XF_BLE_GAP_EVT_DISCONNECT
+                                                 */
     xf_ble_evt_param_gattc_service_found_t service_found;
-
-    /* XF_BLE_GATTC_EVT_MTU_CHANGED */
+    /*!< 搜寻到服务结构事件的参数，
+     *  @ref xf_ble_evt_param_gattc_service_found_t
+     *  XF_BLE_GATTC_EVT_DISCOVER_SERVICE_COMPLETE
+     */
     xf_ble_evt_param_gattc_mtu_changed_t mtu_changed;
-
-    /* XF_BLE_GATTC_EVT_WRITE_COMPLETE */
-    xf_ble_evt_param_gattc_write_t write;
-    /* XF_BLE_GATTC_EVT_READ_COMPLETE */
+    /*!< MTU 变更事件的参数，
+     *  @ref xf_ble_evt_param_gattc_mtu_changed_t
+     *  XF_BLE_GATTC_EVT_MTU_CHANGED
+     */
+    xf_ble_evt_param_gattc_write_t write;       /*!< 写完成事件的参数，
+                                                 *  @ref xf_ble_evt_param_gattc_write_t
+                                                 *  XF_BLE_GATTC_EVT_WRITE_COMPLETE
+                                                 */
     xf_ble_evt_param_gattc_read_cmpl_t read_cmpl;
-
-    /* XF_BLE_GATTC_EVT_RECV_NOTIFICATION_OR_INDICATION */
-    xf_ble_evt_param_gattc_notify_t notify;
+    /*!< 读完成事件的参数，
+     *  @ref xf_ble_evt_param_gattc_read_cmpl_t
+     *  XF_BLE_GATTC_EVT_READ_COMPLETE
+     */
+    xf_ble_evt_param_gattc_notify_t notify;     /*!< 接收到通知或指示事件的参数，
+                                                 *  @ref xf_ble_evt_param_gattc_notify_t
+                                                 *  XF_BLE_GATTC_EVT_RECV_NOTIFICATION_OR_INDICATION
+                                                 */
 } xf_ble_gattc_evt_cb_param_t;
 
 /* ==================== [Global Prototypes] ================================= */
