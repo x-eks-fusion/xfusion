@@ -21,6 +21,18 @@
 
 #if XF_BLE_IS_ENABLE || defined(__DOXYGEN__)
 
+/**
+ * @cond (XFAPI_USER || XFAPI_PORT)
+ * @addtogroup group_xf_wal_ble_gatt
+ * @endcond
+ * @{
+ */
+
+/**
+ * End of addtogroup group_xf_wal_ble_gatt
+ * @}
+ */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -185,6 +197,11 @@ xf_err_t xf_ble_gatts_event_cb_register(
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
+
+/**
+ * End of addtogroup group_xf_wal_ble_gatt
+ * @}
+ */
 
 #endif /* XF_BLE_IS_ENABLE */
 

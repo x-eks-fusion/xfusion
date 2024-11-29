@@ -21,6 +21,13 @@
 
 #if XF_SLE_IS_ENABLE || defined(__DOXYGEN__)
 
+/**
+ * @cond (XFAPI_USER || XFAPI_PORT)
+ * @addtogroup group_xf_wal_sle_ssap
+ * @endcond
+ * @{
+ */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -229,6 +236,11 @@ typedef struct {
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
+
+/**
+ * End of addtogroup group_xf_wal_sle_ssap
+ * @}
+ */
 
 #endif /* XF_SLE_IS_ENABLE */
 

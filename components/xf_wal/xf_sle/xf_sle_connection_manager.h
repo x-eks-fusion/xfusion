@@ -20,6 +20,13 @@
 
 #if XF_SLE_IS_ENABLE || defined(__DOXYGEN__)
 
+/**
+ * @cond (XFAPI_USER || XFAPI_PORT)
+ * @addtogroup group_xf_wal_sle
+ * @endcond
+ * @{
+ */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -209,6 +216,11 @@ xf_err_t xf_sle_set_max_pwr_level_by_pwr(int8_t target_max_pwr);
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
+
+/**
+ * End of addtogroup group_xf_wal_sle
+ * @}
+ */
 
 #endif /* XF_SLE_IS_ENABLE */
 

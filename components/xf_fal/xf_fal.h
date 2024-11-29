@@ -1,14 +1,14 @@
 /**
- * @file xf_log.h
- * @author catcatBlue (catcatblue@qq.com)
- * @brief xfusion log 实现。
- *        xfusion 用户实际包含的 xf_log.h.
- *        通常不直接使用，而是使用 xf_utils_log.h 内定义的 XF_LOG 宏(`XF_LOGI` 等)。
- * @version 1.0
- * @date 2024-08-08
+ * @file xf_fal.h
+ * @author cangyu (sky.kirto@qq.com)
+ * @brief xfusion 硬件抽象层。
+ *        xfusion 用户实际包含的 xf_fal.h.
+ *        使用 xf_utils_config.h 覆盖 xf_fal 内部的 xf_fal.h 的一些配置。
+ * @version 0.1
+ * @date 2024-10-18
  * @note 此文件不需要防止重复包含。
  *
- * Copyright (c) 2024, CorAL. All rights reserved.
+ * @copyright Copyright (c) 2024, CorAL. All rights reserved.
  *
  */
 
@@ -17,14 +17,15 @@
 /**
  * @cond (XFAPI_USER || XFAPI_PORT || XFAPI_INTERNAL)
  * @ingroup group_components_internal
- * @addtogroup group_xf_log
+ * @addtogroup group_xf_fal
  * @endcond
  */
 #endif
 
 /* ==================== [Includes] ========================================== */
 
-#include "xf_log/src/xf_log.h"
+#include "xf_utils_config.h" /*!< 调用者使用 utils 的 XF_LOG_LEVEL */
+#include "xf_fal/src/xf_fal.h"
 
 #ifdef __cplusplus
 extern "C" {

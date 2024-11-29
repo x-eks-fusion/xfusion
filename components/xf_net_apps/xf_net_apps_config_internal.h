@@ -23,13 +23,13 @@ extern "C" {
 
 /* ==================== [Defines] =========================================== */
 
-#if !defined(XF_NET_APPS_IPERF_ENABLE) || (XF_NET_APPS_IPERF_ENABLE)
+#if !defined(XF_NET_APPS_IPERF_ENABLE) || (XF_NET_APPS_IPERF_ENABLE) || defined(__DOXYGEN__)
 #   define XF_NET_APPS_IPERF_IS_ENABLE      (1)
 #else
 #   define XF_NET_APPS_IPERF_IS_ENABLE      (0)
 #endif
 
-#if !defined(XF_NET_APPS_PING_ENABLE) || (XF_NET_APPS_PING_ENABLE)
+#if !defined(XF_NET_APPS_PING_ENABLE) || (XF_NET_APPS_PING_ENABLE) || defined(__DOXYGEN__)
 #   define XF_NET_APPS_PING_IS_ENABLE       (1)
 #else
 #   define XF_NET_APPS_PING_IS_ENABLE       (0)

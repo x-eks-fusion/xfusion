@@ -1,12 +1,19 @@
 /**
  * @file xf_netif.h
  * @author catcatBlue (catcatblue@qq.com)
- * @brief
+ * @brief 
  * @version 1.0
  * @date 2024-06-11
  *
  * Copyright (c) 2024, CorAL. All rights reserved.
  *
+ */
+
+/**
+ * @cond (XFAPI_USER || XFAPI_PORT || XFAPI_INTERNAL)
+ * @ingroup group_xf_nal
+ * @addtogroup group_xf_netif
+ * @endcond
  */
 
 #ifndef __XF_NETIF_H__
@@ -16,6 +23,14 @@
 
 #include "xf_utils.h"
 #include "xf_netif_types.h"
+
+/**
+ * @cond (XFAPI_USER || XFAPI_PORT)
+ * @defgroup group_xf_netif xf_netif
+ * @brief netif 接口。
+ * @endcond
+ * @{
+ */
 
 #ifdef __cplusplus
 extern "C" {
@@ -177,5 +192,10 @@ xf_err_t xf_netif_get_dns_info(
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
+
+/**
+ * End of addtogroup group_xf_netif
+ * @}
+ */
 
 #endif /* __XF_NETIF_H__ */

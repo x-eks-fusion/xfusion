@@ -9,7 +9,6 @@
  *
  */
 
-
 #ifndef __XF_BLE_SM_TYPES_H__
 #define __XF_BLE_SM_TYPES_H__
 
@@ -19,6 +18,14 @@
 #include "xf_ble_gap_types.h"
 
 #if XF_BLE_IS_ENABLE || defined(__DOXYGEN__)
+
+/**
+ * @cond (XFAPI_USER || XFAPI_PORT || XFAPI_INTERNAL)
+ * @ingroup group_xf_wal
+ * @defgroup group_xf_wal_ble xf_ble
+ * @brief xf_ble 是对 ble 的封装。
+ * @endcond
+ */
 
 #ifdef __cplusplus
 extern "C" {
@@ -100,6 +107,11 @@ typedef enum {
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
+
+/**
+ * End of addtogroup group_xf_wal_ble
+ * @}
+ */
 
 #endif /* XF_BLE_IS_ENABLE */
 

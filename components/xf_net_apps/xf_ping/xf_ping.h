@@ -9,6 +9,14 @@
  *
  */
 
+/**
+ * @cond (XFAPI_USER || XFAPI_PORT || XFAPI_INTERNAL)
+ * @ingroup group_xf_net_apps
+ * @defgroup group_xf_ping xf_ping
+ * @brief ping 功能实现。
+ * @endcond
+ */
+
 #ifndef __XF_PING_H__
 #define __XF_PING_H__
 
@@ -19,6 +27,13 @@
 
 #include "xf_osal.h"
 #include "xf_utils.h"
+
+/**
+ * @cond XFAPI_USER
+ * @addtogroup group_xf_ping
+ * @endcond
+ * @{
+ */
 
 #ifdef __cplusplus
 extern "C" {
@@ -250,5 +265,10 @@ xf_err_t xf_ping_stop(xf_ping_t hdl);
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
+
+/**
+ * End of addtogroup group_xf_ping
+ * @}
+ */
 
 #endif /* __XF_PING_H__ */

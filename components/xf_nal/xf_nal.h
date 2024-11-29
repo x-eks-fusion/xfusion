@@ -1,15 +1,12 @@
 /**
- * @file xf_log.h
+ * @file xf_nal.h
  * @author catcatBlue (catcatblue@qq.com)
- * @brief xfusion log 实现。
- *        xfusion 用户实际包含的 xf_log.h.
- *        通常不直接使用，而是使用 xf_utils_log.h 内定义的 XF_LOG 宏(`XF_LOGI` 等)。
+ * @brief 网络抽象层。
  * @version 1.0
- * @date 2024-08-08
- * @note 此文件不需要防止重复包含。
- *
+ * @date 2024-09-24
+ * 
  * Copyright (c) 2024, CorAL. All rights reserved.
- *
+ * 
  */
 
 #if defined(__DOXYGEN__) && defined(__XFUSION__) && defined(__DOXYGEN_ADD_COMPONENTS__)
@@ -17,14 +14,18 @@
 /**
  * @cond (XFAPI_USER || XFAPI_PORT || XFAPI_INTERNAL)
  * @ingroup group_components_internal
- * @addtogroup group_xf_log
+ * @defgroup group_xf_nal xf_nal
+ * @brief 网络抽象层。
  * @endcond
  */
 #endif
 
+#ifndef __XF_NAL_H__
+#define __XF_NAL_H__
+
 /* ==================== [Includes] ========================================== */
 
-#include "xf_log/src/xf_log.h"
+#include "xf_netif/xf_netif.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -41,3 +42,5 @@ extern "C" {
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
+
+#endif // __XF_NAL_H__

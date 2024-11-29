@@ -19,6 +19,13 @@
 #include "xf_mac.h"
 #include "xf_netif_ip_addr_types.h"
 
+/**
+ * @cond (XFAPI_USER || XFAPI_PORT)
+ * @addtogroup group_xf_init
+ * @endcond
+ * @{
+ */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -132,5 +139,10 @@ typedef void (*xf_ip_cb_t)(
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
+
+/**
+ * End of addtogroup group_xf_init
+ * @}
+ */
 
 #endif /* __XF_NETIF_TYPES_H__ */

@@ -18,6 +18,14 @@
    CONDITIONS OF ANY KIND, either express or implied.
 */
 
+/**
+ * @cond (XFAPI_USER || XFAPI_PORT || XFAPI_INTERNAL)
+ * @ingroup group_xf_net_apps
+ * @defgroup group_xf_iperf xf_iperf
+ * @brief 吞吐量测试。
+ * @endcond
+ */
+
 #ifndef __XF_IPERF_H__
 #define __XF_IPERF_H__
 
@@ -26,6 +34,13 @@
 #include "xf_utils.h"
 #include "xf_osal.h"
 #include "xf_netif.h"
+
+/**
+ * @cond XFAPI_USER
+ * @addtogroup group_xf_iperf
+ * @endcond
+ * @{
+ */
 
 #ifdef __cplusplus
 extern "C" {
@@ -179,7 +194,7 @@ typedef struct _xf_iperf_ctx_t {
                                          *   @ref xf_iperf_cfg_t.interval.
                                          */
     uint32_t actual_len;                /*!< 本次报告周期内，
-                                         *   (xf_iperf_t.curr_time 
+                                         *   (xf_iperf_t.curr_time
                                          *      ~ xf_iperf_t.curr_time + xf_iperf_cfg_t.interval)
                                          *   实际发送或者接收到的数据长度(单位字节)。
                                          */
@@ -257,5 +272,10 @@ xf_err_t xf_iperf_stop(void);
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
+
+/**
+ * End of addtogroup group_xf_iperf
+ * @}
+ */
 
 #endif /* __XF_IPERF_H__ */

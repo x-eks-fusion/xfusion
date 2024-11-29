@@ -1,12 +1,20 @@
 /**
  * @file xf_wifi.h
  * @author catcatBlue (catcatblue@qq.com)
- * @brief
+ * @brief xf_wifi 包含 STA、AP 接口。
  * @version 1.0
  * @date 2024-09-14
  *
  * Copyright (c) 2024, CorAL. All rights reserved.
  *
+ */
+
+/**
+ * @cond (XFAPI_USER || XFAPI_PORT || XFAPI_INTERNAL)
+ * @ingroup group_xf_wal
+ * @defgroup group_xf_wal_wifi xf_wifi
+ * @brief xf_wifi 包含 STA、AP 接口。
+ * @endcond
  */
 
 #ifndef __XF_WIFI_H__
@@ -29,7 +37,9 @@ extern "C" {
 /* ==================== [Global Prototypes] ================================= */
 
 /**
- * @ingroup group_xf_wifi_user
+ * @cond (XFAPI_USER || XFAPI_PORT)
+ * @addtogroup group_xf_wal_wifi
+ * @endcond
  * @{
  */
 
@@ -79,14 +89,16 @@ xf_err_t xf_wifi_get_mac(
     xf_wifi_interface_t ifx, uint8_t mac[XF_MAC_LEN_MAX]);
 
 /**
- * End of group_xf_wifi_user
+ * End of addtogroup group_xf_wal_wifi
  * @}
  */
 
 /**
- * @ingroup group_xf_wifi_user
- * @defgroup group_xf_wifi_user_ap ap
+ * @cond (XFAPI_USER || XFAPI_PORT)
+ * @ingroup group_xf_wal_wifi
+ * @defgroup group_xf_wal_wifi_ap ap
  * @brief xf_wifi ap.
+ * @endcond
  * @{
  */
 
@@ -196,14 +208,16 @@ xf_err_t xf_wifi_ap_get_sta_list(
 xf_err_t xf_wifi_ap_deauth_sta(const uint8_t mac[]);
 
 /**
- * End of group_xf_wifi_user_ap
+ * End of group_xf_wal_wifi_ap
  * @}
  */
 
 /**
- * @ingroup group_xf_wifi_user
- * @defgroup group_xf_wifi_user_sta sta
+ * @cond (XFAPI_USER || XFAPI_PORT)
+ * @ingroup group_xf_wal_wifi
+ * @defgroup group_xf_wal_wifi_sta sta
  * @brief xf_wifi sta.
+ * @endcond
  * @{
  */
 
@@ -377,7 +391,7 @@ xf_err_t xf_wifi_scan_get_result(
 xf_err_t xf_wifi_scan_clear_result(void);
 
 /**
- * End of group_xf_wifi_user_sta
+ * End of group_xf_wal_wifi_sta
  * @}
  */
 

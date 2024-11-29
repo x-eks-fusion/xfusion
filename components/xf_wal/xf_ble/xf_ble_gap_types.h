@@ -9,6 +9,14 @@
  *
  */
 
+/**
+ * @cond (XFAPI_USER || XFAPI_PORT || XFAPI_INTERNAL)
+ * @ingroup group_xf_wal_ble
+ * @defgroup group_xf_wal_ble_gap gap
+ * @brief Generic Attribute Profile
+ * @endcond
+ */
+
 #ifndef __XF_BLE_GAP_TYPES_H__
 #define __XF_BLE_GAP_TYPES_H__
 
@@ -19,6 +27,13 @@
 #include "xf_ble_types.h"
 
 #if XF_BLE_IS_ENABLE || defined(__DOXYGEN__)
+
+/**
+ * @cond (XFAPI_USER || XFAPI_PORT)
+ * @addtogroup group_xf_wal_ble_gap
+ * @endcond
+ * @{
+ */
 
 #ifdef __cplusplus
 extern "C" {
@@ -417,6 +432,11 @@ typedef enum {
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
+
+/**
+ * End of addtogroup group_xf_wal_ble_gap
+ * @}
+ */
 
 #endif /* XF_BLE_IS_ENABLE */
 

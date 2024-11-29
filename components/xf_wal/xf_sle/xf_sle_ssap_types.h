@@ -1,12 +1,20 @@
 /**
  * @file xf_sle_ssap_types.h
  * @author dotc (dotchan@qq.com)
- * @brief
+ * @brief SparkLink Service Access Protocol.
  * @version 1.0
  * @date 2024-08-06
  *
  * Copyright (c) 2024, CorAL. All rights reserved.
  *
+ */
+
+/**
+ * @cond (XFAPI_USER || XFAPI_PORT || XFAPI_INTERNAL)
+ * @ingroup group_xf_wal_sle
+ * @defgroup group_xf_wal_sle_ssap ssap
+ * @brief SparkLink Service Access Protocol.
+ * @endcond
  */
 
 #ifndef __XF_SLE_SSAP_TYPES_H__
@@ -16,6 +24,13 @@
 
 #include "xf_utils.h"
 #include "xf_sle_types.h"
+
+/**
+ * @cond (XFAPI_USER || XFAPI_PORT)
+ * @addtogroup group_xf_wal_sle_ssap
+ * @endcond
+ * @{
+ */
 
 #if XF_SLE_IS_ENABLE || defined(__DOXYGEN__)
 
@@ -135,6 +150,11 @@ typedef enum {
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
+
+/**
+ * End of addtogroup group_xf_wal_sle_ssap
+ * @}
+ */
 
 #endif /* XF_SLE_IS_ENABLE */
 

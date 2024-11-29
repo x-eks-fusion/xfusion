@@ -9,6 +9,14 @@
  *
  */
 
+/**
+ * @cond (XFAPI_USER || XFAPI_PORT || XFAPI_INTERNAL)
+ * @ingroup group_xf_wal
+ * @defgroup group_xf_wal_sle xf_sle
+ * @brief xf_sle 是对星闪接口的封装。
+ * @endcond
+ */
+
 #ifndef __XF_SLE_TYPES_H__
 #define __XF_SLE_TYPES_H__
 
@@ -19,6 +27,13 @@
 #define XF_SLE_IS_ENABLE 1
 
 #if XF_SLE_IS_ENABLE  || defined(__DOXYGEN__)
+
+/**
+ * @cond (XFAPI_USER || XFAPI_PORT)
+ * @addtogroup group_xf_wal_sle
+ * @endcond
+ * @{
+ */
 
 #ifdef __cplusplus
 extern "C" {
@@ -176,6 +191,11 @@ typedef union _xf_sle_var_uintptr_t {
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
+
+/**
+ * End of addtogroup group_xf_wal_sle
+ * @}
+ */
 
 #endif /* XF_SLE_IS_ENABLE */
 

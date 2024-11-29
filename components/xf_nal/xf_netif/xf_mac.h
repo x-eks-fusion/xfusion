@@ -16,6 +16,13 @@
 
 #include "xf_utils.h"
 
+/**
+ * @cond (XFAPI_USER || XFAPI_PORT)
+ * @addtogroup group_xf_init
+ * @endcond
+ * @{
+ */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -43,5 +50,10 @@ extern "C" {
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
+
+/**
+ * End of addtogroup group_xf_init
+ * @}
+ */
 
 #endif /* __XF_MAC_H__ */

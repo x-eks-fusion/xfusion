@@ -20,6 +20,13 @@
 
 #if XF_BLE_IS_ENABLE || defined(__DOXYGEN__)
 
+/**
+ * @cond (XFAPI_USER || XFAPI_PORT)
+ * @addtogroup group_xf_wal_ble_gap
+ * @endcond
+ * @{
+ */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -304,6 +311,11 @@ xf_err_t xf_ble_gap_set_security_param(
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
+
+/**
+ * End of addtogroup group_xf_wal_ble_gap
+ * @}
+ */
 
 #endif /* XF_BLE_IS_ENABLE */
 

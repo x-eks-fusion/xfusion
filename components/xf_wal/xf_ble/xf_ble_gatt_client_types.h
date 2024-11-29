@@ -22,6 +22,13 @@
 
 #if XF_BLE_IS_ENABLE || defined(__DOXYGEN__)
 
+/**
+ * @cond (XFAPI_USER || XFAPI_PORT)
+ * @addtogroup group_xf_wal_ble_gatt
+ * @endcond
+ * @{
+ */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -247,6 +254,11 @@ typedef union {
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
+
+/**
+ * End of addtogroup group_xf_wal_ble_gatt
+ * @}
+ */
 
 #endif /* XF_BLE_IS_ENABLE */
 
