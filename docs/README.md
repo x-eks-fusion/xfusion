@@ -10,10 +10,6 @@
 
 1.  安装 doxygen 的 Linux 的二进制分发版本。
 
-    > [!NOTE]
-    > 注意，目前 doxygen 使用版本是 `1.9.8`.
-    > ubuntu 20.04 的 glib 版本较低，而 doxygen 最新版 `1.12.0` 需要 `GLIBC_2.34`.
-
     ```bash
     # 下载 doxygen
     wget https://github.com/doxygen/doxygen/releases/download/Release_1_9_8/doxygen-1.9.8.linux.bin.tar.gz
@@ -42,6 +38,10 @@
     git submodule init
     git submodule update
     ```
+
+> [!NOTE]
+> 注意，目前 doxygen 使用版本是 `1.9.8`.
+> ubuntu 20.04 的 glib 版本较低，而 doxygen 最新版 `1.12.0` 需要 `GLIBC_2.34`.
 
 > [!NOTE]
 > 以下是一些 doxygen 教程，可以忽略。
