@@ -55,7 +55,7 @@ extern "C" {
  *          2.B.1、不可解析私有地址：地址定时更新
  *          2.B.2、可解析私有地址：地址加密生成
  * @endcode
- * @ref 详参蓝牙核心文档 《Core_v5.4》>| Vol 6, Part B >| 1.3 DEVICE ADDRESS
+ * @see 详参蓝牙核心文档 《Core_v5.4》>| Vol 6, Part B >| 1.3 DEVICE ADDRESS
  *  在线文档: https://www.bluetooth.com/specifications/specs/core54-html/
  *  离线文档: https://www.bluetooth.com/specifications/specs/core-specification-amended-5-4/
  */
@@ -86,7 +86,7 @@ typedef enum {
 /**
  * @brief BLE UUID 信息 (多种长度类型通用)
  */
-typedef struct {
+typedef struct __packed {
     union {
         xf_ble_uuid_type_t len_type;                 /*!< UUID 长度类型，见 @ref xf_ble_uuid_type_t */
         uint8_t _invalid;                           /*!< 用于固定 UUID 长度类型变量的大小为 8-bit */
@@ -96,40 +96,40 @@ typedef struct {
         uint32_t    uuid32;                         /*!< 32-bit UUID */
         uint8_t     uuid128[XF_BLE_UUID_TYPE_128];  /*!< 128-bit UUID */
     };
-} __attribute__((packed)) xf_ble_uuid_info_t;
+} xf_ble_uuid_info_t;
 
 /**
  * @brief BLE 16-bit UUID 信息
  */
-typedef struct {
+typedef struct __packed {
     union {
         xf_ble_uuid_type_t type;                     /*!< UUID 长度类型，见 @ref xf_ble_uuid_type_t */
         uint8_t _invalid;                           /*!< 用于固定 UUID 长度类型变量的大小为 8-bit */
     };
     uint16_t value;                                 /*!< 16-bit UUID */
-} __attribute__((packed)) xf_ble_uuid16_info_t;
+} xf_ble_uuid16_info_t;
 
 /**
  * @brief BLE 32-bit UUID 信息
  */
-typedef struct {
+typedef struct __packed {
     union {
         xf_ble_uuid_type_t type;                     /*!< UUID 长度类型，见 @ref xf_ble_uuid_type_t */
         uint8_t _invalid;                           /*!< 用于固定 UUID 长度类型变量的大小为 8-bit */
     };
     uint32_t value;                                 /*!< 32-bit UUID */
-} __attribute__((packed)) xf_ble_uuid32_info_t;
+} xf_ble_uuid32_info_t;
 
 /**
  * @brief BLE 128-bit UUID 信息
  */
-typedef struct {
+typedef struct __packed {
     union {
         xf_ble_uuid_type_t type;                     /*!< UUID 长度类型，见 @ref xf_ble_uuid_type_t */
         uint8_t _invalid;                           /*!< 用于固定 UUID 长度类型变量的大小为 8-bit */
     };
     uint8_t value[XF_BLE_UUID_TYPE_128];            /*!< 128-bit UUID */
-} __attribute__((packed)) xf_ble_uuid128_info_t;
+} xf_ble_uuid128_info_t;
 
 #define _XF_BLE_UUID16_INIT(uuid16)         \
     {                                       \

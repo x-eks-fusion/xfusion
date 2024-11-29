@@ -18,7 +18,7 @@
 #include "xf_sle_types.h"
 #include "xf_sle_ssap_server_types.h"
 
-#if XF_SLE_IS_ENABLE
+#if XF_SLE_IS_ENABLE || defined(__DOXYGEN__)
 
 #ifdef __cplusplus
 extern "C" {
@@ -143,7 +143,7 @@ xf_err_t xf_sle_ssaps_send_notify_indicate(
 
 /**
  * @brief  SLE SSAPS 设置服务端 INFO (连接前)
- * @param server_id 服务端 (应用) ID
+ * @param app_id 服务端 (应用) ID
  * @param info  服务端 INFO
  * @return xf_err_t
  *      - XF_OK                 成功

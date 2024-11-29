@@ -20,7 +20,7 @@
 #include "xf_ble_gap_types.h"
 #include "xf_ble_gatt_common.h"
 
-#if XF_BLE_IS_ENABLE
+#if XF_BLE_IS_ENABLE || defined(__DOXYGEN__)
 
 #ifdef __cplusplus
 extern "C" {

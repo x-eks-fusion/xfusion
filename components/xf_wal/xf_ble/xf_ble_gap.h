@@ -18,7 +18,7 @@
 #include "xf_ble_gap_types.h"
 #include "xf_ble_sm_types.h"
 
-#if XF_BLE_IS_ENABLE
+#if XF_BLE_IS_ENABLE || defined(__DOXYGEN__)
 
 #ifdef __cplusplus
 extern "C" {

@@ -18,7 +18,7 @@
 
 #include "xf_ble_types.h"
 
-#if XF_BLE_IS_ENABLE
+#if XF_BLE_IS_ENABLE || defined(__DOXYGEN__)
 
 #ifdef __cplusplus
 extern "C" {
@@ -33,7 +33,7 @@ extern "C" {
  *
  * @note 这里仅列出部分常用的值，更多可选值参见蓝牙官方文档
  *  《Assigned Numbers》 >| 2.6 Appearance Values
- * @ref https://www.bluetooth.com/specifications/assigned-numbers/
+ * @see https://www.bluetooth.com/specifications/assigned-numbers/
  */
 typedef uint16_t xf_ble_appearance_t;
 
@@ -109,7 +109,7 @@ typedef enum {
  *
  * @note  这里仅列出部分常用的类型，更多可选类型参见蓝牙官方文档
  *  《Assigned Numbers》 > 2.3 Common Data Types
- * @ref https://www.bluetooth.com/specifications/assigned-numbers/
+ * @see https://www.bluetooth.com/specifications/assigned-numbers/
  */
 typedef enum {
     XF_BLE_ADV_STRUCT_TYPE_FLAGS                   = 0x01,
@@ -259,7 +259,7 @@ typedef struct {
 /**
  * @brief BLE GAP 广播类型，完全遵循蓝牙标准进行定义
  *
- * @ref 详参蓝牙核心文档 《Core_v5.4》>| Vol 4, Part E >| 7.8.5 LE Set Advertising Parameters command
+ * @see 详参蓝牙核心文档 《Core_v5.4》>| Vol 4, Part E >| 7.8.5 LE Set Advertising Parameters command
  *  >| Command parameters >| Advertising_Type
  *  在线文档: https://www.bluetooth.com/specifications/specs/core54-html/
  *  离线文档: https://www.bluetooth.com/specifications/specs/core-specification-amended-5-4/
@@ -275,7 +275,7 @@ typedef enum {
 /**
  * @brief BLE GAP 广播过滤策略，完全遵循蓝牙标准进行定义
  *
- * @ref 详参蓝牙核心文档 《Core_v5.4》>| Vol 4, Part E >| 7.8.5 LE Set Advertising Parameters command
+ * @see 详参蓝牙核心文档 《Core_v5.4》>| Vol 4, Part E >| 7.8.5 LE Set Advertising Parameters command
  *  >| Command parameters >| Advertising_Filter_Policy
  *  在线文档: https://www.bluetooth.com/specifications/specs/core54-html/
  *  离线文档: https://www.bluetooth.com/specifications/specs/core-specification-amended-5-4/
@@ -290,7 +290,7 @@ typedef enum {
 /**
  * @brief BLE GAP 广播通道，完全遵循蓝牙标准进行定义
  *
- * @ref 详参蓝牙核心文档 《Core_v5.4》>| Vol 4, Part E >| 7.8.5 LE Set Advertising Parameters command
+ * @see 详参蓝牙核心文档 《Core_v5.4》>| Vol 4, Part E >| 7.8.5 LE Set Advertising Parameters command
  *  >| Command parameters >| Advertising_Channel_Map
  *  在线文档: https://www.bluetooth.com/specifications/specs/core54-html/
  *  离线文档: https://www.bluetooth.com/specifications/specs/core-specification-amended-5-4/
@@ -333,7 +333,7 @@ typedef struct {
 /**
  * @brief BLE GAP 扫描过滤策略，完全遵循蓝牙标准进行定义
  *
- * @ref 详参蓝牙核心文档 《Core_v5.4》
+ * @see 详参蓝牙核心文档 《Core_v5.4》
  *  1. >| Vol 6, Part B >| 4.3.3 Scanning filter policy
  *  2. >| Vol 4, Part E >| 7.8.10 LE Set Scan Parameters command >| Command parameters >| Scanning_Filter_Policy
  *  在线文档: https://www.bluetooth.com/specifications/specs/core54-html/
@@ -353,7 +353,7 @@ typedef enum {
 /**
  * @brief BLE GAP 扫描类型，完全遵循蓝牙标准进行定义
  *
- * @ref 详参蓝牙核心文档 《Core_v5.4》>| Vol 4, Part E
+ * @see 详参蓝牙核心文档 《Core_v5.4》>| Vol 4, Part E
  *  >| 7.8.10 LE Set Scan Parameters command >| Command parameters >| Scan_Type[
  *  在线文档: https://www.bluetooth.com/specifications/specs/core54-html/
  *  离线文档: https://www.bluetooth.com/specifications/specs/core-specification-amended-5-4/
@@ -399,7 +399,7 @@ typedef struct {
  * @brief 蓝牙断连原因
  *
  * @note 其他错误码值参见：具体平台说明或参考蓝牙标准
- * @ref 详参蓝牙核心文档 《Core_v5.4》>| Vol 1, Part F >| 1.3 LIST OF ERROR CODES
+ * @see 详参蓝牙核心文档 《Core_v5.4》>| Vol 1, Part F >| 1.3 LIST OF ERROR CODES
  *  在线文档: https://www.bluetooth.com/specifications/specs/core54-html/
  *  离线文档: https://www.bluetooth.com/specifications/specs/core-specification-amended-5-4/
  */

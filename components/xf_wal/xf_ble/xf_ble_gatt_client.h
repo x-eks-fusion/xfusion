@@ -19,7 +19,7 @@
 #include "xf_ble_types.h"
 #include "xf_ble_gatt_client_types.h"
 
-#if XF_BLE_IS_ENABLE
+#if XF_BLE_IS_ENABLE || defined(__DOXYGEN__)
 
 #ifdef __cplusplus
 extern "C" {
@@ -60,7 +60,7 @@ xf_err_t xf_ble_gattc_app_unregister(uint8_t app_id);
  *
  * @param app_id 客户端 ID (应用 ID )
  * @param conn_id 连接 ID (链接 ID )
- * @param svc_uuid 指定搜寻的服务的 UUID，见 @ref xf_ble_uuid_info_t
+ * @param service_uuid 指定搜寻的服务的 UUID，见 @ref xf_ble_uuid_info_t
  *      - NULL      搜寻所有服务
  *      - (OTHER)   指定搜寻的服务的 UUID ( 注意 UUID 需要为有效值，如不能为 0 )
  * @param [in,out] service_set_info 传入服务集合信息类型的指针变量的地址，

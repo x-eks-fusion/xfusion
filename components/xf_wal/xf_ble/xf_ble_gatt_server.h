@@ -19,7 +19,7 @@
 #include "xf_ble_types.h"
 #include "xf_ble_gatt_server_types.h"
 
-#if XF_BLE_IS_ENABLE
+#if XF_BLE_IS_ENABLE || defined(__DOXYGEN__)
 
 #ifdef __cplusplus
 extern "C" {

@@ -18,7 +18,7 @@
 
 #define XF_SLE_IS_ENABLE 1
 
-#if XF_SLE_IS_ENABLE
+#if XF_SLE_IS_ENABLE  || defined(__DOXYGEN__)
 
 #ifdef __cplusplus
 extern "C" {
@@ -78,7 +78,7 @@ typedef enum {
 /**
  * @brief SLE UUID 信息 (多种长度类型通用)
  */
-typedef struct {
+typedef struct __packed {
     union {
         xf_sle_uuid_type_t len_type;                /*!< UUID 长度类型，见 @ref xf_sle_uuid_type_t */
         uint8_t _invalid;                           /*!< 用于固定 UUID 长度类型变量的大小为 8-bit */
@@ -87,29 +87,29 @@ typedef struct {
         uint16_t    uuid16;                         /*!< 16-bit UUID */
         uint8_t     uuid128[XF_SLE_UUID_TYPE_128];  /*!< 128-bit UUID */
     };
-} __attribute__((packed)) xf_sle_uuid_info_t;
+} xf_sle_uuid_info_t;
 
 /**
  * @brief SLE 16-bit UUID 信息
  */
-typedef struct {
+typedef struct __packed {
     union {
         xf_sle_uuid_type_t type;                    /*!< UUID 长度类型，见 @ref xf_sle_uuid_type_t */
         uint8_t _invalid;                           /*!< 用于固定 UUID 长度类型变量的大小为 8-bit */
     };
     uint16_t value;                                 /*!< 16-bit UUID */
-} __attribute__((packed)) xf_sle_uuid16_info_t;
+} xf_sle_uuid16_info_t;
 
 /**
  * @brief SLE 128-bit UUID 信息
  */
-typedef struct {
+typedef struct __packed {
     union {
         xf_sle_uuid_type_t type;            /*!< UUID 长度类型，见 @ref xf_sle_uuid_type_t */
         uint8_t _invalid;                   /*!< 用于固定 UUID 长度类型变量的大小为 8-bit */
     };
     uint8_t value[XF_SLE_UUID_TYPE_128];    /*!< 32-bit UUID */
-} __attribute__((packed)) xf_sle_uuid128_info_t;
+} xf_sle_uuid128_info_t;
 
 #define _XF_SLE_UUID16_INIT(uuid16)         \
     {                                       \

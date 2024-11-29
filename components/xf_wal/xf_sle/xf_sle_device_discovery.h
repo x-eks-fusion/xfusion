@@ -18,7 +18,7 @@
 #include "xf_sle_types.h"
 #include "xf_sle_device_discovery_types.h"
 
-#if XF_SLE_IS_ENABLE
+#if XF_SLE_IS_ENABLE || defined(__DOXYGEN__)
 
 #ifdef __cplusplus
 extern "C" {
@@ -102,6 +102,7 @@ xf_err_t xf_sle_get_local_name(uint8_t *name, uint8_t *len);
 /**
  * @brief SLE 设置广播 (公开) 数据
  *
+ * @param announce_id 广播 ID
  * @param data 广播数据，见 @ref xf_sle_announce_data_t
  * @return xf_err_t
  *      - XF_OK                 成功
@@ -114,6 +115,7 @@ xf_err_t xf_sle_set_announce_data(
 /**
  * @brief SLE 设置广播 (公开) 参数
  *
+ * @param announce_id 广播 ID
  * @param param 广播参数，见 @ref xf_sle_announce_param_t
  * @return xf_err_t
  *      - XF_OK                 成功

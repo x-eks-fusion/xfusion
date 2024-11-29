@@ -1,3 +1,15 @@
+/**
+ * @file xf_ble_sm_types.h
+ * @author dotc (dotchan@qq.com)
+ * @brief
+ * @version 1.0
+ * @date 2024-08-06
+ *
+ * Copyright (c) 2024, CorAL. All rights reserved.
+ *
+ */
+
+
 #ifndef __XF_BLE_SM_TYPES_H__
 #define __XF_BLE_SM_TYPES_H__
 
@@ -6,7 +18,7 @@
 #include "xf_utils.h"
 #include "xf_ble_gap_types.h"
 
-#if XF_BLE_IS_ENABLE
+#if XF_BLE_IS_ENABLE || defined(__DOXYGEN__)
 
 #ifdef __cplusplus
 extern "C" {

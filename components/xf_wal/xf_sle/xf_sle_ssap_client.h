@@ -18,7 +18,7 @@
 #include "xf_sle_types.h"
 #include "xf_sle_ssap_client_types.h"
 
-#if XF_SLE_IS_ENABLE
+#if XF_SLE_IS_ENABLE || defined(__DOXYGEN__)
 
 #ifdef __cplusplus
 extern "C" {
