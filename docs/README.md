@@ -44,6 +44,9 @@
 > ubuntu 20.04 的 glib 版本较低，而 doxygen 最新版 `1.12.0` 需要 `GLIBC_2.34`.
 
 > [!NOTE]
+> 默认生成的文档仅包含用户接口，如需移植接口请修改 Doxyfile 内的 ENABLED_SECTIONS，添加 XFAPI_PORT 和 XFAPI_INTERNAL。
+
+> [!NOTE]
 > 以下是一些 doxygen 教程，可以忽略。
 >
 > -   [【Doxygen】Doxygen 使用配置及注释语法规范-CSDN 博客](https://blog.csdn.net/Stay_Hun_forward/article/details/140873510)

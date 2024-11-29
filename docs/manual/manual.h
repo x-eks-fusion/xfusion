@@ -15,7 +15,9 @@
     将组件的内部定义的组添加到 `components_internal` 组内。
  */
 
+#if defined(__DOXYGEN__) && defined(__XFUSION__) && defined(__DOXYGEN_ADD_COMPONENTS__)
 /**
  * @defgroup group_components_internal components
  * @brief 内部组件可以直接使用。
  */
+#endif

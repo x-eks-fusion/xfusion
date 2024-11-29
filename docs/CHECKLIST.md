@@ -5,5 +5,3 @@
 -   [ ] 更新版本号。
     -   [ ] docs/Doxyfile
         -   [ ] `PROJECT_NUMBER`
-    -   [ ] docs/manual/mainpage.md
-        -   [ ] `@version`
