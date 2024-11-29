@@ -136,7 +136,7 @@ typedef void (*xf_ping_cb_t)(
 typedef struct _xf_ping_ctx_t {
     /* public: */
     /* 只读数据 */
-    struct icmp_echo_hdr *packet_hdr;   /*!< ping 序列号见 @ref packet_hdr->seqno. */
+    struct icmp_echo_hdr *packet_hdr;   /*!< ping 序列号见 icmp_echo_hdr.seqno. */
     ip_addr_t recv_addr;                /*!< 回复的 IP 地址。 */
     uint32_t recv_len;                  /*!< 接收到的数据包的大小。 */
     uint32_t elapsed_time_ms;           /*!< 请求和回复数据包之间经过的时间。 */

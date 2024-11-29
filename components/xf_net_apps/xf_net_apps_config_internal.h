@@ -1,5 +1,5 @@
 /**
- * @file xf_net_apps_config_internal_h.h
+ * @file xf_net_apps_config_internal.h
  * @author catcatBlue (catcatblue@qq.com)
  * @brief xf_netif 模块内部配置总头文件。
  *        确保 xf_netif_config.h 的所有定义都有默认值。
@@ -10,8 +10,8 @@
  *
  */
 
-#ifndef __XF_NET_APPS_CONFIG_INTERNAL_H_H__
-#define __XF_NET_APPS_CONFIG_INTERNAL_H_H__
+#ifndef __XF_NET_APPS_CONFIG_INTERNAL_H__
+#define __XF_NET_APPS_CONFIG_INTERNAL_H__
 
 /* ==================== [Includes] ========================================== */
 
@@ -45,4 +45,4 @@ extern "C" {
 } /* extern "C" */
 #endif
 
-#endif // __XF_NET_APPS_CONFIG_INTERNAL_H_H__
+#endif // __XF_NET_APPS_CONFIG_INTERNAL_H__

@@ -87,12 +87,12 @@ typedef enum _xf_iperf_event_code_t {
     XF_IPERF_EVENT_START = 0x00,        /*!< iperf 开始。 */
     XF_IPERF_EVENT_REPORT,              /*!< iperf 报告带宽。
                                          *   事件数据见
-                                         *   @ref xf_iperf_t->curr_time,
-                                         *   @ref xf_iperf_t->actual_len,
-                                         *   和 @ref xf_iperf_t->actual_bandwidth.
+                                         *   @ref xf_iperf_t.curr_time,
+                                         *   @ref xf_iperf_t.actual_len,
+                                         *   和 @ref xf_iperf_t.actual_bandwidth.
                                          */
     XF_IPERF_EVENT_END,                 /*!< iperf 完成。
-                                         *   事件数据见 @ref xf_iperf_t->average_bandwidth.
+                                         *   事件数据见 @ref xf_iperf_t.average_bandwidth.
                                          *   不要在回调内重启 iperf.
                                          */
 
@@ -110,7 +110,7 @@ typedef int32_t xf_iperf_event_id_t;
  * 不要在回调内重启 iperf.
  *
  * @param event_id 事件 id. 根据事件类型, 见 @ref xf_iperf_event_code_t.
- * @param hdl 事件数据. 见 @ref xf_iperf_ctx_t.
+ * @param hdl 事件数据. 见 @ref xf_iperf_t.
  * @param user_args 用户数据. `xf_iperf_new_session()` 时传入.
  */
 typedef void (*xf_iperf_cb_t)(
@@ -175,10 +175,12 @@ typedef struct _xf_iperf_ctx_t {
     /* 只读数据 */
     xf_iperf_cfg_t cfg;                 /*!< xf_iperf_start() 传入的配置备份。 */
     uint32_t curr_time;                 /*!< 当前报告时刻，单位 s.
-                                         *   注意，每次报告时间差见 @ref xf_iperf_t->cfg.interval.
+                                         *   注意，每次报告时间差见当前结构体内的 cfg:
+                                         *   @ref xf_iperf_cfg_t.interval.
                                          */
     uint32_t actual_len;                /*!< 本次报告周期内，
-                                         *   (xf_iperf_t->curr_time ~ xf_iperf_t->curr_time + xf_iperf_t->cfg.interval)
+                                         *   (xf_iperf_t.curr_time 
+                                         *      ~ xf_iperf_t.curr_time + xf_iperf_cfg_t.interval)
                                          *   实际发送或者接收到的数据长度(单位字节)。
                                          */
     float actual_bandwidth;             /*!< 本次报告周期内的实际带宽(单位 Mbits/sec)。 */
@@ -212,6 +214,8 @@ typedef struct _xf_iperf_ctx_t {
  * @note iperf 通常用于测试网络极限性能，因此不打算支持多实例。
  *
  * @param p_cfg iperf 配置。
+ * @param cb_func iperf 回调函数。
+ * @param user_args iperf 回调函数用户参数。
  * @return xf_err_t
  *      - XF_ERR_INVALID_ARG 无效参数（例如配置为空等）
  *      - XF_ERR_NO_MEM 内存不足
