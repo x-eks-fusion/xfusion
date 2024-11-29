@@ -1,7 +1,7 @@
 {
     "sdks":{
         "url": "https://github.com/Im-eks-dev/bs2x_sdk", 
-        "commit": "94121aa562f8f012d4194cb79f24ecd4665ae029",
+        "commit": "11f30ec4f4c06d2d75420bdcfcad83de01031301",
         "dir": "bs2x_sdk",
         "branch": "main"
     }
