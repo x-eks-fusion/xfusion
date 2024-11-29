@@ -1,12 +1,12 @@
 /**
  * @file xf_sle_connection_manager.h
  * @author dotc (dotchan@qq.com)
- * @brief 
+ * @brief
  * @version 1.0
  * @date 2024-08-06
- * 
+ *
  * Copyright (c) 2024, CorAL. All rights reserved.
- * 
+ *
  */
 
 #ifndef __XF_SLE_XF_SLE_CONNECTION_MANAGER_H__
@@ -134,9 +134,9 @@ xf_err_t xf_sle_get_bond_list(
 
 /**
  * @brief SLE 获取对端设备的 RSSI
- * 
+ *
  * @param conn_id 链接 (连接) ID
- * @param rssi 
+ * @param rssi
  * @return xf_err_t
  *      - XF_OK                 成功
  *      - XF_FAIL               失败
@@ -146,7 +146,7 @@ xf_err_t xf_sle_get_peer_rssi(uint16_t conn_id, int8_t *rssi);
 
 /**
  * @brief SLE 设置 PHY 参数
- * 
+ *
  * @param conn_id 链接 (连接) ID
  * @param sle_phy SLE PHY 参数， @ref xf_sle_set_phy_t
  * @return xf_err_t
@@ -158,7 +158,7 @@ xf_err_t xf_sle_set_phy_params(uint16_t conn_id, xf_sle_set_phy_t *sle_phy);
 
 /**
  * @brief SLE 设置 调制与编码策略（  Modulation and Coding Scheme ）
- * 
+ *
  * @param conn_id 链接 (连接) ID
  * @param mcs SLE 调制与编码策略（  Modulation and Coding Scheme ）
  * @return xf_err_t
@@ -170,7 +170,7 @@ xf_err_t xf_sle_set_mcs(uint16_t conn_id, uint8_t mcs);
 
 /**
  * @brief SLE 设置连接链路上所偏好的最大传输 payload 字节数
- * 
+ *
  * @param conn_id 链接 (连接) ID
  * @param tx_octets 偏好的 payload 字节数
  * @return xf_err_t
@@ -180,10 +180,10 @@ xf_err_t xf_sle_set_mcs(uint16_t conn_id, uint8_t mcs);
  */
 xf_err_t xf_sle_set_data_len(uint16_t conn_id, uint16_t tx_octets);
 
-// 
+//
 /**
  * @brief SLE 设置默认连接参数
- * 
+ *
  * @param conn_param_def SLE 默认连接参数
  * @return xf_err_t
  *      - XF_OK                 成功
@@ -195,7 +195,7 @@ xf_err_t xf_sle_set_default_conn_params(
 
 /**
  * @brief SLEE 配置最大功率档位（根据指定的最大功率）
- * 
+ *
  * @param target_max_pwr 目标最大功率
  * @return xf_err_t
  *      - XF_OK                 成功

@@ -256,7 +256,6 @@ typedef struct {
     uint8_t *scan_rsp_data;                     /*!< 扫描响应数据 */
 } xf_ble_gap_adv_data_t;
 
-
 /**
  * @brief BLE GAP 广播类型，完全遵循蓝牙标准进行定义
  *

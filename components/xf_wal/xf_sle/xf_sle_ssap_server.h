@@ -1,12 +1,12 @@
 /**
  * @file xf_sle_ssap_server.h
  * @author dotc (dotchan@qq.com)
- * @brief 
+ * @brief
  * @version 1.0
  * @date 2024-08-06
- * 
+ *
  * Copyright (c) 2024, CorAL. All rights reserved.
- * 
+ *
  */
 
 #ifndef __XF_SLE_SSAP_SERVER_H__

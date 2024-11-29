@@ -131,7 +131,6 @@ typedef struct {
     uint8_t value[XF_BLE_UUID_TYPE_128];            /*!< 128-bit UUID */
 } __attribute__((packed)) xf_ble_uuid128_info_t;
 
-
 #define _XF_BLE_UUID16_INIT(uuid16)         \
     {                                       \
         .type = XF_BLE_UUID_TYPE_16,        \

@@ -1,12 +1,12 @@
 /**
  * @file xf_sle_ssap_server_types.h
  * @author dotc (dotchan@qq.com)
- * @brief 
+ * @brief
  * @version 1.0
  * @date 2024-08-06
- * 
+ *
  * Copyright (c) 2024, CorAL. All rights reserved.
- * 
+ *
  */
 
 #ifndef __XF_SLE_SSAP_SERVER_TYPES_H__
@@ -55,7 +55,7 @@ typedef struct {
     xf_sle_uuid_info_t *desc_uuid;          /*!< 特征描述符 UUID，见 @ref xf_sle_uuid_info_t */
     xf_sle_ssap_permission_t permissions;   /*!< 特征描述符权限，见 @ref xf_sle_ssap_permission_t */
     xf_sle_ssap_operate_indication_t operate_indication;
-                                            /*!< 操作指示，见 @ref xf_sle_ssap_operate_indication_t */
+    /*!< 操作指示，见 @ref xf_sle_ssap_operate_indication_t */
     xf_sle_ssap_desc_type_t desc_type;      /*!< 特征描述符类型，见 @ref xf_sle_ssap_desc_type_t */
     uint8_t *value;                         /*!< 属性值 */
     uint16_t value_len;                     /*!< 属性值长度 */
@@ -72,7 +72,8 @@ typedef struct {
     operate_indication;                     /*!< 操作指示，见 @ref xf_sle_ssap_operate_indication_t */
     uint16_t value_len;                     /*!< 响应的数据长度 */
     uint8_t *value;                         /*!< 响应的数据 */
-    xf_sle_ssaps_desc_t *desc_set;          /*!< 特征描述符集合，如无，则填 NULL，见 @ref xf_sle_ssaps_desc_t */
+    xf_sle_ssaps_desc_t
+    *desc_set;          /*!< 特征描述符集合，如无，则填 NULL，见 @ref xf_sle_ssaps_desc_t */
 } xf_sle_ssaps_property_t;
 
 /**
@@ -83,7 +84,8 @@ typedef struct _xf_sle_ssaps_service_t {
     xf_sle_attr_handle_t service_handle;    /*!< 服务句柄，见 @ref xf_sle_attr_handle_t */
     xf_sle_ssap_service_type_t service_type;/*!< 服务类型，见 @ref xf_sle_ssap_service_type_t */
     xf_sle_uuid_info_t *service_uuid;       /*!< 服务UUID ，见 @ref xf_sle_uuid_info_t */
-    xf_sle_ssaps_service_t **include_set;   /*!< 包含服务 (include service) 集合信息，见 @ref xf_sle_ssaps_service_t */
+    xf_sle_ssaps_service_t
+    **include_set;   /*!< 包含服务 (include service) 集合信息，见 @ref xf_sle_ssaps_service_t */
     xf_sle_ssaps_property_t *prop_set;      /*!< 特征集合 ，见 @ref xf_sle_ssaps_property_t */
 } xf_sle_ssaps_service_t;
 
@@ -91,10 +93,10 @@ typedef struct _xf_sle_ssaps_service_t {
  * @brief SLE SSAPS 事件
  */
 typedef enum {
-    XF_SLE_ADV_EVT_ENABLE = _XF_SLE_SSAP_COMMON_EVT_MAX,/*!< 广播使能事件 */  
+    XF_SLE_ADV_EVT_ENABLE = _XF_SLE_SSAP_COMMON_EVT_MAX,/*!< 广播使能事件 */
     XF_SLE_ADV_EVT_DISABLE,                             /*!< 广播失能事件 */
-    XF_SLE_ADV_EVT_TERMINAL,                            
-    XF_SLE_SSAPS_EVT_ADD_SERVICE,                       /*!< 服务添加事件 */       
+    XF_SLE_ADV_EVT_TERMINAL,
+    XF_SLE_SSAPS_EVT_ADD_SERVICE,                       /*!< 服务添加事件 */
     XF_SLE_SSAPS_EVT_ADD_PROPERTY,                      /*!< 特征添加事件 */
     XF_SLE_SSAPS_EVT_ADD_DESC,                          /*!< 特征描述符事件 */
     XF_SLE_SSAPS_EVT_SERVICE_START,                     /*!< 服务开启事件 */
@@ -102,7 +104,6 @@ typedef enum {
     XF_SLE_SSAPS_EVT_REQ_READ,                          /*!< 接收到读请求事件 */
     XF_SLE_SSAPS_EVT_REQ_WRITE,                         /*!< 接收到写请求事件 */
 } xf_sle_ssaps_event_t;
-
 
 /**
  * @brief SLE SSAPS 服务端事件回调参数
@@ -200,7 +201,7 @@ typedef union _xf_sle_ssaps_evt_cb_param_t {
         bool need_auth;                     /*!< 是否需要授权 */
         uint8_t *value;                     /*!< 值 */
         uint16_t value_len;                 /*!< 值长度 */
-    } req_write;    
+    } req_write;
 } xf_sle_ssaps_evt_cb_param_t;
 
 /**

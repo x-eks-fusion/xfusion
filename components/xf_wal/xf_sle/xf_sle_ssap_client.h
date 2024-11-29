@@ -1,12 +1,12 @@
 /**
  * @file xf_sle_ssap_client.h
  * @author dotc (dotchan@qq.com)
- * @brief 
+ * @brief
  * @version 1.0
  * @date 2024-08-06
- * 
+ *
  * Copyright (c) 2024, CorAL. All rights reserved.
- * 
+ *
  */
 
 #ifndef __XF_SLE_SSAP_CLIENT_H__
@@ -56,7 +56,7 @@ xf_err_t xf_sle_ssapc_app_unregister(uint8_t app_id);
 
 /**
  * @brief SLE SSAPC 搜寻服务
- * 
+ *
  * @param app_id 客户端 ID (应用 ID )
  * @param conn_id 连接 ID (链接 ID )
  * @param param 搜寻参数，见 @ref xf_sle_ssapc_find_struct_param_t
@@ -71,7 +71,7 @@ xf_err_t xf_sle_ssapc_discover_service(
 
 /**
  * @brief SLE SSAPC 搜寻属性 (property)
- * 
+ *
  * @param app_id 客户端 ID (应用 ID )
  * @param conn_id 连接 ID (链接 ID )
  * @param param 搜寻参数，见 @ref xf_sle_ssapc_find_struct_param_t
@@ -163,11 +163,11 @@ xf_err_t xf_sle_ssapc_request_write_cmd(
 
 /**
  * @brief SLE SSAPC 发送协商 (MTU、Version) 请求
- * 
+ *
  * @param app_id 客户端 ID (应用 ID)
  * @param conn_id 连接 ID (链接 ID )
  * @param param 协商信息，见 @ref xf_sle_ssap_exchange_info_t
- * @return xf_err_t 
+ * @return xf_err_t
  */
 xf_err_t xf_sle_ssapc_request_exchange_info(
     uint8_t app_id, uint16_t conn_id,

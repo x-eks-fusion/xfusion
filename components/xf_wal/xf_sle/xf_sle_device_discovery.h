@@ -1,12 +1,12 @@
 /**
  * @file xf_sle_device_discovery.h
  * @author dotc (dotchan@qq.com)
- * @brief 
+ * @brief
  * @version 1.0
  * @date 2024-08-06
- * 
+ *
  * Copyright (c) 2024, CorAL. All rights reserved.
- * 
+ *
  */
 
 #ifndef __XF_SLE_DEVICE_DISCOVERY_H__
@@ -125,7 +125,7 @@ xf_err_t xf_sle_set_announce_param(
 
 /**
  * @brief SLE 广播开启
- * 
+ *
  * @param announce_id 广播 ID
  * @return xf_err_t
  *      - XF_OK                 成功
@@ -144,7 +144,6 @@ xf_err_t xf_sle_start_announce(uint8_t announce_id);
  *      - (OTHER)               @ref xf_err_t
  */
 xf_err_t xf_sle_stop_announce(uint8_t announce_id);
-
 
 /**
  * @brief SLE 设置扫描参数

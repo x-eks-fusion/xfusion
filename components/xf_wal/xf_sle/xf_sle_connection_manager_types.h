@@ -1,12 +1,12 @@
 /**
  * @file xf_sle_connection_manager_types.h
  * @author dotc (dotchan@qq.com)
- * @brief 
+ * @brief
  * @version 1.0
  * @date 2024-08-06
- * 
+ *
  * Copyright (c) 2024, CorAL. All rights reserved.
- * 
+ *
  */
 
 #ifndef __XF_SLE_XF_SLE_CONNECTION_MANAGER_TYPES_H__
@@ -28,7 +28,7 @@ extern "C" {
 /* ==================== [Typedefs] ========================================== */
 
 /* TODO xf_sle_conn_param_update_t conn_id 移至函数参数处，
-			 	supervision_timeout 改 timeout */
+                supervision_timeout 改 timeout */
 /**
  * @brief SLE 连接参数更新的信息
  */

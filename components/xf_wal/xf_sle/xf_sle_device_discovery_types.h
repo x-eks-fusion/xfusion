@@ -1,12 +1,12 @@
 /**
  * @file xf_sle_device_discovery_types.h
  * @author dotc (dotchan@qq.com)
- * @brief 
+ * @brief
  * @version 1.0
  * @date 2024-08-06
- * 
+ *
  * Copyright (c) 2024, CorAL. All rights reserved.
- * 
+ *
  */
 
 #ifndef __XF_SLE_DEVICE_DISCOVERY_TYPES_H__
@@ -70,7 +70,7 @@ typedef enum {
  *  | Public Information Data Structure                                                                     ......  |
  *  | Data Substructure 1                                                           | Data Substructure 2|  ......  |
  *  | Type (1 octet) | Length (1 octet, len of content) | Content (Length octets)   | ......                        |
- *                                                      |             ^             |         
+ *                                                      |             ^             |
  * @endcode
  */
 typedef union _xf_sle_adv_struct_data_t {
@@ -90,7 +90,7 @@ typedef union _xf_sle_adv_struct_data_t {
  *  | Public Information Data Structure                                                                     ......  |
  *  | Data Substructure 1                                                           | Data Substructure 2|  ......  |
  *  | Type (1 octet) | Length (1 octet, len of content) | Content (Length octets)   | ......                        |
- *  |                          ^                        |         
+ *  |                          ^                        |
  * @endcode
  */
 typedef struct {
@@ -206,7 +206,7 @@ typedef struct {
     xf_sle_addr_t own_addr;                 /*!< 本端地址，见 @ref xf_sle_addr_t */
     xf_sle_addr_t peer_addr;                /*!< 对端地址，见 @ref xf_sle_addr_t */
     xf_sle_adv_channel_map_t  announce_channel_map;
-                                            /*!< 广播通道，见 @ref xf_sle_adv_channel_map_t */
+    /*!< 广播通道，见 @ref xf_sle_adv_channel_map_t */
     int8_t   announce_tx_power;             /*!< 广播发射功率，单位dbm, 取值范围[-127, 20], 0x7F：不设置特定发送功率*/
     uint8_t announce_handle;                /*!< 广播 (公开) 句柄，取值范围[0, 0xFF] */
     xf_sle_announce_gt_role_t announce_gt_role; /*!< G/T 角色协商指示，见 @ref xf_sle_announce_gt_role_t */
@@ -221,7 +221,6 @@ typedef struct {
                                              * announce_gt_role 为 SLE_ANNOUNCE_ROLE_T_NO_NEGO 时无需配置  */
     void *ext_param;                        /*!< 扩展设备公开参数, 缺省时置空 */
 } xf_sle_announce_param_t;
-
 
 /**
  * @brief 扫描 (发现， seek) 过滤类型

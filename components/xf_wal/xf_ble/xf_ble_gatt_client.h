@@ -143,7 +143,6 @@ xf_err_t xf_ble_gattc_request_read_by_uuid(
     uint16_t end_handle,
     const xf_ble_uuid_info_t *uuid);
 
-
 /**
  * @brief BLE GATTC 发起写请求
  *

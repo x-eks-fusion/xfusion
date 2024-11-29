@@ -1,12 +1,12 @@
 /**
  * @file xf_sle_ssap_client_types.h
  * @author dotc (dotchan@qq.com)
- * @brief 
+ * @brief
  * @version 1.0
  * @date 2024-08-06
- * 
+ *
  * Copyright (c) 2024, CorAL. All rights reserved.
- * 
+ *
  */
 
 #ifndef __XF_SLE_SSAP_CLIENT_TYPES_H__
@@ -47,7 +47,8 @@ typedef struct {
     xf_sle_ssap_find_type_t type;   /*!< 搜寻类型，见 @ref xf_sle_ssap_find_type_t */
     uint16_t start_hdl;             /*!< 起始句柄 */
     uint16_t end_hdl;               /*!< 结束句柄 */
-    xf_sle_uuid_info_t uuid;        /*!< UUID，按照 UUID 搜寻时生效，其余情况不生效，见 @ref xf_sle_uuid_info_t */
+    xf_sle_uuid_info_t
+    uuid;        /*!< UUID，按照 UUID 搜寻时生效，其余情况不生效，见 @ref xf_sle_uuid_info_t */
     uint8_t    reserve;             /*!< 预留，默认值写0 */
 } xf_sle_ssapc_find_struct_param_t;
 
@@ -74,9 +75,9 @@ typedef struct {
     xf_sle_attr_handle_t handle;    /*!< 特征句柄 */
     xf_sle_uuid_info_t uuid;        /*!< 特征 UUID ，见 @ref xf_sle_uuid_info_t */
     xf_sle_ssap_operate_indication_t operate_indication;
-                                    /*!< 操作指示 ，见 @ref xf_sle_ssap_operate_indication_t */
+    /*!< 操作指示 ，见 @ref xf_sle_ssap_operate_indication_t */
     xf_sle_ssapc_desc_found_set_t *desc_set_info;
-                                    /*!< 特征描述符集合信息，见 @ref xf_sle_ssapc_desc_found_set_t */
+    /*!< 特征描述符集合信息，见 @ref xf_sle_ssapc_desc_found_set_t */
 } xf_sle_ssapc_property_found_t;
 
 /**
@@ -95,7 +96,7 @@ typedef struct {
     xf_sle_attr_handle_t end_hdl;       /*!< 服务结束句柄，见 @ref xf_sle_attr_handle_t */
     xf_sle_uuid_info_t uuid;            /*!< 服务 UUID ，见 @ref xf_sle_uuid_info_t */
     xf_sle_ssapc_property_found_set_t *chara_set_info;
-                                        /*!< 特征集合信息 ，见 @ref xf_sle_ssapc_property_found_set_t */
+    /*!< 特征集合信息 ，见 @ref xf_sle_ssapc_property_found_set_t */
 } xf_sle_ssapc_service_found_t;
 
 /**
@@ -222,15 +223,15 @@ typedef union _xf_sle_ssapc_evt_cb_param_t {
                                                  *  XF_SLE_CONN_EVT_DISCONNECT
                                                  */
     xf_sle_evt_param_conn_param_update_t conn_param_update;
-                                                /*!< 连接参数更新事件的参数，
-                                                 *  @ref xf_sle_evt_param_conn_param_update_t
-                                                 *  XF_SLE_CONN_EVT_CONN_PARAMS_UPDATE
-                                                 */
+    /*!< 连接参数更新事件的参数，
+     *  @ref xf_sle_evt_param_conn_param_update_t
+     *  XF_SLE_CONN_EVT_CONN_PARAMS_UPDATE
+     */
     xf_sle_evt_param_req_conn_param_update_t req_conn_param_update;
-                                                /*!< 请求更新连接参数事件的参数，
-                                                 *  @ref xf_sle_evt_param_req_conn_param_update_t
-                                                 *  XF_SLE_CONN_EVT_REQ_CONN_PARAMS_UPDATE
-                                                 */
+    /*!< 请求更新连接参数事件的参数，
+     *  @ref xf_sle_evt_param_req_conn_param_update_t
+     *  XF_SLE_CONN_EVT_REQ_CONN_PARAMS_UPDATE
+     */
     xf_sle_evt_param_seek_result_t seek_result; /*!< 收到扫描结果事件的参数，
                                                  *  @ref xf_sle_evt_param_seek_result_t
                                                  *  XF_SLE_SEEK_EVT_RESULT

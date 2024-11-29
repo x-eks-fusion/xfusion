@@ -41,7 +41,6 @@ typedef enum {
     XF_BLE_GATT_ATTR_PERMISSION_MITM_NEED = 0x20,           /*!< 需要MITM保护 */
 } xf_ble_gatt_attr_permission_t;
 
-
 /**
  * @brief BLE 特征的特性 (property)
  * @note
@@ -125,7 +124,6 @@ typedef enum {
     XF_BLE_GATT_ERR_COMMON_PROFILE_AND_SERVICE_START    = 0xE0,
     XF_BLE_GATT_ERR_COMMON_PROFILE_AND_SERVICE_END      = 0xFF,
 } xf_ble_gatt_err_t;
-
 
 /* ==================== [Global Prototypes] ================================= */
 
