@@ -1,12 +1,12 @@
 /**
  * @file xf_mac.h
  * @author catcatBlue (catcatblue@qq.com)
- * @brief 
+ * @brief
  * @version 1.0
  * @date 2024-06-11
- * 
+ *
  * Copyright (c) 2024, CorAL. All rights reserved.
- * 
+ *
  */
 
 #ifndef __XF_MAC_H__

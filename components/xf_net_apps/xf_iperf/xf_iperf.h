@@ -165,7 +165,6 @@ typedef struct _xf_iperf_cfg_t {
         .report_task_prio = IPERF_REPORT_TASK_PRIORITY, \
     }
 
-
 /**
  * @brief iperf 上下文.
  * @attention 只有 `public:` 部分是在回调中可读的，

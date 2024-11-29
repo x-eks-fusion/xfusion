@@ -9,7 +9,6 @@
  *
  */
 
-
 /* ==================== [Includes] ========================================== */
 
 #include "xf_sys/src/xf_sys.h"
@@ -29,4 +28,3 @@ extern "C" {
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
-

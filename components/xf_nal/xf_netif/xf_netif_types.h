@@ -32,7 +32,7 @@ extern "C" {
 #if XF_NETIF_TODO
 /**
  * @brief 网络设备类型码，用于查询 netif 句柄归属。
- * 
+ *
  * @todo 暂未使用。
  */
 typedef enum _xf_netif_type_code_t {

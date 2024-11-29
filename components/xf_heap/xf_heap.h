@@ -6,9 +6,9 @@
  * @version 1.0
  * @date 2024-08-09
  * @note 此文件不需要防止重复包含。
- * 
+ *
  * Copyright (c) 2024, CorAL. All rights reserved.
- * 
+ *
  */
 
 #if defined(__DOXYGEN__) && defined(__XFUSION__)
