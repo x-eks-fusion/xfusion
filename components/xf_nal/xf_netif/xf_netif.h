@@ -1,7 +1,7 @@
 /**
  * @file xf_netif.h
  * @author catcatBlue (catcatblue@qq.com)
- * @brief 
+ * @brief
  * @version 1.0
  * @date 2024-06-11
  *

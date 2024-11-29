@@ -4,9 +4,9 @@
  * @brief (请勿使用)此头文件暂时仅用于分组。
  * @version 1.0
  * @date 2024-11-29
- * 
+ *
  * Copyright (c) 2024, CorAL. All rights reserved.
- * 
+ *
  */
 
 #if defined(__DOXYGEN__) && defined(__XFUSION__) && defined(__DOXYGEN_ADD_COMPONENTS__)
