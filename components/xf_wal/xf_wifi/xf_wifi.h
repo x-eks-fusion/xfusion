@@ -214,9 +214,6 @@ xf_err_t xf_wifi_ap_deauth_sta(const uint8_t mac[]);
  *       连接 AP 请调用 xf_wifi_sta_connect().
  *
  * @param[in] p_cfg STA 配置（目标 AP 配置）。仅在内部拷贝记录。可以为 NULL.
- * @param[in] p_cfg_ext STA 额外配置. 可以为 NULL.
- * @param[out] p_netif_hdl 传出对应的 netif 句柄，通过该句柄可配置 IP 等信息.
- *                         可以为 NULL. 后续使用 xf_wifi_ap_get_netif() 获取。
  * @return xf_err_t
  *      - XF_OK             启用成功或连接成功
  *      - XF_FAIL           失败
