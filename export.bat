@@ -79,9 +79,9 @@ if "%VENV_RESULT%"=="1" (
     call "%USERPROFILE%\.xfusion\%XF_VERSION%\Scripts\activate.bat"
 )
 
-python.exe -m pip install --upgrade pip -i https://pypi.tuna.tsinghua.edu.cn/simple
-pip install xf_build==0.3.8 -i https://pypi.tuna.tsinghua.edu.cn/simple
-pip install windows-curses -i https://pypi.tuna.tsinghua.edu.cn/simple
+python.exe -m pip install --upgrade pip
+pip install xf_build==0.3.9
+pip install windows-curses
 
 echo XF_ROOT:           %XF_ROOT%
 echo XF_TARGET:         %XF_TARGET%
