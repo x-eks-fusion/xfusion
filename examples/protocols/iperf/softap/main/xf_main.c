@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/protocols/iperf/softap/main/xf_main.c
+ * wifi iperf 示例(softap)。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xfconfig.h"

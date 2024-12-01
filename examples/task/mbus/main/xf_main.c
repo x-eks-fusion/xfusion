@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example examples/task/mbus/main/xf_main.c
+ * xf_task 发布订阅示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_task.h"

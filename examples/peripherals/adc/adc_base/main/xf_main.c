@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/peripherals/adc/adc_base/main/xf_main.c
+ * xf_hal adc 基础示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"

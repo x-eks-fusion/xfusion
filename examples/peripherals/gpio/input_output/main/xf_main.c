@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/peripherals/gpio/input_output/main/xf_main.c
+ * xf_hal gpio 输入输出示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"

@@ -1,3 +1,8 @@
+/**
+ * @example examples/wireless/ble/sample_gatt_client/main/xf_main.c
+ * xf_wal ble gatt 客户端 示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"
@@ -38,7 +43,7 @@ static xf_err_t gattc_event_scan_result_cb(xf_ble_gattc_evt_cb_param_t *param);
 */
 static uint8_t target_gatts_device_name[] = "XF_GATTS";
 static uint8_t write_req_data[] = "I M GATTC";
-static xf_bt_uuid_info_t app_uuid = {
+static xf_ble_uuid_info_t app_uuid = {
     .len_type = XF_BLE_UUID_TYPE_16,
     .uuid16 = 0x0000
 };
@@ -48,7 +53,7 @@ static bool is_need_discovery = false;
 static bool is_discovery_cmpl = false;
 static bool is_read_cmpl = false;
 static xf_ble_gattc_service_found_set_t *service_found_set = NULL;
-static xf_bt_dev_addr_t peer_addr = {0};
+static xf_ble_addr_t peer_addr = {0};
 
 static void discovery_task(xf_task_t task);
 static void read_write_task(xf_task_t task);
@@ -70,7 +75,7 @@ void xf_main(void)
              "REGISTER event cb failed:%#X", ret);
 
     // 注册 gattc app_profile
-    ret = xf_ble_gattc_register_app_profile(&app_uuid, &s_app_id);
+    ret = xf_ble_gattc_app_register(&app_uuid, &s_app_id);
     XF_CHECK(ret != XF_OK || s_app_id == 0, XF_RETURN_VOID, TAG,
              "REGISTER app profile failed:%#X app_id:%d", ret, s_app_id);
 
@@ -111,9 +116,9 @@ static xf_err_t sample_ble_gattc_event_cb(
         peer_addr = param.connect.peer_addr;
 
         XF_LOGI(TAG, "EV:connect:s_conn_id:%d,addr_type:%u,addr:"
-                XF_BT_ADDR_PRINT_FMT,
+                XF_BLE_ADDR_PRINT_FMT,
                 s_conn_id, peer_addr.type,
-                XF_BT_ADDR_EXPAND_TO_ARG(peer_addr.addr));
+                XF_BLE_ADDR_EXPAND_TO_ARG(peer_addr.addr));
         is_need_discovery = true;
     } break;
     case XF_BLE_GATTC_EVT_READ_COMPLETE: {
@@ -158,10 +163,10 @@ static xf_err_t sample_ble_set_scan_param(void)
 static xf_err_t gattc_event_scan_result_cb(xf_ble_gattc_evt_cb_param_t *param)
 {
     xf_err_t ret = XF_OK;
-    XF_LOGD(TAG, "EV:scan_result:ADV:addr_type:%d,addr:" XF_BT_ADDR_PRINT_FMT
+    XF_LOGD(TAG, "EV:scan_result:ADV:addr_type:%d,addr:" XF_BLE_ADDR_PRINT_FMT
             ",RSSI:%d,adv_data_len:%u",
             param->scan_result.addr_scanned.type,
-            XF_BT_ADDR_EXPAND_TO_ARG(param->scan_result.addr_scanned.addr)
+            XF_BLE_ADDR_EXPAND_TO_ARG(param->scan_result.addr_scanned.addr)
            );
     uint8_t *adv_data_all = param->scan_result.adv_data;
     uint16_t adv_size_all = param->scan_result.adv_data_len;
@@ -177,7 +182,7 @@ static xf_err_t gattc_event_scan_result_cb(xf_ble_gattc_evt_cb_param_t *param)
         switch (ad_type) {
         case XF_BLE_ADV_STRUCT_TYPE_LOCAL_NAME_ALL: {
             uint8_t *local_name = &ptr_current[2];
-            uint8_t local_namez_size = struct_data_len - XF_BLE_GAP_ADV_STRUCT_AD_TYPE_SIZE;
+            uint8_t local_namez_size = struct_data_len - XF_BLE_GAP_ADV_STRUCT_AD_TYPE_FIELD_SIZE;
             if (strncmp((char *)target_gatts_device_name, (char *)local_name, local_namez_size) == 0) {
                 XF_LOGI(TAG, "EV:scan_result:target local name:%s", local_name);
                 ret = xf_ble_gap_stop_scan();
@@ -190,7 +195,7 @@ static xf_err_t gattc_event_scan_result_cb(xf_ble_gattc_evt_cb_param_t *param)
             XF_LOGD(TAG, "EV:scan_result:uncaring ad_type:%#2X", ad_type);
         } break;
         }
-        ptr_current += (struct_data_len + XF_BLE_GAP_ADV_STRUCT_LEN_SIZE);
+        ptr_current += (struct_data_len + XF_BLE_GAP_ADV_STRUCT_LEN_FIELD_SIZE);
     }
     return XF_OK;
 }

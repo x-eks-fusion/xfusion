@@ -33,7 +33,7 @@ def format_code(path):
         "--pad-header "\
         "--unpad-paren "\
         "--unpad-brackets "\
-        "--squeeze-lines=2 "\
+        "--squeeze-lines=1 "\
         "--align-pointer=name "\
         "--align-reference=name "\
         "--keep-one-line-statements "\

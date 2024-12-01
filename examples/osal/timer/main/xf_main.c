@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/osal/timer/main/xf_main.c
+ * xf_osal 定时器示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"

@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/peripherals/spi/spi_master_half_duplex/main/xf_main.c
+ * xf_hal spi 主机半双工示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"

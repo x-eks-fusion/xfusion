@@ -1,12 +1,12 @@
 /**
  * @file xf_mac.h
  * @author catcatBlue (catcatblue@qq.com)
- * @brief 
+ * @brief
  * @version 1.0
  * @date 2024-06-11
- * 
+ *
  * Copyright (c) 2024, CorAL. All rights reserved.
- * 
+ *
  */
 
 #ifndef __XF_MAC_H__
@@ -15,6 +15,13 @@
 /* ==================== [Includes] ========================================== */
 
 #include "xf_utils.h"
+
+/**
+ * @cond (XFAPI_USER || XFAPI_PORT)
+ * @addtogroup group_xf_init
+ * @endcond
+ * @{
+ */
 
 #ifdef __cplusplus
 extern "C" {
@@ -43,5 +50,10 @@ extern "C" {
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
+
+/**
+ * End of addtogroup group_xf_init
+ * @}
+ */
 
 #endif /* __XF_MAC_H__ */

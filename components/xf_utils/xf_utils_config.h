@@ -48,7 +48,6 @@ extern "C" {
  */
 #define XF_STDLIB_ENABLE                CONFIG_XF_STDLIB_ENABLE
 
-
 /**
  * @brief 是否include string.h
  *

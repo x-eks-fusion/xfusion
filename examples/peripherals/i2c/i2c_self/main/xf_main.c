@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/peripherals/i2c/i2c_self/main/xf_main.c
+ * xf_hal i2c 自测示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"

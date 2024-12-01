@@ -63,7 +63,7 @@
  *     "--pad-header",
  *     "--unpad-paren",
  *     "--unpad-brackets",
- *     "--squeeze-lines=2",
+ *     "--squeeze-lines=1",
  *     "--align-pointer=name",
  *     "--align-reference=name",
  *     "--keep-one-line-statements",
@@ -317,8 +317,8 @@ int g_xf_templ_global_data2_no_in_head = 0; /*!< 没有在头文件中声明的�
 /**
  * @brief 关于条件编译。
  *
- * 1. 需要在对应的 #else 后追加相应的的条件（如：`!defined(xf_log_printf)`），
- *    在 #endif 后标注 #if 的信息（如：`defined(xf_log_printf)`）。
+ * 1. 需要在对应的 `#else` 后追加相应的的条件（如：`!defined(xf_log_printf)`），
+ *    在 `#endif` 后标注 `#if` 的信息（如：`defined(xf_log_printf)`）。
  *
  * @note 如何宏需要缩进保持美观，请在'#'号后面缩进。如下缩进所示。
  */

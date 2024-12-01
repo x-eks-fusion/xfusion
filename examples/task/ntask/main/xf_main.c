@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example examples/task/ntask/main/xf_main.c
+ * xf_task 定时任务示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_task.h"
@@ -36,8 +41,8 @@ void xf_main(void)
 }
 
 /* ==================== [Static Functions] ================================== */
+
 static void xf_main_task(xf_task_t task)
 {
     XF_LOGI(TAG, "hello world");
 }
-

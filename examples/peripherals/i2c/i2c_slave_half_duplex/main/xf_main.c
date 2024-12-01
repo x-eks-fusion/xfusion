@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/peripherals/i2c/i2c_slave_half_duplex/main/xf_main.c
+ * xf_hal i2c 从机半双工示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"

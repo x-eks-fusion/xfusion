@@ -17,13 +17,20 @@
 #include "xf_utils.h"
 #include "xf_netif_config_internal.h"
 
+/**
+ * @cond (XFAPI_USER || XFAPI_PORT)
+ * @addtogroup group_xf_init
+ * @endcond
+ * @{
+ */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* ==================== [Defines] =========================================== */
 
-/* 
+/*
     TODO 机器大小端目前是手动选择的
     或者：
     #include <machine/endian.h>
@@ -187,5 +194,10 @@ static inline void xf_netif_ip_addr_types_copy(xf_ip_addr_t *dest, const xf_ip_a
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
+
+/**
+ * End of addtogroup group_xf_init
+ * @}
+ */
 
 #endif /* __XF_NETIF_IP_ADDR_TYPES_H__ */

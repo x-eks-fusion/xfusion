@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/osal/event/main/xf_main.c
+ * xf_osal 事件示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"

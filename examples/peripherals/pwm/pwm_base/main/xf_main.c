@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/peripherals/pwm/pwm_base/main/xf_main.c
+ * xf_hal pwm 基础示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"

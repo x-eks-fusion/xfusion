@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/peripherals/timer/timer_base/main/xf_main.c
+ * xf_hal timer 基础示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"
