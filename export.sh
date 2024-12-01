@@ -131,8 +131,8 @@ __enter_virtualenv()
     if [ "$result" -eq 2 ] || [ "$result" -eq 1 ]; then
         source ~/.xfusion/${XF_VERSION}/bin/activate
     fi
-    python3 -m pip install --upgrade pip -i https://pypi.tuna.tsinghua.edu.cn/simple
-    pip install xf_build==0.3.8 -i https://pypi.tuna.tsinghua.edu.cn/simple
+    python3 -m pip install --upgrade pip
+    pip install xf_build==0.3.9
 }
 
 __print_value()
