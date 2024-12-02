@@ -101,7 +101,7 @@ typedef enum {
 /**
  * @brief BLE UUID 信息 (多种长度类型通用)
  */
-typedef struct __packed {
+typedef struct __packed _xf_ble_uuid_info_t {
     union {
         xf_ble_uuid_type_t len_type;                 /*!< UUID 长度类型，见 @ref xf_ble_uuid_type_t */
         uint8_t _invalid;                           /*!< 用于固定 UUID 长度类型变量的大小为 8-bit */
@@ -116,7 +116,7 @@ typedef struct __packed {
 /**
  * @brief BLE 16-bit UUID 信息
  */
-typedef struct __packed {
+typedef struct __packed _xf_ble_uuid16_info_t {
     union {
         xf_ble_uuid_type_t type;                     /*!< UUID 长度类型，见 @ref xf_ble_uuid_type_t */
         uint8_t _invalid;                           /*!< 用于固定 UUID 长度类型变量的大小为 8-bit */
@@ -127,7 +127,7 @@ typedef struct __packed {
 /**
  * @brief BLE 32-bit UUID 信息
  */
-typedef struct __packed {
+typedef struct __packed _xf_ble_uuid32_info_t {
     union {
         xf_ble_uuid_type_t type;                     /*!< UUID 长度类型，见 @ref xf_ble_uuid_type_t */
         uint8_t _invalid;                           /*!< 用于固定 UUID 长度类型变量的大小为 8-bit */
@@ -138,7 +138,7 @@ typedef struct __packed {
 /**
  * @brief BLE 128-bit UUID 信息
  */
-typedef struct __packed {
+typedef struct __packed _xf_ble_uuid128_info_t {
     union {
         xf_ble_uuid_type_t type;                     /*!< UUID 长度类型，见 @ref xf_ble_uuid_type_t */
         uint8_t _invalid;                           /*!< 用于固定 UUID 长度类型变量的大小为 8-bit */
