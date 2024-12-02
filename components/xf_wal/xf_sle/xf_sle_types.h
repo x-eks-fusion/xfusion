@@ -93,7 +93,7 @@ typedef enum {
 /**
  * @brief SLE UUID 信息 (多种长度类型通用)
  */
-typedef struct __packed {
+typedef struct __packed _xf_sle_uuid_info_t {
     union {
         xf_sle_uuid_type_t len_type;                /*!< UUID 长度类型，见 @ref xf_sle_uuid_type_t */
         uint8_t _invalid;                           /*!< 用于固定 UUID 长度类型变量的大小为 8-bit */
@@ -107,7 +107,7 @@ typedef struct __packed {
 /**
  * @brief SLE 16-bit UUID 信息
  */
-typedef struct __packed {
+typedef struct __packed _xf_sle_uuid16_info_t {
     union {
         xf_sle_uuid_type_t type;                    /*!< UUID 长度类型，见 @ref xf_sle_uuid_type_t */
         uint8_t _invalid;                           /*!< 用于固定 UUID 长度类型变量的大小为 8-bit */
@@ -118,7 +118,7 @@ typedef struct __packed {
 /**
  * @brief SLE 128-bit UUID 信息
  */
-typedef struct __packed {
+typedef struct __packed _xf_sle_uuid128_info_t {
     union {
         xf_sle_uuid_type_t type;            /*!< UUID 长度类型，见 @ref xf_sle_uuid_type_t */
         uint8_t _invalid;                   /*!< 用于固定 UUID 长度类型变量的大小为 8-bit */
