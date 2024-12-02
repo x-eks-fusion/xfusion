@@ -4,7 +4,7 @@
 
 # Changelog
 
-本文记录 XFusion 的显著更改。
+本文记录 XFusion 当前版本的显著更改。
 
 ## [1.2.0]
 
@@ -15,6 +15,22 @@
     1.  新增
         1.  首次更新。
         1.  暂未对接到具体平台，仅 linux 中模拟测试。
+
+1.  `components/xf_hal`
+
+    硬件抽象层。
+
+    1.  新增
+        1.  gpio 初始化后支持设置方向([#2](https://github.com/x-eks-fusion/xf_hal/pull/2))。
+
+1.  `components/xf_init`
+
+    自动初始化。
+
+    1.  修改
+        1.  移除预初始化，添加 xfusion 内部专用的 `SETUP` 和 `CLEANUP` 等级代替原本预初始化的功能。
+        1.  修改 `xfusion_run()` 的调用方式为外部循环调用，见 `boards/espressif/esp32/main/main.c`。
+        1.  详见 ([#1](https://github.com/x-eks-fusion/xf_init/pull/1))。
 
 1.  `components/xf_log`
 
@@ -32,7 +48,7 @@
 
 1.  `components/xf_nal`
 
-    网络抽象层。
+    网络抽象层。目前主要用于设置 DHCP、IP、DNS。
 
     1.  新增
         1.  首次更新。
@@ -41,7 +57,7 @@
 
 1.  `components/xf_net_apps`
 
-    网络应用。
+    网络应用。目前含 PING 和吞吐量测试功能。
 
     1.  新增
         1.  首次更新。
@@ -49,6 +65,7 @@
         1.  含 `xf_iperf` 及 `xf_ping`.
         1.  依赖 `xf_utils`, `xf_osal`, `xf_sys`.
         1.  已在 esp32, ws63 上测试可用。
+        1.  默认不启用，在 `esp32` 和 `ws63` 上默认启用。菜单配置路径见 `(Top) -> public components -> xf_net_apps -> xf_net_apps Configuration`.
 
 1.  `components/xf_osal`
 
@@ -84,7 +101,7 @@
         星闪接口抽象。
 
         1.  修改
-            1.  调整参数顺序，不向前兼容。
+            1.  修改错误命名。调整参数顺序，不向前兼容。
 
 1.  `examples/protocols/sockets`
 
