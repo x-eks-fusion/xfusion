@@ -1,5 +1,5 @@
 <!--
-    更新本文档时请注意，新的版本号在最前面。
+    更新本文档时请注意，新版本号及描述放到最前面。
  -->
 
 # Changelog
@@ -45,6 +45,8 @@
         1.  颜色开关。
         1.  输出信息等级。
         1.  使用 log 后端的 printf.
+    1.  备注
+        1.  详见 ([#2](https://github.com/x-eks-fusion/xf_log/pull/2)).
 
 1.  `components/xf_nal`
 
@@ -54,6 +56,8 @@
         1.  首次更新。
         1.  示例见 `examples/wireless/wifi/static_ip`.
         1.  含 `xf_netif`.
+    1.  备注
+        1.  详见 ([#8](https://github.com/x-eks-fusion/xfusion/pull/8)).
 
 1.  `components/xf_net_apps`
 
@@ -66,6 +70,8 @@
         1.  依赖 `xf_utils`, `xf_osal`, `xf_sys`.
         1.  已在 esp32, ws63 上测试可用。
         1.  默认不启用，在 `esp32` 和 `ws63` 上默认启用。菜单配置路径见 `(Top) -> public components -> xf_net_apps -> xf_net_apps Configuration`.
+    1.  备注
+        1.  详见 ([#17](https://github.com/x-eks-fusion/xfusion/pull/17)).
 
 1.  `components/xf_osal`
 
@@ -75,6 +81,8 @@
         1.  首次更新。
         1.  示例见 `examples/osal`.
         1.  含事件、内核管理、互斥锁、消息队列、信号量、线程、定时器等功能.
+    1.  备注
+        1.  详见 ([#9](https://github.com/x-eks-fusion/xfusion/pull/9)).
 
 1.  `components/xf_sys`
 
@@ -84,6 +92,8 @@
         1.  首次更新。
         1.  示例见 `examples/system/sys`.
         1.  含看门狗控制、开关系统中断、获取时间戳及阻塞精确延迟等功能.
+    1.  备注
+        1.  详见 ([#15](https://github.com/x-eks-fusion/xfusion/pull/15)).
 
 1.  `components/xf_wal`
 
