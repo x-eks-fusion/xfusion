@@ -28,11 +28,6 @@
  * @{
  */
 
-/**
- * End of addtogroup group_xf_wal_ble_gatt
- * @}
- */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

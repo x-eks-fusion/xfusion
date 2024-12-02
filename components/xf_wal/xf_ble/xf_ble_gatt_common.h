@@ -10,7 +10,7 @@
  */
 
 /**
- * @cond (XFAPI_USER || XFAPI_PORT || XFAPI_INTERNAL)
+ * @cond (XFAPI_USER || XFAPI_PORT)
  * @ingroup group_xf_wal_ble
  * @defgroup group_xf_wal_ble_gatt gatt
  * @brief Generic Attribute Profile
