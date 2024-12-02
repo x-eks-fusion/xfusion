@@ -112,3 +112,14 @@
     1.  备注
         1.  依赖底层 lwip 实现，XFusion 目前不含 lwip.
         1.  已在 esp32, ws63 上测试可用。
+
+1.  `xf_build`
+
+    构建脚本生成系统。
+
+    1.  新增
+        1.  支持收集 cflag 参数。
+        1.  支持自定义文件夹。
+        1.  支持 monitor, target 命令。
+    1.  修复
+        1.  修复 user_dirs 无效.
