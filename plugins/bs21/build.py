@@ -5,6 +5,9 @@ import shutil
 import glob
 import sys
 from pathlib import Path
+import logging
+import subprocess
+import serial.tools.list_ports
 
 # 默认目标
 DEFAULT_TARGET = "bs21e-sle-ble-slp-central-peripheral"
@@ -54,7 +57,30 @@ class bs21():
 
     @hookimpl
     def flash(self, args):
-        pass
+        framware_path = "build/sdk/fwpkg/bs21e-sle-ble-slp-central-peripheral/bs21e_all_in_one.fwpkg"
+        if not os.path.exists(framware_path):
+            logging.error(f"firmware path {framware_path} not exists")
+            return
+        try:
+            # 检查命令是否可用
+            subprocess.run(['burn', '--help'], check=True,
+                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except FileNotFoundError:
+            # 尝试安装相应的包
+            subprocess.run([sys.executable, '-m', 'pip',
+                           'install', "xf_burn_tools"], check=True)
+            # 再次检查命令
+            try:
+                subprocess.run(['burn', '--help'], check=True,
+                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            except FileNotFoundError:
+                logging.error("burn command not found")
+        ports = serial.tools.list_ports.comports()
+        if len(ports) == 0:
+            logging.error("no serial port found")
+            return
+        for port in ports:
+            os.system(f"burn {framware_path}  -p {port.device}")
 
     @hookimpl
     def export(self, args):
