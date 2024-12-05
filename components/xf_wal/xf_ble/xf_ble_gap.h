@@ -62,17 +62,14 @@ xf_err_t xf_ble_disable(void);
 /**
  * @brief BLE GAP 设置本端设备地址
  *
- * @param addr BLE 地址值
- * @param type BLE 地址类型，见 @ref xf_ble_addr_type_t
+ * @param addr BLE 地址信息，见 @ref xf_ble_addr_t
  * @return xf_err_t
  *      - XF_OK                 成功
  *      - XF_FAIL               失败
  *      - XF_ERR_NOT_SUPPORTED  不支持
  *      - (OTHER)               @ref xf_err_t
  */
-xf_err_t xf_ble_gap_set_local_addr(
-    uint8_t addr[XF_BLE_ADDR_LEN],
-    xf_ble_addr_type_t type);
+xf_err_t xf_ble_gap_set_local_addr(xf_ble_addr_t *addr);
 
 /**
  * @brief BLE GAP 获取本端设备地址
@@ -99,9 +96,13 @@ xf_err_t xf_ble_gap_set_local_appearance(xf_ble_appearance_t appearance);
 /**
  * @brief BLE GAP 获取本端设备的外观
  *
- * @return xf_ble_appearance_t，见 @ref xf_ble_appearance_t
+ * @param[out] appearance 外观值，见 @ref xf_ble_appearance_t
+ * @return xf_err_t
+ *      - XF_OK                 成功
+ *      - XF_FAIL               失败
+ *      - (OTHER)               @ref xf_err_t
  */
-xf_ble_appearance_t xf_ble_gap_get_local_appearance(void);
+xf_err_t xf_ble_gap_get_local_appearance(xf_ble_appearance_t *appearance);
 
 /**
  * @brief BLE GAP 设置本端设备名称
