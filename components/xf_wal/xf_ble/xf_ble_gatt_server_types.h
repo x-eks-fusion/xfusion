@@ -155,7 +155,7 @@ typedef struct {
     xf_ble_attr_handle_t handle;                /*!< 属性句柄，见 @ref xf_ble_attr_handle_t */
     uint16_t value_len;                         /*!< 通知/指示的值长度 */
     uint8_t *value;                             /*!< 发送的通知/指示的值 */
-} xf_ble_gatts_ntf_ind_t;
+} xf_ble_gatts_ntf_t, xf_ble_gatts_ind_t;
 
 /**
  * @brief BLE GATTS 响应 (回应) 值信息

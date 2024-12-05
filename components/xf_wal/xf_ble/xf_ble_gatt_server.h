@@ -118,7 +118,7 @@ xf_err_t xf_ble_gatts_del_services_all(uint8_t app_id);
  *
  * @param app_id 服务端 (应用) ID
  * @param conn_id 链接 (连接) ID
- * @param param 发送的通知的信息，见 @ref xf_ble_gatts_ntf_ind_t
+ * @param param 发送的通知的信息，见 @ref xf_ble_gatts_ntf_t
  * @return xf_err_t
  *      - XF_OK                 成功
  *      - XF_FAIL               失败
@@ -126,14 +126,14 @@ xf_err_t xf_ble_gatts_del_services_all(uint8_t app_id);
  */
 xf_err_t xf_ble_gatts_send_notification(
     uint8_t app_id, uint16_t conn_id,
-    xf_ble_gatts_ntf_ind_t *param);
+    xf_ble_gatts_ntf_t *param);
 
 /**
  * @brief BLE GATTS 发送指示
  *
  * @param app_id 服务端 (应用) ID
  * @param conn_id 链接 (连接) ID
- * @param param 发送的指示的信息，见 @ref xf_ble_gatts_ntf_ind_t
+ * @param param 发送的指示的信息，见 @ref xf_ble_gatts_ind_t
  * @return xf_err_t
  *      - XF_OK                 成功
  *      - XF_FAIL               失败
@@ -141,7 +141,7 @@ xf_err_t xf_ble_gatts_send_notification(
  */
 xf_err_t xf_ble_gatts_send_indication(
     uint8_t app_id, uint16_t conn_id,
-    xf_ble_gatts_ntf_ind_t *param);
+    xf_ble_gatts_ind_t *param);
 
 /**
  * @brief BLE GATTS 发送 (请求的) 响应

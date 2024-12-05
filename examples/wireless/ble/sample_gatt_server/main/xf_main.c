@@ -14,6 +14,8 @@
 
 #define TAG "sample_gatts"
 
+#define DEFAULT_BLE_GAP_ADV_ID  0x01
+
 /* Ble adv min interval */
 #define DEFAULT_BLE_GAP_ADV_MIN_INTERVAL 0x30
 /* Ble adv max interval */
@@ -137,7 +139,7 @@ void xf_main(void)
     XF_LOGI(TAG, "CONFIG ADV CMPL");
 
     // 开启广播
-    ret = xf_ble_gap_start_adv();
+    ret = xf_ble_gap_start_adv(DEFAULT_BLE_GAP_ADV_ID);
     XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
              "STAR ADV failed:%#X", ret);
     XF_LOGI(TAG, "STAR ADV CMPL");
@@ -158,13 +160,13 @@ static xf_err_t sample_ble_gatts_event_cb(
                 app_id, param.read_req.conn_id, param.read_req.need_rsp,
                 param.read_req.handle);
 
-        xf_ble_gatts_ntf_ind_t indication_param = {
+        xf_ble_gatts_ntf_t ntf_param = {
             .value = read_req_indication,
             .value_len = sizeof(read_req_indication),
             .handle = param.read_req.handle
         };
         xf_err_t ret = xf_ble_gatts_send_notification(
-                           app_id, param.read_req.conn_id, &indication_param);
+                           app_id, param.read_req.conn_id, &ntf_param);
         XF_CHECK(ret != XF_OK, ret, TAG,
                  "send_notify_indicate failed:%#X", ret);
     } break;
@@ -177,13 +179,13 @@ static xf_err_t sample_ble_gatts_event_cb(
 
         /* 如果是需要响应的请求类型->返回响应 */
         if (param.write_req.need_rsp == true) {
-            xf_ble_gatts_ntf_ind_t indication_param = {
+            xf_ble_gatts_ntf_t ntf_param = {
                 .value = write_req_indication,
                 .value_len = sizeof(write_req_indication),
                 .handle = param.write_req.handle,
             };
             xf_err_t ret = xf_ble_gatts_send_notification(
-                               app_id, param.write_req.conn_id, &indication_param);
+                               app_id, param.write_req.conn_id, &ntf_param);
             XF_CHECK(ret != XF_OK, ret, TAG,
                      "send_notify_indicate failed:%#X app_id:%d", ret);
         }
@@ -230,7 +232,7 @@ static xf_err_t sample_ble_gatts_event_cb(
                 param.disconnect.peer_addr.type,
                 XF_BLE_ADDR_EXPAND_TO_ARG(param.disconnect.peer_addr.addr));
         XF_LOGI(TAG, "It will restart ADV");
-        xf_ble_gap_start_adv();
+        xf_ble_gap_start_adv(DEFAULT_BLE_GAP_ADV_ID);
     } break;
     default:
         break;
@@ -263,7 +265,7 @@ static void sample_ble_set_adv_data(void)
         .scan_rsp_length = 0,
         .scan_rsp_data = NULL,
     };
-    xf_ble_gap_set_adv_data(&adv_data);
+    xf_ble_gap_set_adv_data(DEFAULT_BLE_GAP_ADV_ID, &adv_data);
 }
 static void sample_ble_set_adv_param(void)
 {
@@ -289,5 +291,5 @@ static void sample_ble_set_adv_param(void)
         .duration = DEFAULT_BLE_GAP_ADV_FOREVER_DURATION,
         .tx_power = 1,  // 发送功率,单位dbm,范围-127~20
     };
-    xf_ble_gap_set_adv_param(&adv_param);
+    xf_ble_gap_set_adv_param(DEFAULT_BLE_GAP_ADV_ID, &adv_param);
 }

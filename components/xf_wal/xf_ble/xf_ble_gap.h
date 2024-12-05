@@ -131,44 +131,50 @@ xf_err_t xf_ble_gap_get_local_name(uint8_t *name, uint8_t *len);
 /**
  * @brief BLE GAP 设置广播数据
  *
+ * @param adv_id 广播 ID
  * @param data 广播数据，见 @ref xf_ble_gap_adv_data_t
  * @return xf_err_t
  *      - XF_OK                 成功
  *      - XF_FAIL               失败
  *      - (OTHER)               @ref xf_err_t
  */
-xf_err_t xf_ble_gap_set_adv_data(const xf_ble_gap_adv_data_t *data);
+xf_err_t xf_ble_gap_set_adv_data(
+    uint8_t adv_id, const xf_ble_gap_adv_data_t *data);
 
 /**
  * @brief BLE GAP 设置广播参数
  *
+ * @param adv_id 广播 ID
  * @param param 广播参数，见 @ref xf_ble_gap_adv_param_t
  * @return xf_err_t
  *      - XF_OK                 成功
  *      - XF_FAIL               失败
  *      - (OTHER)               @ref xf_err_t
  */
-xf_err_t xf_ble_gap_set_adv_param(const xf_ble_gap_adv_param_t *param);
+xf_err_t xf_ble_gap_set_adv_param(
+    uint8_t adv_id, const xf_ble_gap_adv_param_t *param);
 
 /**
  * @brief BLE GAP 广播开启
  *
+ * @param adv_id 广播 ID
  * @return xf_err_t
  *      - XF_OK                 成功
  *      - XF_FAIL               失败
  *      - (OTHER)               @ref xf_err_t
  */
-xf_err_t xf_ble_gap_start_adv(void);
+xf_err_t xf_ble_gap_start_adv(uint8_t adv_id);
 
 /**
  * @brief BLE GAP 广播关闭
  *
+ * @param adv_id 广播 ID
  * @return xf_err_t
  *      - XF_OK                 成功
  *      - XF_FAIL               失败
  *      - (OTHER)               @ref xf_err_t
  */
-xf_err_t xf_ble_gap_stop_adv(void);
+xf_err_t xf_ble_gap_stop_adv(uint8_t adv_id);
 
 /**
  * @brief BLE GAP 设置扫描参数
