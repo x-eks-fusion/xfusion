@@ -251,7 +251,12 @@ static void sample_ble_set_adv_data(void)
             }, {
                 .ad_type = XF_BLE_ADV_STRUCT_TYPE_APPEARANCE,
                 .ad_data_len = sizeof(xf_ble_appearance_t),
-                .ad_data.appearance = XF_BLE_APPEARANCE_HID_DIGITIZER_TABLET,
+                .ad_data.appearance = XF_BLE_APPEARANCE_GENERIC_PHONE,
+            },
+            {
+                .ad_type = XF_BLE_ADV_STRUCT_TYPE_TX_POWER_LEVEL,
+                .ad_data_len = sizeof(uint8_t),
+                .ad_data.adv_var.val_u8 = 6,
             },
             {0}
         },

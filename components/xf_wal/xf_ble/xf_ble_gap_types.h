@@ -111,6 +111,13 @@ typedef uint16_t xf_ble_appearance_t;
 #define XF_BLE_APPEARANCE_OUTDOOR_SPORTS_LOCATION_POD           0x1443
 #define XF_BLE_APPEARANCE_OUTDOOR_SPORTS_LOCATION_POD_AND_NAV   0x1444
 
+#define XF_BLE_ADV_DEVICE_ID_SPEC_ID                            0x0200
+#define XF_BLE_ADV_DEVICE_ID_VENDOR_ID                          0x0201
+#define XF_BLE_ADV_DEVICE_ID_PRODUCT_ID                         0x0202
+#define XF_BLE_ADV_DEVICE_ID_VERSION                            0x0202
+#define XF_BLE_ADV_DEVICE_ID_PRIMARY_RECORD                     0x0203
+#define XF_BLE_ADV_DEVICE_ID_VENDOR_ID_SOURCE                   0x0204
+
 /**
  * @brief BLE GAP 链接角色类型
  */
@@ -126,15 +133,16 @@ typedef enum {
  *  《Assigned Numbers》 > 2.3 Common Data Types
  * @see https://www.bluetooth.com/specifications/assigned-numbers/
  */
-typedef enum {
-    XF_BLE_ADV_STRUCT_TYPE_FLAGS                   = 0x01,
-    XF_BLE_ADV_STRUCT_TYPE_LOCAL_NAME_SHORT        = 0x08,
-    XF_BLE_ADV_STRUCT_TYPE_LOCAL_NAME_ALL          = 0x09,
-    XF_BLE_ADV_STRUCT_TYPE_TX_POWER_LEVEL          = 0x0A,
-    XF_BLE_ADV_STRUCT_TYPE_CLASS_OF_DEVICE         = 0x0D,
-    XF_BLE_ADV_STRUCT_TYPE_DEVICE_ID               = 0x10,
-    XF_BLE_ADV_STRUCT_TYPE_APPEARANCE              = 0x19,
-} xf_ble_gap_adv_struct_type_t;
+typedef uint8_t xf_ble_gap_adv_struct_type_t;
+
+
+#define XF_BLE_ADV_STRUCT_TYPE_FLAGS                    0x01
+#define XF_BLE_ADV_STRUCT_TYPE_LOCAL_NAME_SHORT         0x08
+#define XF_BLE_ADV_STRUCT_TYPE_LOCAL_NAME_ALL           0x09
+#define XF_BLE_ADV_STRUCT_TYPE_TX_POWER_LEVEL           0x0A    // 1 bytes
+#define XF_BLE_ADV_STRUCT_TYPE_CLASS_OF_DEVICE          0x0D    
+#define XF_BLE_ADV_STRUCT_TYPE_DEVICE_ID                0x10    // 2 bytes
+#define XF_BLE_ADV_STRUCT_TYPE_APPEARANCE               0x19    // 2 bytes
 
 /**
  * @brief BLE GAP 广播数据单元类型 (AD_TYPE) 字段的大小
@@ -152,7 +160,7 @@ typedef enum {
  * @details 以下为蓝牙标准定义的广播数据结构及广播数据单元数据 ( AD Data ) 所在的位置
  * @code
  *  | AdvData                                                                                                   |
- *  | AD Structure 1                            | AD Structure 2                | ... |（无效数据 000...000b）   |
+ *  | AD Structure 1                            | AD Structure 2                | ...... |（无效数据 000...000b）|
  *  | Length              | Data                | Length | Data                 | ......                        |
  *  | Length(type + data) | AD type | AD Data   | Length | AD type | AD Data    | ......                        |
  *                                  |    ^      |
@@ -195,18 +203,10 @@ typedef struct {
 #define XF_BLE_ADV_STRUCT_TYPE_ARRAY(type_name, adv_data_array_size)   \
 typedef struct {                                                \
     uint8_t struct_data_len;                                    \
-    struct  /* struct_data */                                   \
-    {                                                           \
-        union                                                   \
-        {                                                       \
-            xf_ble_gap_adv_struct_type_t ad_type;               \
-            uint8_t _fixed_size;                                \
-        };                                                      \
-        struct  /* adv_data */                                  \
-        {                                                       \
-            uint8_t ad_data[adv_data_array_size];               \
-        };                                                      \
-    };                                                          \
+    /* struct_data */                                           \
+    xf_ble_gap_adv_struct_type_t ad_type;                       \
+    /* adv_data */                                              \
+    uint8_t ad_data[adv_data_array_size];                       \
 }type_name
 
 /**
@@ -218,18 +218,9 @@ typedef struct {                                                \
 #define XF_BLE_ADV_STRUCT_TYPE_VAL_U8(type_name)                \
 typedef struct {                                                \
     uint8_t struct_data_len;                                    \
-    struct  /* struct_data */                                   \
-    {                                                           \
-        union                                                   \
-        {                                                       \
-            xf_ble_gap_adv_struct_type_t ad_type;               \
-            uint8_t _fixed_size;                                \
-        };                                                      \
-        struct  /* adv_data */                                  \
-        {                                                       \
-            uint8_t val;                                        \
-        };                                                      \
-    };                                                          \
+    xf_ble_gap_adv_struct_type_t ad_type;                       \
+    /* adv_data */                                              \
+    uint8_t val;                                                \
 }type_name
 
 /**
@@ -239,20 +230,11 @@ typedef struct {                                                \
  * @note 一般仅用于平台对接时使用，便于 XF BLE 广播数据单元结构与符号标准的广播数据结构间的转换
  */
 #define XF_BLE_ADV_STRUCT_TYPE_VAL_U16(type_name)               \
-typedef struct {                                                \
+typedef __packed struct {                                       \
     uint8_t struct_data_len;                                    \
-    struct  /* struct_data */                                   \
-    {                                                           \
-        union                                                   \
-        {                                                       \
-            xf_ble_gap_adv_struct_type_t ad_type;               \
-            uint8_t _fixed_size;                                \
-        };                                                      \
-        struct  /* adv_data */                                  \
-        {                                                       \
-            uint16_t val;                                       \
-        };                                                      \
-    };                                                          \
+    xf_ble_gap_adv_struct_type_t ad_type;                       \
+    /* adv_data */                                              \
+    uint16_t val;                                               \
 }type_name
 
 /**
