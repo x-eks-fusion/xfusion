@@ -48,8 +48,9 @@ typedef enum {
 } xf_sle_ssap_find_type_t;
 
 /**
- * @brief SLE SSAP 搜寻参数
-*/
+ * @brief 
+ * 
+ */
 typedef struct {
     xf_sle_ssap_find_type_t type;   /*!< 搜寻类型，见 @ref xf_sle_ssap_find_type_t */
     uint16_t start_hdl;             /*!< 起始句柄 */
@@ -118,74 +119,22 @@ typedef struct {
  * @brief SLE SSAPC 事件
  */
 typedef enum {
-    XF_SLE_SEEK_EVT_START = _XF_SLE_SSAP_COMMON_EVT_MAX,/*!< 扫描开启事件 */
-    XF_SLE_SEEK_EVT_STOP,                               /*!< 扫描停止事件 */
-    XF_SLE_SEEK_EVT_RESULT,                             /*!< 收到扫描结果事件 */
-    XF_SLE_SSAPC_EVT_FIND_STRUCT,                       /*!< 搜寻结构事件 */
-    XF_SLE_SSAPC_EVT_FIND_STRUCT_CMPL,                  /*!< 搜寻结构完成事件 */
-    XF_SLE_SSAPC_EVT_FIND_PROPERTY,                     /*!< 搜寻属性 (property) 完成事件 */
-    XF_SLE_SSAPC_EVT_RECV_WRITE_CFM,                    /*!< 接收到写确认事件 */
-    XF_SLE_SSAPC_EVT_RECV_READ_CFM,                     /*!< 接收到读确认事件 */
-    XF_SLE_SSAPC_EVT_NOTIFICATION,                      /*!< 接接收到通知事件 */
-    XF_SLE_SSAPC_EVT_INDICATION,                        /*!< 接接收到指示事件 */
+    XF_SLE_SSAPC_EVT_EXCHANGE_INFO = _XF_SLE_COMMON_EVT_ENUM_END,   /*!< INFO (MTU) 协商事件 */
+    XF_SLE_SSAPC_EVT_WRITE_CFM = _XF_SLE_COMMON_EVT_ENUM_END,       /*!< 接收到写确认事件 */
+    XF_SLE_SSAPC_EVT_READ_CFM,                                      /*!< 接收到读确认事件 */
+    XF_SLE_SSAPC_EVT_NOTIFICATION,                                  /*!< 接接收到通知事件 */
+    XF_SLE_SSAPC_EVT_INDICATION,                                    /*!< 接接收到指示事件 */
 } xf_sle_ssapc_event_t;
 
 /**
- * @brief SLE 连接事件的参数
+ * @brief SLE SSAPC INFO 协商事件的参数
  */
 typedef struct {
-    uint16_t conn_id;                   /*!< 链接(连接) ID */
-    xf_sle_addr_t peer_addr;            /*!< 对端地址，见 @ref xf_sle_addr_t */
-    xf_sle_pair_state_t pair_state;     /*!< 配对状态，见 @ref xf_sle_pair_state_t */
-} xf_sle_evt_param_connect_t;
-
-/**
- * @brief SLE 断连事件的参数
- */
-typedef struct {
-    uint16_t conn_id;                   /*!< 链接(连接) ID */
-    xf_sle_addr_t peer_addr;            /*!< 对端地址，见 @ref xf_sle_addr_t */
-    xf_sle_pair_state_t pair_state;     /*!< 配对状态，见 @ref xf_sle_pair_state_t */
-    xf_sle_disconnect_reason_t reason;  /*!< 断连原因，见 @ref xf_sle_disconnect_reason_t */
-} xf_sle_evt_param_disconnect_t;
-
-/**
- * @brief SLE 连接参数更新事件的参数
- */
-typedef struct {
-    uint16_t conn_id;
-    uint16_t interval;              /*!< 链路调度间隔，单位slot */
-    uint16_t latency;               /*!< 延迟周期，单位slot */
-    uint16_t supervision_timeout;   /*!< 超时时间，单位10ms */
-} xf_sle_evt_param_conn_param_update_t;
-
-/* TODO supervision_timeout 改 timeout */
-
-/**
- * @brief SLE 请求更新连接参数事件的参数
- */
-typedef struct {
-    uint16_t conn_id;
-    uint16_t interval_min;          /*!< 链路调度间隔，单位slot */
-    uint16_t interval_max;          /*!< 链路调度间隔，单位slot */
-    uint16_t max_latency;           /*!< 延迟周期，单位slot */
-    uint16_t supervision_timeout;   /*!< 超时时间，单位10ms */
-} xf_sle_evt_param_req_conn_param_update_t;
-
-/**
- * @brief SLE 收到扫描结果事件的参数
- */
-typedef struct {
-    uint8_t evt_type;               /*!< 上报事件类型 */
-    xf_sle_addr_t peer_addr;        /*!< 对端地址，见 @ref xf_sle_addr_t */
-    xf_sle_addr_t direct_addr;      /*!< 定向发现地址，见 @ref xf_sle_addr_t */
-    /* FIXME 这里不知道为啥官方 SDK 用的是 uint8_t */
-    uint8_t rssi;                   /*!< 信号强度指示，取值范围[-127dBm, 20dBm]，0x7F表示不提供信号强度指示 */
-    uint8_t data_status;            /*!< 数据状态 */
-    uint8_t data_len;               /*!< 数据长度 */
-    uint8_t *data;                  /*!< 数据内容 */
-} xf_sle_evt_param_seek_result_t;
-
+    uint8_t app_id;         /*!< 服务端 (应用) ID */
+    uint16_t conn_id;       /*!< 链接(连接) ID */
+    uint32_t mtu_size;      /*!< MTU 大小 */
+    uint16_t version;       /*!< 版本 */
+} xf_sle_ssapc_evt_param_exchange_info_t;
 /**
  * @brief SLE 接收到读确认事件的参数
  */
@@ -195,16 +144,16 @@ typedef struct {
     uint8_t  type;          /*!< 属性类型 (property) */
     uint16_t data_len;      /*!< 数据长度 */
     uint8_t  *data;         /*!< 数据内容 */
-} xf_sle_evt_param_read_cfm_t;
+} xf_sle_ssapc_evt_param_read_cfm_t;
 
 /**
- * @brief SLE 接收到读确认事件的参数
+ * @brief SLE 接收到写确认事件的参数
  */
 typedef struct {
     uint16_t conn_id;       /*!< 链接(连接) ID */
     uint16_t handle;        /*!< 属性句柄 (property) */
     uint8_t  type;          /*!< 属性类型 (property) */
-} xf_sle_evt_param_write_cfm_t;
+} xf_sle_ssapc_evt_param_write_cfm_t;
 
 /**
  * @brief SLE 接收到通知或指示事件的参数
@@ -215,48 +164,51 @@ typedef struct {
     uint8_t  type;          /*!< 属性类型 (property) */
     uint16_t data_len;      /*!< 数据长度 */
     uint8_t  *data;         /*!< 数据内容 */
-} xf_sle_evt_param_ntf_t, xf_sle_evt_param_ind_t;
+} xf_sle_ssapc_evt_param_ntf_t, xf_sle_ssapc_evt_param_ind_t;
 
 /**
  * @brief SLE SSAPC 客户端事件回调参数
  */
 typedef union _xf_sle_ssapc_evt_cb_param_t {
-    xf_sle_evt_param_connect_t connect;         /*!< 连接事件的参数，
-                                                 *  @ref xf_sle_evt_param_connect_t
-                                                 *  XF_SLE_CONN_EVT_CONNECT
+    xf_sle_common_evt_param_connect_t connect;  /*!< 连接事件的参数，
+                                                 *  @ref xf_sle_common_evt_param_connect_t
+                                                 *  XF_SLE_COMMON_EVT_CONNECT
                                                  */
-    xf_sle_evt_param_disconnect_t disconnect;   /*!< 断连事件的参数，
-                                                 *  @ref xf_sle_evt_param_disconnect_t
-                                                 *  XF_SLE_CONN_EVT_DISCONNECT
+    xf_sle_common_evt_param_disconnect_t disconnect;   
+                                                /*!< 断连事件的参数，
+                                                 *  @ref xf_sle_common_evt_param_disconnect_t
+                                                 *  XF_SLE_COMMON_EVT_DISCONNECT
                                                  */
-    xf_sle_evt_param_conn_param_update_t conn_param_update;
+    xf_sle_common_evt_param_conn_param_update_t conn_param_update;
     /*!< 连接参数更新事件的参数，
-     *  @ref xf_sle_evt_param_conn_param_update_t
-     *  XF_SLE_CONN_EVT_CONN_PARAMS_UPDATE
+     *  @ref xf_sle_common_evt_param_conn_param_update_t
+     *  XF_SLE_COMMON_EVT_CONN_PARAMS_UPDATE
      */
-    xf_sle_evt_param_req_conn_param_update_t req_conn_param_update;
-    /*!< 请求更新连接参数事件的参数，
-     *  @ref xf_sle_evt_param_req_conn_param_update_t
-     *  XF_SLE_CONN_EVT_REQ_CONN_PARAMS_UPDATE
-     */
-    xf_sle_evt_param_seek_result_t seek_result; /*!< 收到扫描结果事件的参数，
-                                                 *  @ref xf_sle_evt_param_seek_result_t
-                                                 *  XF_SLE_SEEK_EVT_RESULT
+    xf_sle_common_evt_param_seek_result_t seek_result; 
+                                                /*!< 收到扫描结果事件的参数，
+                                                 *  @ref xf_sle_common_evt_param_seek_result_t
+                                                 *  XF_SLE_COMMON_EVT_SEEK_RESULT
                                                  */
-    xf_sle_evt_param_read_cfm_t req_read;       /*!< 接收到读确认事件的参数，
-                                                 *  @ref xf_sle_evt_param_read_cfm_t
-                                                 *  XF_SLE_SSAPS_EVT_REQ_READ
+    xf_sle_ssapc_evt_param_exchange_info_t info;
+                                                /*!< 接收到 INFO 协商事件的参数，
+                                                 *  @ref xf_sle_ssapc_evt_param_exchange_info_t
+                                                 *  XF_SLE_SSAPC_EVT_EXCHANGE_INFO
                                                  */
-    xf_sle_evt_param_write_cfm_t req_write;     /*!< 接收到读确认事件的参数，
-                                                 *  @ref xf_sle_evt_param_write_cfm_t
-                                                 *  XF_SLE_SSAPS_EVT_REQ_WRITE
+    xf_sle_ssapc_evt_param_read_cfm_t read_cfm; /*!< 接收到读确认事件的参数，
+                                                 *  @ref xf_sle_ssapc_evt_param_read_cfm_t
+                                                 *  XF_SLE_SSAPC_EVT_READ_CFM
                                                  */
-    xf_sle_evt_param_ntf_t ntf;                 /*!< 接收到通知事件的参数，
-                                                 *  @ref xf_sle_evt_param_ntf_t
+    xf_sle_ssapc_evt_param_write_cfm_t write_cfm;     
+                                                /*!< 接收到写确认事件的参数，
+                                                 *  @ref xf_sle_ssapc_evt_param_write_cfm_t
+                                                 *  XF_SLE_SSAPC_EVT_WRITE_CFM
+                                                 */
+    xf_sle_ssapc_evt_param_ntf_t ntf;           /*!< 接收到通知事件的参数，
+                                                 *  @ref xf_sle_ssapc_evt_param_ntf_t
                                                  *  XF_SLE_SSAPC_EVT_NOTIFICATION
                                                  */
-    xf_sle_evt_param_ind_t ind;                 /*!< 接收到通知事件的参数，
-                                                 *  @ref xf_sle_evt_param_ind_t
+    xf_sle_ssapc_evt_param_ind_t ind;           /*!< 接收到通知事件的参数，
+                                                 *  @ref xf_sle_ssapc_evt_param_ind_t
                                                  *  XF_SLE_SSAPC_EVT_INDICATION
                                                  */
 } xf_sle_ssapc_evt_cb_param_t;

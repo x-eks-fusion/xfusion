@@ -100,115 +100,79 @@ typedef struct _xf_sle_ssaps_service_t {
  * @brief SLE SSAPS 事件
  */
 typedef enum {
-    XF_SLE_ADV_EVT_ENABLE = _XF_SLE_SSAP_COMMON_EVT_MAX,/*!< 广播使能事件 */
-    XF_SLE_ADV_EVT_DISABLE,                             /*!< 广播失能事件 */
-    XF_SLE_ADV_EVT_TERMINAL,
-    XF_SLE_SSAPS_EVT_ADD_SERVICE,                       /*!< 服务添加事件 */
-    XF_SLE_SSAPS_EVT_ADD_PROPERTY,                      /*!< 特征添加事件 */
-    XF_SLE_SSAPS_EVT_ADD_DESC,                          /*!< 特征描述符事件 */
-    XF_SLE_SSAPS_EVT_SERVICE_START,                     /*!< 服务开启事件 */
-    XF_SLE_SSAPS_EVT_SERVICE_DEL_ALL,                   /*!< 删除所有服务事件 */
-    XF_SLE_SSAPS_EVT_REQ_READ,                          /*!< 接收到读请求事件 */
-    XF_SLE_SSAPS_EVT_REQ_WRITE,                         /*!< 接收到写请求事件 */
+    XF_SLE_SSAPS_EVT_EXCHANGE_INFO = _XF_SLE_COMMON_EVT_ENUM_END,   /*!< INFO (MTU) 协商事件 */
+    XF_SLE_SSAPS_EVT_READ_REQ,                                      /*!< 接收到读请求事件 */
+    XF_SLE_SSAPS_EVT_WRITE_REQ,                                     /*!< 接收到写请求事件 */
 } xf_sle_ssaps_event_t;
+
+/**
+ * @brief SLE SSAPS INFO 协商事件的参数
+ */
+typedef struct {
+    uint8_t app_id;         /*!< 服务端 (应用) ID */
+    uint16_t conn_id;       /*!< 链接(连接) ID */
+    uint32_t mtu_size;      /*!< MTU 大小 */
+    uint16_t version;       /*!< 版本 */
+} xf_sle_ssaps_evt_param_exchange_info_t;
+
+/**
+ * @brief SLE SSAPS 读请求事件的参数
+ */
+typedef struct {
+    uint16_t conn_id;                   /*!< 链接 (连接) ID */
+    uint16_t trans_id;                  /*!< 传输 ID */
+    uint16_t handle;                    /*!< 属性句柄 */
+    xf_sle_ssap_property_type_t type;   /*!< 类型，见 @ref xf_sle_ssap_property_type_t */
+    bool need_rsp;                      /*!< 是否需要发送响应 */
+    bool need_auth;                     /*!< 是否需要授权 */
+} xf_sle_ssaps_evt_param_read_req_t;
+
+/**
+ * @brief SLE SSAPS 写请求事件的参数
+ */
+typedef struct {
+    uint16_t conn_id;                   /*!< 链接 (连接) ID */
+    uint16_t trans_id;                  /*!< 传输 ID */
+    uint16_t handle;                    /*!< 属性句柄 */
+    xf_sle_ssap_property_type_t type;   /*!< 类型，见 @ref xf_sle_ssap_property_type_t */
+    bool need_rsp;                      /*!< 是否需要发送响应 */
+    bool need_auth;                     /*!< 是否需要授权 */
+    uint8_t *value;                     /*!< 值 */
+    uint16_t value_len;                 /*!< 值长度 */
+} xf_sle_ssaps_evt_param_write_req_t;
 
 /**
  * @brief SLE SSAPS 服务端事件回调参数
  */
 typedef union _xf_sle_ssaps_evt_cb_param_t {
-    // XF_SLE_CONN_EVT_CONNECT,
-    /**
-     * @brief SLE SSAPS 连接事件的参数
-     */
-    struct {
-        uint16_t conn_id;               /*!< 链接(连接) ID */
-        xf_sle_addr_t peer_addr;        /*!< 对端地址，见 @ref xf_sle_addr_t */
-        xf_sle_pair_state_t pair_state; /*!< 配对状态，见 @ref xf_sle_pair_state_t */
-    } connect;
-
-    // XF_SLE_CONN_EVT_DISCONNECT,
-    /**
-     * @brief SLE 断连事件的参数
-     */
-    struct {
-        uint16_t conn_id;                   /*!< 链接(连接) ID */
-        xf_sle_addr_t peer_addr;            /*!< 对端地址，见 @ref xf_sle_addr_t */
-        xf_sle_pair_state_t pair_state;     /*!< 配对状态，见 @ref xf_sle_pair_state_t */
-        xf_sle_disconnect_reason_t reason;  /*!< 断连原因，见 @ref xf_sle_disconnect_reason_t */
-    } disconnect;
-
-    // XF_SLE_CONN_EVT_CONN_PARAMS_UPDATE,
-    /**
-     * @brief SLE 断连事件的参数
-     */
-    struct {
-        uint16_t interval;              /*!< 链路调度间隔，单位slot */
-        uint16_t latency;               /*!< 延迟周期，单位slot */
-        uint16_t supervision_timeout;   /*!< 超时时间，单位10ms */
-    } conn_param_update;
-
-    // XF_SLE_CONN_EVT_REQ_CONN_PARAMS_UPDATE
-    /**
-     * @brief SLE 连接参数更新事件的参数
-     */
-    struct {
-        uint16_t conn_id;               /*!< 链接(连接) ID */
-        uint16_t interval_min;          /*!< 链路调度间隔，单位slot */
-        uint16_t interval_max;          /*!< 链路调度间隔，单位slot */
-        uint16_t max_latency;           /*!< 延迟周期，单位slot */
-        uint16_t supervision_timeout;   /*!< 超时时间，单位10ms */
-    } req_conn_param_update;
-
-    // XF_SLE_ADV_EVT_ENABLE,
-    /**
-     * @brief SLE 广播开启事件的参数
-     */
-    struct {
-        uint32_t announce_id;       /*!< 广播 ID */
-    } adv_enable;
-
-    // XF_SLE_ADV_EVT_DISABLE,
-    /**
-     * @brief SLE 广播停止事件的参数
-     */
-    struct {
-        uint32_t announce_id;       /*!< 广播 ID */
-    } adv_disable;
-
-    // XF_SLE_ADV_EVT_TERMINAL,
-    /**
-     * @brief SLE 广播 TERMINAL 事件的参数
-     */
-    struct {
-        uint32_t announce_id;       /*!< 广播 ID */
-    } adv_termial;
-
-    /**
-     * @brief SLE SSAPS 接收到读请求事件的参数
-     */
-    struct {
-        uint16_t conn_id;                   /*!< 链接 (连接) ID */
-        uint16_t trans_id;                  /*!< 传输 ID */
-        uint16_t handle;                    /*!< 属性句柄 */
-        xf_sle_ssap_property_type_t type;   /*!< 类型，见 @ref xf_sle_ssap_property_type_t */
-        bool need_rsp;                      /*!< 是否需要发送响应 */
-        bool need_auth;                     /*!< 是否需要授权 */
-    } req_read;
-
-    // XF_SLE_SSAPS_EVT_REQ_WRITE,
-    /**
-     * @brief SLE SSAPS 接收到写请求事件的参数
-     */
-    struct {
-        uint16_t conn_id;                   /*!< 链接 (连接) ID */
-        uint16_t trans_id;                  /*!< 传输 ID */
-        uint16_t handle;                    /*!< 属性句柄 */
-        xf_sle_ssap_property_type_t type;   /*!< 类型，见 @ref xf_sle_ssap_property_type_t */
-        bool need_rsp;                      /*!< 是否需要发送响应 */
-        bool need_auth;                     /*!< 是否需要授权 */
-        uint8_t *value;                     /*!< 值 */
-        uint16_t value_len;                 /*!< 值长度 */
-    } req_write;
+   xf_sle_common_evt_param_connect_t connect;   /*!< 连接事件的参数，
+                                                 *  @ref xf_sle_common_evt_param_connect_t
+                                                 *  XF_SLE_COMMON_EVT_CONNECT
+                                                 */
+    xf_sle_common_evt_param_disconnect_t disconnect;
+                                                /*!< 断连事件的参数，
+                                                 *  @ref xf_sle_common_evt_param_disconnect_t
+                                                 *  XF_SLE_COMMON_EVT_DISCONNECT
+                                                 */
+    xf_sle_common_evt_param_conn_param_update_t conn_param_update;
+                                                /*!< 连接参数更新事件的参数，
+                                                 *  @ref xf_sle_common_evt_param_conn_param_update_t
+                                                 *  XF_SLE_COMMON_EVT_CONN_PARAMS_UPDATE
+                                                 */
+    xf_sle_ssaps_evt_param_exchange_info_t info;/*!< 接收到 INFO 协商事件的参数，
+                                                 *  @ref xf_sle_ssaps_evt_param_exchange_info_t
+                                                 *  XF_SLE_SSAPS_EVT_EXCHANGE_INFO
+                                                 */
+    xf_sle_ssaps_evt_param_read_req_t read_req;                    
+                                    /*!< 接收到读请求事件的参数，
+                                     *  @ref xf_sle_ssaps_evt_param_read_req_t
+                                     *  XF_SLE_SSAPS_EVT_READ_REQ
+                                     */
+    xf_sle_ssaps_evt_param_write_req_t write_req;                    
+                                    /*!< 接收到写请求事件的参数，
+                                     *  @ref xf_sle_ssaps_evt_param_write_req_t
+                                     *  XF_SLE_SSAPS_EVT_WRITE_REQ
+                                     */
 } xf_sle_ssaps_evt_cb_param_t;
 
 /**

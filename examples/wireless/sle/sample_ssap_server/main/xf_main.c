@@ -92,7 +92,7 @@ void xf_main(void)
              "xf_sle_enable error!:%#X", ret);
 
     // 注册 ssaps 事件回调
-    xf_sle_ssaps_event_cb_register(sample_ssaps_event_cb, XF_SLE_EVT_ALL);
+    xf_sle_ssaps_event_cb_register(sample_ssaps_event_cb, XF_SLE_COMMON_EVT_ALL);
 
     // 设置本地设备名
     ret = xf_sle_set_local_name(s_local_name, sizeof(s_local_name));
@@ -135,7 +135,7 @@ static xf_err_t sample_ssaps_event_cb(
     xf_sle_ssaps_evt_cb_param_t *param)
 {
     switch (event) {
-    case XF_SLE_CONN_EVT_DISCONNECT: {
+    case XF_SLE_COMMON_EVT_DISCONNECT: {
         is_connected = false;
         XF_LOGI(TAG, "EV:disconnect, it will restart ADV");
         // 重新启动广播
@@ -143,27 +143,27 @@ static xf_err_t sample_ssaps_event_cb(
         XF_CHECK(ret != XF_OK, ret, TAG,
                  "xf_sle_start_announce error:%#X", ret);
     } break;
-    case XF_SLE_CONN_EVT_CONNECT: {
+    case XF_SLE_COMMON_EVT_CONNECT: {
         is_connected = true;
     } break;
-    case XF_SLE_SSAPS_EVT_REQ_WRITE: {
+    case XF_SLE_SSAPS_EVT_WRITE_REQ: {
         XF_LOGI(TAG, "EV:REQ WRITE:need_rsp:%d,hdl:%d,conn_id:%d,trans_id:%d",
-                param->req_write.need_rsp, param->req_write.handle,
-                param->req_write.conn_id, param->req_write.trans_id);
-        XF_LOG_BUFFER_HEXDUMP_ESCAPE(param->req_write.value, param->req_write.value_len);
+                param->write_req.need_rsp, param->write_req.handle,
+                param->write_req.conn_id, param->write_req.trans_id);
+        XF_LOG_BUFFER_HEXDUMP_ESCAPE(param->write_req.value, param->write_req.value_len);
 
     } break;
-    case XF_SLE_SSAPS_EVT_REQ_READ: {
+    case XF_SLE_SSAPS_EVT_READ_REQ: {
         XF_LOGI(TAG, "EV:REQ READ:need_rsp:%d,hdl:%d,conn_id:%d,trans_id:%d",
-                param->req_read.need_rsp, param->req_read.handle,
-                param->req_read.conn_id, param->req_read.trans_id);
+                param->read_req.need_rsp, param->read_req.handle,
+                param->read_req.conn_id, param->read_req.trans_id);
 
         xf_sle_ssaps_response_value_t rsp = {
             .value = s_rsp_value,
             .value_len = sizeof(s_rsp_value),
         };
         xf_err_t ret = xf_sle_ssaps_send_response(s_aap_id,
-                       param->req_read.conn_id, param->req_read.trans_id,
+                       param->read_req.conn_id, param->read_req.trans_id,
                        XF_OK, &rsp
                                                  );
         XF_CHECK(ret != XF_OK, ret, TAG,

@@ -24,6 +24,7 @@
 
 #include "xf_utils.h"
 #include "xf_sle_types.h"
+#include "xf_sle_connection_manager_types.h"
 
 /**
  * @cond (XFAPI_USER || XFAPI_PORT)
@@ -131,17 +132,62 @@ typedef struct {
     uint16_t version;       /*!< 版本 */
 } xf_sle_ssap_exchange_info_t;
 
+
+#define XF_SLE_COMMON_EVT_ALL       (-1)        /*!< 所有事件 */
 /**
  * @brief SLE SSAP 通用事件类型
  */
 typedef enum {
-    XF_SLE_EVT_ALL,                             /*!< 所有事件 */
-    XF_SLE_CONN_EVT_CONNECT,                    /*!< 连接事件 */
-    XF_SLE_CONN_EVT_DISCONNECT,                 /*!< 断连事件 */
-    XF_SLE_CONN_EVT_CONN_PARAMS_UPDATE,         /*!< 连接参数更新事件 */
-    XF_SLE_CONN_EVT_REQ_CONN_PARAMS_UPDATE,     /*!< 请求更新连接参数事件 */
-    _XF_SLE_SSAP_COMMON_EVT_MAX,                /*!< SLE SSAP 通用事件类型最大值 */
-} xf_sle_ssap_common_event_t;
+    XF_SLE_COMMON_EVT_CONNECT,                  /*!< 连接事件 */
+    XF_SLE_COMMON_EVT_DISCONNECT,               /*!< 断连事件 */
+    XF_SLE_COMMON_EVT_SEEK_RESULT,              /*!< 收到扫描结果事件 */
+    XF_SLE_COMMON_EVT_PAIR_END,                 /*!< 配对结束事件 */
+    XF_SLE_COMMON_EVT_CONN_PARAMS_UPDATE,       /*!< 连接参数更新事件 */
+    _XF_SLE_COMMON_EVT_ENUM_END,                /*!< SLE 通用事件枚举结束值 */
+} xf_sle_common_event_t;
+
+/**
+ * @brief SLE 连接事件的参数
+ */
+typedef struct {
+    uint16_t conn_id;                   /*!< 链接(连接) ID */
+    xf_sle_addr_t peer_addr;            /*!< 对端地址，见 @ref xf_sle_addr_t */
+    xf_sle_pair_state_t pair_state;     /*!< 配对状态，见 @ref xf_sle_pair_state_t */
+} xf_sle_common_evt_param_connect_t;
+
+/**
+ * @brief SLE 断连事件的参数
+ */
+typedef struct {
+    uint16_t conn_id;                   /*!< 链接(连接) ID */
+    xf_sle_addr_t peer_addr;            /*!< 对端地址，见 @ref xf_sle_addr_t */
+    xf_sle_pair_state_t pair_state;     /*!< 配对状态，见 @ref xf_sle_pair_state_t */
+    xf_sle_disconnect_reason_t reason;  /*!< 断连原因，见 @ref xf_sle_disconnect_reason_t */
+} xf_sle_common_evt_param_disconnect_t;
+
+/**
+ * @brief SLE 连接参数更新事件的参数
+ */
+typedef struct {
+    uint16_t conn_id;
+    uint16_t interval;              /*!< 链路调度间隔，单位slot */
+    uint16_t latency;               /*!< 延迟周期，单位slot */
+    uint16_t supervision_timeout;   /*!< 超时时间，单位10ms */
+} xf_sle_common_evt_param_conn_param_update_t;
+
+/**
+ * @brief SLE 收到扫描结果事件的参数
+ */
+typedef struct {
+    uint8_t evt_type;               /*!< 上报事件类型 */
+    xf_sle_addr_t peer_addr;        /*!< 对端地址，见 @ref xf_sle_addr_t */
+    xf_sle_addr_t direct_addr;      /*!< 定向发现地址，见 @ref xf_sle_addr_t */
+    /* FIXME 这里不知道为啥官方 SDK 用的是 uint8_t */
+    uint8_t rssi;                   /*!< 信号强度指示，取值范围[-127dBm, 20dBm]，0x7F表示不提供信号强度指示 */
+    uint8_t data_status;            /*!< 数据状态 */
+    uint8_t data_len;               /*!< 数据长度 */
+    uint8_t *data;                  /*!< 数据内容 */
+} xf_sle_common_evt_param_seek_result_t;
 
 /* ==================== [Global Prototypes] ================================= */
 
