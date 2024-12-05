@@ -70,7 +70,7 @@ void xf_main(void)
     xf_ble_enable();
 
     // 注册 gattc 事件回调
-    ret = xf_ble_gattc_event_cb_register(sample_ble_gattc_event_cb, 0);
+    ret = xf_ble_gattc_event_cb_register(sample_ble_gattc_event_cb, XF_BLE_COMMON_EVT_ALL);
     XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
              "REGISTER event cb failed:%#X", ret);
 
@@ -108,10 +108,10 @@ static xf_err_t sample_ble_gattc_event_cb(
     UNUSED(param);
     xf_err_t ret = XF_OK;
     switch (event) {
-    case XF_BLE_GAP_EVT_SCAN_RESULT: {
+    case XF_BLE_COMMON_EVT_SCAN_RESULT: {
         ret = gattc_event_scan_result_cb(&param);
     } break;
-    case XF_BLE_GAP_EVT_CONNECT: {
+    case XF_BLE_COMMON_EVT_CONNECT: {
         s_conn_id = param.connect.conn_id;
         peer_addr = param.connect.peer_addr;
 
@@ -121,24 +121,24 @@ static xf_err_t sample_ble_gattc_event_cb(
                 XF_BLE_ADDR_EXPAND_TO_ARG(peer_addr.addr));
         is_need_discovery = true;
     } break;
-    case XF_BLE_GATTC_EVT_READ_COMPLETE: {
-        if (param.read_cmpl.chara_value_len != 0) {
-            XF_LOGI(TAG, "EV:read CMPL:handle:%d", param.read_cmpl.chara_handle);
-            XF_LOG_BUFFER_HEXDUMP(param.read_cmpl.chara_value,
-                                  param.read_cmpl.chara_value_len);
+    case XF_BLE_GATTC_EVT_READ_CFM: {
+        if (param.read_cfm.value_len != 0) {
+            XF_LOGI(TAG, "EV:read CMPL:handle:%d", param.read_cfm.handle);
+            XF_LOG_BUFFER_HEXDUMP(param.read_cfm.value,
+                                  param.read_cfm.value_len);
             is_read_cmpl = true;
         }
     } break;
-    case XF_BLE_GATTC_EVT_WRITE_COMPLETE: {
+    case XF_BLE_GATTC_EVT_WRITE_CFM: {
         XF_LOGI(TAG, "EV:write CMPL:handle:%d,it will disconnect",
-                param.write.handle);
+                param.write_cfm.handle);
         xf_ble_gap_disconnect(&peer_addr);
     } break;
-    case XF_BLE_GATTC_EVT_RECV_NOTIFICATION_OR_INDICATION: {
-        if (param.read_cmpl.chara_value_len != 0) {
-            XF_LOGI(TAG, "EV:read ntf/ind:chara_handle:%d", param.notify.handle);
-            XF_LOG_BUFFER_HEXDUMP(param.notify.value,
-                                  param.notify.value_len);
+    case XF_BLE_GATTC_EVT_NOTIFICATION: {
+        if (param.ntf.value_len != 0) {
+            XF_LOGI(TAG, "EV:read ntf/ind:chara_handle:%d", param.ntf.handle);
+            XF_LOG_BUFFER_HEXDUMP(param.ntf.value,
+                                  param.ntf.value_len);
         }
     } break;
     default:

@@ -74,7 +74,7 @@ xf_err_t xf_ble_gatts_app_unregister(uint8_t app_id);
  *      - XF_FAIL               失败
  *      - (OTHER)               @ref xf_err_t
  */
-xf_err_t xf_ble_gatts_add_service_to_app_profile(
+xf_err_t xf_ble_gatts_add_service_to_app(
     uint8_t app_id, xf_ble_gatts_service_t *service);
 
 /**

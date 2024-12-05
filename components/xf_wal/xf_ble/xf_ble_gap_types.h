@@ -374,6 +374,17 @@ typedef struct {
 } xf_ble_gap_scan_param_t;
 
 /**
+ * @brief BLE GAP 扫描结果中的事件类型，扫描响应、广播数据或其他类型
+ */
+typedef enum {
+    XF_BLE_GAP_SCANNED_ADV_TYPE_CONN        = 0x00, /*!< Connectable undirected advertising (ADV_IND) */
+    XF_BLE_GAP_SCANNED_ADV_TYPE_CONN_DIR    = 0x01, /*!< Connectable directed advertising (ADV_DIRECT_IND) */
+    XF_BLE_GAP_SCANNED_ADV_TYPE_SCAN        = 0x02, /*!< Scannable undirected advertising (ADV_SCAN_IND) */
+    XF_BLE_GAP_SCANNED_ADV_TYPE_NONCONN     = 0x03, /*!< Non connectable undirected advertising (ADV_NONCONN_IND) */
+    XF_BLE_GAP_SCANNED_ADV_TYPE_SCAN_RSP    = 0x04, /*!< Scan Response (SCAN_RSP) */
+} xf_ble_gap_scanned_adv_type_t;
+
+/**
  * @brief BLE GAP 连接参数更新数据结构
  */
 typedef struct {
@@ -406,6 +417,44 @@ typedef enum {
     XF_BLE_GAP_DISCONNECT_ENDED_BY_REMOTE_USER = 0x13,    /*!< 远端用户断连 */
     XF_BLE_GAP_DISCONNECT_ENDED_BY_LOCAL_HOST  = 0x16,    /*!< 本端 HOST 断连 */
 } xf_ble_gap_disconnect_reason_t;
+
+/**
+ * @brief BLE 连接事件的参数
+ */
+typedef struct {
+    uint16_t conn_id;                       /*!< 链接(连接) ID */
+    uint16_t conn_handle;                   /*!< 链接的句柄 */
+    xf_ble_gap_link_role_type_t link_role;  /*!< 链路角色，见 @ref xf_ble_gap_link_role_type_t */
+    xf_ble_addr_t peer_addr;                /*!< 对端地址，见 @ref xf_ble_addr_t */
+} xf_ble_common_evt_param_connect_t;
+
+/**
+ * @brief BLE 断连事件的参数
+ */
+typedef struct {
+    uint16_t conn_id;                       /*!< 链接(连接) ID */
+    xf_ble_addr_t peer_addr;                /*!< 对端地址，见 @ref xf_ble_addr_t */
+    xf_ble_gap_disconnect_reason_t reason;  /*!< 断连原因，见 @ref xf_ble_gap_disconnect_reason_t */
+} xf_ble_common_evt_param_disconnect_t;
+
+/**
+ * @brief BLE 配对结束事件的参数
+ */
+typedef struct {
+    uint16_t conn_id;                           /*!< 链接 (连接) ID */
+    xf_ble_addr_t peer_addr;                    /*!< 对端地址， @ref xf_ble_addr_t */
+} xf_ble_common_evt_param_pair_end_t;
+
+/**
+ * @brief BLE 收到扫描结果事件的参数
+ */
+typedef struct {
+    int rssi;                                   /*!< 扫到的设备的 RSSI 值 */
+    xf_ble_addr_t addr_scanned;              /*!< 扫到的设备的地址，见 @ref xf_ble_addr_t */
+    xf_ble_gap_scanned_adv_type_t adv_type;     /*!< 扫到的设备广播类型，见 @ref xf_ble_gap_scanned_adv_type_t */
+    uint8_t adv_data_len;                       /*!< 广播数据的长度 (指整个广播数据 AdvData ) */
+    uint8_t *adv_data;                          /*!< 广播数据 (指整个广播数据 AdvData ) */
+} xf_ble_common_evt_param_scan_result_t;
 
 /* ==================== [Global Prototypes] ================================= */
 

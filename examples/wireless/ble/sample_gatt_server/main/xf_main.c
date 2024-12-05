@@ -107,7 +107,7 @@ void xf_main(void)
     xf_ble_enable();
 
     // 注册 gatts 事件回调
-    ret = xf_ble_gatts_event_cb_register(sample_ble_gatts_event_cb, 0);
+    ret = xf_ble_gatts_event_cb_register(sample_ble_gatts_event_cb, XF_BLE_COMMON_EVT_ALL);
     XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
              "REGISTER event cb failed:%#X", ret);
 
@@ -121,7 +121,7 @@ void xf_main(void)
              "REGISTER app profile failed:%#X app_id:%d", ret, app_id);
 
     // 添加服务至 app_profile
-    ret = xf_ble_gatts_add_service_to_app_profile(
+    ret = xf_ble_gatts_add_service_to_app(
               app_id, &service_set[0]);
     XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
              "ADD service failed:%#X", ret);
@@ -153,7 +153,7 @@ static xf_err_t sample_ble_gatts_event_cb(
     UNUSED(param);
     switch (event) {
     /* 事件: 读请求  */
-    case XF_BLE_GATTS_EVT_REQ_READ: {
+    case XF_BLE_GATTS_EVT_READ_REQ: {
         XF_LOGI(TAG, "EV:RECV READ_REQ:app_id:%d,conn_id:%d,need_rsp:%d,attr_handle:%d",
                 app_id, param.read_req.conn_id, param.read_req.need_rsp,
                 param.read_req.handle);
@@ -169,7 +169,7 @@ static xf_err_t sample_ble_gatts_event_cb(
                  "send_notify_indicate failed:%#X", ret);
     } break;
     /* 事件: 写请求  */
-    case XF_BLE_GATTS_EVT_REQ_WRITE: {
+    case XF_BLE_GATTS_EVT_WRITE_REQ: {
         XF_LOGI(TAG, "EV:RECV WRITE_REQ:app_id:%d,conn_id:%d,need_rsp:%d,attr_handle:%d",
                 app_id, param.write_req.conn_id, param.write_req.need_rsp,
                 param.write_req.handle);
@@ -189,12 +189,12 @@ static xf_err_t sample_ble_gatts_event_cb(
         }
     } break;
     /* 事件: MTU 协商  */
-    case XF_BLE_GATTS_EVT_MTU_CHANGED: {
+    case XF_BLE_GATTS_EVT_EXCHANGE_MTU: {
         XF_LOGI(TAG, "EV:mtu changed:app_id:%d,conn_id:%d,mtu_size:%d",
                 app_id, param.mtu.conn_id, param.mtu.mtu_size);
     } break;
     /* 事件: 连接  */
-    case XF_BLE_GAP_EVT_CONNECT: {
+    case XF_BLE_COMMON_EVT_CONNECT: {
         XF_LOGI(TAG, "EV:peer connect:app_id:%d,conn_id:%d,"
                 "addr_type:%d,addr:"XF_BLE_ADDR_PRINT_FMT,
                 app_id, param.connect.conn_id,
@@ -214,7 +214,7 @@ static xf_err_t sample_ble_gatts_event_cb(
         XF_CHECK(ret != XF_OK, ret, TAG,
                  "set_security_param failed:%#X", ret);
     } break;
-    case XF_BLE_GAP_EVT_PAIR_END: {
+    case XF_BLE_COMMON_EVT_PAIR_END: {
         XF_LOGI(TAG, "EV:pair end:app_id:%d,conn_id:%d,"
                 "addr_type:%d,addr:"XF_BLE_ADDR_PRINT_FMT,
                 app_id, param.connect.conn_id,
@@ -222,7 +222,7 @@ static xf_err_t sample_ble_gatts_event_cb(
                 XF_BLE_ADDR_EXPAND_TO_ARG(param.connect.peer_addr.addr));
     } break;
     /* 事件: 断连  */
-    case XF_BLE_GAP_EVT_DISCONNECT: {
+    case XF_BLE_COMMON_EVT_DISCONNECT: {
         XF_LOGI(TAG, "EV:peer disconnect:app_id:%d,conn_id:%d,reason:%u,"
                 "addr_type:%d,addr:"XF_BLE_ADDR_PRINT_FMT,
                 app_id, param.disconnect.conn_id,
