@@ -204,20 +204,19 @@ static xf_err_t ssapc_event_seek_result_cb(
     uint8_t *adv_pos = adv_data_all;
     uint8_t *adv_end = adv_data_all + adv_size_all;
     while (adv_pos <= adv_end) {
-        uint8_t struct_data_len = adv_pos[1];
+        uint8_t ad_data_len = adv_pos[1];
         xf_sle_adv_struct_type_t ad_type = adv_pos[0];
-        XF_LOGD(TAG, "EV:scan_result:struct_data_len:%d ad_type:%#2X",
-                struct_data_len, ad_type);
+        XF_LOGD(TAG, "EV:scan_result:ad_type:%#2X, ad_data_len:%d",
+                ad_type, ad_data_len);
         switch (ad_type) {
         case XF_SLE_ADV_STRUCT_TYPE_COMPLETE_LOCAL_NAME: {
             uint8_t *local_name = &adv_pos[2];
-            uint8_t local_name_size = struct_data_len - XF_SLE_ADV_STRUCT_TYPE_FILED_SIZE;
-            if (strncmp((char *)target_device_name, (char *)local_name, local_name_size) == 0) {
+            if (strncmp((char *)target_device_name, (char *)local_name, ad_data_len) == 0) {
 
                 XF_LOGD(TAG, "EV:seek result:evt_type:%d,rssi:%d"
                         XF_SLE_ADDR_PRINT_FMT " data status:%d",
                         result->evt_type, result->rssi,
-                        XF_SLE_ADDR_EXPAND_TO_ARG(result->peer_addr->addr),
+                        XF_SLE_ADDR_EXPAND_TO_ARG(result->peer_addr.addr),
                         result->data_status);
                 XF_LOGI(TAG, "> target name:%s", local_name);
                 ret = xf_sle_stop_seek();
@@ -230,7 +229,7 @@ static xf_err_t ssapc_event_seek_result_cb(
             XF_LOGD(TAG, "EV:scan_result:uncaring ad_type:%#2X", ad_type);
         } break;
         }
-        adv_pos += (struct_data_len + XF_SLE_ADV_STRUCT_LEN_FILED_SIZE);
+        adv_pos += (ad_data_len + XF_SLE_ADV_STRUCT_TYPE_FILED_SIZE + XF_SLE_ADV_STRUCT_LEN_FILED_SIZE);
     }
     return XF_OK;
 }

@@ -81,7 +81,7 @@ typedef enum {
  * @endcode
  */
 typedef union _xf_sle_adv_struct_data_t {
-    xf_sle_var_uintptr_t adv_var;       /*!< 类型不定的广播数据单元数据（暂不建议使用）*/
+    xf_sle_var_uintptr_t adv_var;       /*!< 通用类型 (类型不定) 的广播数据单元数据 */
 
     uint8_t *local_name;
     uint8_t discovery_level;
@@ -90,6 +90,7 @@ typedef union _xf_sle_adv_struct_data_t {
 /**
  * @brief SLE 广播数据单元 ( AD structure ）
  *
+ * @note 广播数据包与扫描响应数据包均是这个结构
  * @warning 这里的内存空间结构及成员并非严格按星闪标准定义的广播数据单元结构进行定义
  * @details 以下为星闪标准定义的广播数据结构及广播数据单元 ( AD structure ）所在的位置
  * （SLE、BLE 广播数据结构类似，但也有些区别，可与蓝牙标准中的广播数据结构进行对比观看）
@@ -101,18 +102,11 @@ typedef union _xf_sle_adv_struct_data_t {
  * @endcode
  */
 typedef struct {
-    uint8_t struct_data_len;        /*!< 广播数据单元的数据 (AD Data) 的长度 */
-    xf_sle_adv_struct_type_t type;  /*!< 广播数据单元的类型，见 @ref xf_sle_adv_struct_type_t */
-    xf_sle_adv_struct_data_t data;  /*!< 广播数据单元的数据 (AD Data)，见 @ref xf_sle_adv_struct_data_t */
+    uint8_t is_ptr              :1;     /*!< 传入的广播单元数据是值还是指针()，如果是指针则 true ；否则 false */
+    uint8_t ad_data_len         :7;     /*!< 广播数据单元的数据 (AD Data) 的长度 */
+    xf_sle_adv_struct_type_t ad_type;   /*!< 广播数据单元的类型，见 @ref xf_sle_adv_struct_type_t */
+    xf_sle_adv_struct_data_t ad_data;   /*!< 广播数据单元的数据 (AD Data)，见 @ref xf_sle_adv_struct_data_t */
 } xf_sle_adv_struct_t;
-
-#define XF_SLE_SSAP_STRUCT_INFO_BASE                            \
-    union                                                       \
-    {                                                           \
-        xf_sle_adv_struct_type_t type;                          \
-        uint8_t _fixed_size;                                    \
-    };                                                          \
-    uint8_t struct_data_len;                                    \
 
 /**
  * @brief 定义一个严格遵循星闪标准的广播数据单元结构，单元数据 ( AD Data ) 为数组的类型
@@ -121,36 +115,23 @@ typedef struct {
  * @param adv_data_array_size 单元数据 ( AD Data ) 数组的大小
  * @note 一般仅用于平台对接时使用，便于 XF SLE 广播数据单元结构与符号标准的广播数据结构间的转换
  */
-#define XF_SLE_SSAP_STRUCT_TYPE_ARRAY_U8(type_name, adv_data_array_size)   \
+#define XF_SLE_ADV_STRUCT_TYPE_ARRAY_U8(type_name, adv_data_array_size)   \
 typedef struct {                                                \
-    XF_SLE_SSAP_STRUCT_INFO_BASE                                \
-    uint8_t data[adv_data_array_size];                          \
-}type_name
-
-/**
- * @brief 定义一个严格遵循星闪标准的广播数据单元结构，单元数据 ( AD Data ) 为 uint8_t 的类型
- *
- * @param type_name 指定定义的类型名
- * @note 一般仅用于平台对接时使用，便于 XF SLE 广播数据单元结构与符号标准的广播数据结构间的转换
- */
-#define XF_SLE_SSAP_STRUCT_TYPE_VAL_U8(type_name)               \
-typedef struct {                                                \
-    XF_SLE_SSAP_STRUCT_INFO_BASE                                \
-    uint8_t data;                                               \
+    xf_sle_adv_struct_type_t ad_type;                           \
+    uint8_t ad_data_len;                                        \
+    uint8_t ad_data[adv_data_array_size];                       \
 }type_name
 
 /**
  * @brief  SLE 广播 (公开) 数据 ( 包含响应数据 )
- * @warning 目前 广播数据单元 并不是严格按标准的广播数据结构进行定义，
+ * @warning 目前 广播数据单元 与 扫描响应数据单元并不是严格按标准的广播数据结构进行定义，
  *  而是从更方便使用的角度对标准的结构进行了微调
- * @warning 目前 响应数据 是需严格遵循标准结构，需要自行逐项填充
  */
-/* TODO adv data 与 adv resp data 分离（包括api），优化响应数据的结构 */
 typedef struct _xf_sle_announce_data_t {
     xf_sle_adv_struct_t *announce_struct_set;   /*!< 广播数据单元（ AD Structure ）的集合，
                                                  * 见 @ref xf_sle_adv_struct_t */
-    uint16_t seek_rsp_data_len;                 /*!< 扫描响应数据长度， */
-    uint8_t  *seek_rsp_data;                    /*!< 扫描响应数据 */
+    xf_sle_adv_struct_t *seek_rsp_struct_set;   /*!< 扫描响应数据单元（ AD Structure ）的集合，
+                                                 * 见 @ref xf_sle_adv_struct_t */
 } xf_sle_announce_data_t;
 
 /**
@@ -194,14 +175,6 @@ typedef enum {
     XF_SLE_ANNOUNCE_ROLE_T_NO_NEGO,      /*!< 期望做 T 不可协商 */
     XF_SLE_ANNOUNCE_ROLE_G_NO_NEGO       /*!< 期望做 G 不可协商 */
 } xf_sle_announce_gt_role_t;
-
-/**
- * @if Eng
- * @brief  Announce parameter.
- * @else
- * @brief  设备公开参数。
- * @endif
- */
 
 /**
  * @brief SLE 广播 (公开) 参数

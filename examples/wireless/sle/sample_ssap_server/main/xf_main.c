@@ -181,18 +181,23 @@ static void sample_sle_set_adv_data(void)
         .announce_struct_set = (xf_sle_adv_struct_t [])
         {
             {
-                .type = XF_SLE_ADV_STRUCT_TYPE_COMPLETE_LOCAL_NAME,
-                .data.local_name = s_local_name,
-                .struct_data_len = sizeof(s_local_name),
-            }, {
-                .type = XF_SLE_ADV_STRUCT_TYPE_DISCOVERY_LEVEL,
-                .data.discovery_level = XF_SLE_ANNOUNCE_LEVEL_NORMAL,
-                .struct_data_len = 1,
+                .ad_type = XF_SLE_ADV_STRUCT_TYPE_DISCOVERY_LEVEL,
+                .ad_data.discovery_level = XF_SLE_ANNOUNCE_LEVEL_NORMAL,
+                .ad_data_len = 1,
+                .is_ptr = false,
             },
-            {.struct_data_len = 0}  // 结束标记，也可以直接填 0，struct_data_len为关键标记变量
+            {
+                .ad_type = XF_SLE_ADV_STRUCT_TYPE_COMPLETE_LOCAL_NAME,
+                .ad_data.local_name = s_local_name,
+                .ad_data_len = sizeof(s_local_name),
+                .is_ptr = true,
+            }, 
+            {0}
         },
-        .seek_rsp_data_len = 0,
-        .seek_rsp_data = NULL,
+        .seek_rsp_struct_set = (xf_sle_adv_struct_t [])
+        {
+            {0}
+        },
     };
 
     xf_err_t ret = xf_sle_set_announce_data(SAMPLE_ADV_ID, &announce_data);
