@@ -175,15 +175,14 @@ static xf_err_t gattc_event_scan_result_cb(xf_ble_gattc_evt_cb_param_t *param)
 
     /* 解析广播数据，当包含指定设备名的广播时，进行连接 */
     while (ptr_current <= ptr_end) {
-        uint8_t struct_data_len = ptr_current[0];
+        uint8_t ad_data_len = ptr_current[0]- XF_BLE_GAP_ADV_STRUCT_AD_TYPE_FIELD_SIZE;
         xf_ble_gap_adv_struct_type_t ad_type = ptr_current[1];
-        XF_LOGD(TAG, "EV:scan_result:struct_data_len:%d ad_type:%#2X",
-                struct_data_len, ad_type);
+        XF_LOGD(TAG, "EV:scan_result:ad_data_len:%d ad_type:%#2X",
+                ad_data_len, ad_type);
         switch (ad_type) {
         case XF_BLE_ADV_STRUCT_TYPE_LOCAL_NAME_ALL: {
             uint8_t *local_name = &ptr_current[2];
-            uint8_t local_namez_size = struct_data_len - XF_BLE_GAP_ADV_STRUCT_AD_TYPE_FIELD_SIZE;
-            if (strncmp((char *)target_gatts_device_name, (char *)local_name, local_namez_size) == 0) {
+            if (strncmp((char *)target_gatts_device_name, (char *)local_name, ad_data_len) == 0) {
                 XF_LOGI(TAG, "EV:scan_result:target local name:%s", local_name);
                 ret = xf_ble_gap_stop_scan();
                 XF_CHECK(ret != XF_OK, ret, TAG, "gap stop scan failed:%#X", ret);
@@ -195,7 +194,7 @@ static xf_err_t gattc_event_scan_result_cb(xf_ble_gattc_evt_cb_param_t *param)
             XF_LOGD(TAG, "EV:scan_result:uncaring ad_type:%#2X", ad_type);
         } break;
         }
-        ptr_current += (struct_data_len + XF_BLE_GAP_ADV_STRUCT_LEN_FIELD_SIZE);
+        ptr_current += (ad_data_len + XF_BLE_GAP_ADV_STRUCT_AD_TYPE_FIELD_SIZE + XF_BLE_GAP_ADV_STRUCT_LEN_FIELD_SIZE);
     }
     return XF_OK;
 }

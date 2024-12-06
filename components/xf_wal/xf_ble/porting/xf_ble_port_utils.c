@@ -1,0 +1,82 @@
+/**
+ * @file xf_ble_port_utils.c
+ * @author dotc (dotchan@qq.com)
+ * @brief 主要为 BLE 对接时辅助的一些方法，可简化对接处理。
+ * @version 0.1
+ * @date 2024-12-06
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
+
+/* ==================== [Includes] ========================================== */
+
+#include "xf_ble_port_utils.h"
+
+/* ==================== [Defines] =========================================== */
+
+/* ==================== [Typedefs] ========================================== */
+
+/* ==================== [Static Prototypes] ================================= */
+
+/* ==================== [Static Variables] ================================== */
+
+/* ==================== [Macros] ============================================ */
+
+/* ==================== [Global Functions] ================================== */
+
+uint8_t xf_ble_gap_adv_data_packed_size_get(xf_ble_gap_adv_struct_t *adv_struct_set)
+{
+    if (adv_struct_set == NULL) {
+        return 0;
+    }
+    uint8_t adv_struct_cnt = 0;
+    uint8_t data_packed_size = 0;
+    while (adv_struct_set[adv_struct_cnt].ad_data_len != 0) {
+        data_packed_size += XF_BLE_GAP_ADV_STRUCT_LEN_FIELD_SIZE
+                            + XF_BLE_GAP_ADV_STRUCT_AD_TYPE_FIELD_SIZE
+                            + adv_struct_set[adv_struct_cnt].ad_data_len;
+        ++adv_struct_cnt;
+    }
+    return data_packed_size;
+}
+
+xf_err_t xf_ble_gap_adv_data_packed_by_adv_struct_set(
+    uint8_t *adv_data_buf, xf_ble_gap_adv_struct_t *adv_struct_set)
+{
+    /* 遍历将各个 ad structure 顺序放入 */
+    uint8_t *ptr_current = adv_data_buf;
+    uint8_t cnt = 0;
+    while (adv_struct_set[cnt].ad_data_len != 0) {
+        uint8_t adv_struct_size = 0;
+
+        XF_BLE_GAP_ADV_STRUCT_TYPE_ARRAY_U8(std_adv_struct_t, adv_struct_set[cnt].ad_data_len);
+        std_adv_struct_t adv_struct;
+        // 获取整个 adv_struct 大小
+        adv_struct_size = sizeof(std_adv_struct_t);
+        // > 设置 struct_data_len：sizeof(ad_type(1Byte)+ad_data) 或 整个 adv_struct 大小 - struct_data_len
+        adv_struct.struct_data_len = adv_struct_size - XF_BLE_GAP_ADV_STRUCT_LEN_FIELD_SIZE;
+        // > 设置 ad_type
+        adv_struct.ad_type = adv_struct_set[cnt].ad_type;
+
+        if (adv_struct_set[cnt].is_ptr == true) {
+            // > 设置 ad_data (值在 ad_data 指向的内存中 (指针变量))
+            memcpy(adv_struct.ad_data, adv_struct_set[cnt].ad_data.adv_var.ptr_u8,
+                   adv_struct_set[cnt].ad_data_len);
+        } else {
+            // > 设置 ad_data (值在 ad_data 中 (值变量))
+            memcpy(adv_struct.ad_data, &adv_struct_set[cnt].ad_data.adv_var.val_u32,
+                   adv_struct_set[cnt].ad_data_len);
+        }
+
+        /* 将临时构造的 adv_struct 整个复制至 data_packed_adv 对应位置 */
+        memcpy(ptr_current, &adv_struct, adv_struct_size);
+
+        /* data_packed_adv 写入位置更新 */
+        ptr_current += adv_struct_size;
+        ++cnt;
+    }
+    return XF_OK;
+}
+
+/* ==================== [Static Functions] ================================== */

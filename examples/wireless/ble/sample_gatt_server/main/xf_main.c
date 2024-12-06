@@ -250,20 +250,26 @@ static void sample_ble_set_adv_data(void)
                 .ad_type = XF_BLE_ADV_STRUCT_TYPE_LOCAL_NAME_ALL,
                 .ad_data_len = sizeof(sample_gatts_device_name),
                 .ad_data.local_name = sample_gatts_device_name,
-            }, {
-                .ad_type = XF_BLE_ADV_STRUCT_TYPE_APPEARANCE,
-                .ad_data_len = sizeof(xf_ble_appearance_t),
-                .ad_data.appearance = XF_BLE_APPEARANCE_GENERIC_PHONE,
+                .is_ptr = true,
             },
             {
                 .ad_type = XF_BLE_ADV_STRUCT_TYPE_TX_POWER_LEVEL,
                 .ad_data_len = sizeof(uint8_t),
-                .ad_data.adv_var.val_u8 = 6,
+                .ad_data.adv_var.val_u8 = 18,
+                .is_ptr = false,
             },
             {0}
         },
-        .scan_rsp_length = 0,
-        .scan_rsp_data = NULL,
+        .scan_rsp_struct_set = (xf_ble_gap_adv_struct_t [])
+        {
+            {
+                .ad_type = XF_BLE_ADV_STRUCT_TYPE_APPEARANCE,
+                .ad_data_len = sizeof(xf_ble_appearance_t),
+                .ad_data.appearance = XF_BLE_APPEARANCE_GENERIC_PHONE,
+                .is_ptr = false,
+            },
+            {0}
+        },
     };
     xf_ble_gap_set_adv_data(DEFAULT_BLE_GAP_ADV_ID, &adv_data);
 }

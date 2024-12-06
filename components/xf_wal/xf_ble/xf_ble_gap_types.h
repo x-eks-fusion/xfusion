@@ -135,12 +135,11 @@ typedef enum {
  */
 typedef uint8_t xf_ble_gap_adv_struct_type_t;
 
-
 #define XF_BLE_ADV_STRUCT_TYPE_FLAGS                    0x01
 #define XF_BLE_ADV_STRUCT_TYPE_LOCAL_NAME_SHORT         0x08
 #define XF_BLE_ADV_STRUCT_TYPE_LOCAL_NAME_ALL           0x09
 #define XF_BLE_ADV_STRUCT_TYPE_TX_POWER_LEVEL           0x0A    // 1 bytes
-#define XF_BLE_ADV_STRUCT_TYPE_CLASS_OF_DEVICE          0x0D    
+#define XF_BLE_ADV_STRUCT_TYPE_CLASS_OF_DEVICE          0x0D
 #define XF_BLE_ADV_STRUCT_TYPE_DEVICE_ID                0x10    // 2 bytes
 #define XF_BLE_ADV_STRUCT_TYPE_APPEARANCE               0x19    // 2 bytes
 
@@ -167,7 +166,7 @@ typedef uint8_t xf_ble_gap_adv_struct_type_t;
  * @endcode
  */
 typedef union _xf_ble_gap_adv_struct_data_t {
-    xf_ble_var_uintptr_t adv_var;       /*!< 类型不定的广播数据单元数据（暂不建议使用）*/
+    xf_ble_var_uintptr_t adv_var;       /*!< 通用类型 (类型不定) 的广播数据单元数据 */
     uint8_t flag;                       /*!< 类型为: 0x01, type:flag */
     uint8_t *local_name;                /*!< 类型为: 0x08, type:name short; 0x09, type:name all */
     xf_ble_appearance_t appearance;     /*!< 类型为: 0x19, type:appearance，见 @ref xf_ble_appearance_t */
@@ -176,10 +175,11 @@ typedef union _xf_ble_gap_adv_struct_data_t {
 /**
  * @brief BLE GAP 广播数据单元 ( AD structure ）
  *
+ * @note 广播数据包与扫描响应数据包均是这个结构
  * @warning 这里的内存空间结构及成员并非严格按蓝牙标准定义的广播数据单元结构进行定义
  * @details 以下为蓝牙标准定义的广播数据结构及广播数据单元 ( AD structure ）所在的位置
  * @code
- *  | AdvData                                                                                                   |
+ *  | AdvData (or ScanRspData)                                                                                                  |
  *  | AD Structure 1                            | AD Structure 2                | ... |（无效数据 000...000b）   |
  *  | Length              | Data                | Length | Data                 | ......                        |
  *  | Length(type + data) | AD type | AD Data   | Length | AD type | AD Data    | ......                        |
@@ -187,70 +187,46 @@ typedef union _xf_ble_gap_adv_struct_data_t {
  * @endcode
  */
 typedef struct {
-    uint8_t ad_data_len;        /*!< 注意，这并不是蓝牙标准中广播数据结构 AD structure 长度（ Length ），
-                                 * 仅是 AD data 字段的长度（不包含 AD type 字段的长度 ）*/
+    uint8_t is_ptr          :
+    1;            /*!< 传入的广播单元数据是值还是指针()，如果是指针则 true ；否则 false */
+    uint8_t ad_data_len     :
+    7;             /*!< 注意，这并不是蓝牙标准中广播数据结构 AD structure 长度（ Length ），
+                                             * 仅是 AD data 字段的长度（不包含 AD type 字段的长度 ）*/
     xf_ble_gap_adv_struct_type_t ad_type;   /*!< 广播数据单元的类型，见 @ref xf_ble_gap_adv_struct_type_t */
     xf_ble_gap_adv_struct_data_t ad_data;   /*!< 广播数据单元的数据，见 @ref xf_ble_gap_adv_struct_data_t */
 } xf_ble_gap_adv_struct_t;
 
 /**
- * @brief 定义一个严格遵循蓝牙标准的广播数据单元结构，单元数据 ( AD Data ) 为数组的类型
+ * @brief 定义一个严格遵循蓝牙标准的广播数据单元结构，单元数据 ( AD Data ) 为 U8 数组的类型
  *
  * @param type_name 指定定义的类型名
  * @param adv_data_array_size 单元数据 ( AD Data ) 数组的大小
  * @note 一般仅用于平台对接时使用，便于 XF BLE 广播数据单元结构与符号标准的广播数据结构间的转换
  */
-#define XF_BLE_ADV_STRUCT_TYPE_ARRAY(type_name, adv_data_array_size)   \
+#define XF_BLE_GAP_ADV_STRUCT_TYPE_ARRAY_U8(type_name, adv_data_array_size)   \
 typedef struct {                                                \
+    /* len of struct */                                         \
     uint8_t struct_data_len;                                    \
-    /* struct_data */                                           \
+    /* AD_Type */                                               \
     xf_ble_gap_adv_struct_type_t ad_type;                       \
-    /* adv_data */                                              \
+    /* AD_Data */                                               \
     uint8_t ad_data[adv_data_array_size];                       \
-}type_name
-
-/**
- * @brief 定义一个严格遵循蓝牙标准的广播数据单元结构，单元数据 ( AD Data ) 为 uint8_t 的类型
- *
- * @param type_name 指定定义的类型名
- * @note 一般仅用于平台对接时使用，便于 XF BLE 广播数据单元结构与符号标准的广播数据结构间的转换
- */
-#define XF_BLE_ADV_STRUCT_TYPE_VAL_U8(type_name)                \
-typedef struct {                                                \
-    uint8_t struct_data_len;                                    \
-    xf_ble_gap_adv_struct_type_t ad_type;                       \
-    /* adv_data */                                              \
-    uint8_t val;                                                \
-}type_name
-
-/**
- * @brief 定义一个严格遵循蓝牙标准的广播数据单元结构，单元数据 ( AD Data ) 为 uint16_t 的类型
- *
- * @param type_name 指定定义的类型名
- * @note 一般仅用于平台对接时使用，便于 XF BLE 广播数据单元结构与符号标准的广播数据结构间的转换
- */
-#define XF_BLE_ADV_STRUCT_TYPE_VAL_U16(type_name)               \
-typedef __packed struct {                                       \
-    uint8_t struct_data_len;                                    \
-    xf_ble_gap_adv_struct_type_t ad_type;                       \
-    /* adv_data */                                              \
-    uint16_t val;                                               \
 }type_name
 
 /**
  * @brief BLE GAP 广播数据 ( 包含响应数据 )
  *
- * @warning 目前 广播数据单元 并不是严格按标准的广播数据结构进行定义，
+ * @warning 目前 广播数据单元 与 扫描响应数据单元 并不是严格按标准的广播数据结构进行定义，
  *  而是从更方便使用的角度对标准的结构进行了微调
- * @warning 目前 响应数据 是需严格遵循标准结构，需要自行逐项填充
  */
-/* TODO adv data 与 adv resp data 分离（包括api），优化响应数据的结构 */
 typedef struct {
     xf_ble_gap_adv_struct_t *adv_struct_set;    /*!< 广播数据单元（ AD Structure ）的集合，
                                                  * 见 @ref xf_ble_gap_adv_struct_t */
 
-    uint16_t scan_rsp_length;                   /*!< 扫描响应数据长度， */
-    uint8_t *scan_rsp_data;                     /*!< 扫描响应数据 */
+    xf_ble_gap_adv_struct_t *scan_rsp_struct_set;
+    /*!< 扫描响应数据单元（ AD Structure ）的集合，
+     * 见 @ref xf_ble_gap_adv_struct_t */
+
 } xf_ble_gap_adv_data_t;
 
 /**
