@@ -44,7 +44,7 @@ static xf_err_t gattc_event_scan_result_cb(xf_ble_gattc_evt_cb_param_t *param);
 static uint8_t target_gatts_device_name[] = "XF_GATTS";
 static uint8_t write_req_data[] = "I M GATTC";
 static xf_ble_uuid_info_t app_uuid = {
-    .len_type = XF_BLE_UUID_TYPE_16,
+    .type = XF_BLE_UUID_TYPE_16,
     .uuid16 = 0x0000
 };
 static uint8_t s_app_id = 0;

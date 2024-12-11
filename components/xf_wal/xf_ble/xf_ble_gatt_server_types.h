@@ -69,7 +69,8 @@ typedef struct {
     xf_ble_gatt_attr_permission_t permissions;  /*!< 特征描述符权限，见 @ref xf_ble_gatt_attr_permission_t */
     uint8_t *value;                             /*!< 属性值 */
     uint16_t value_len;                         /*!< 属性值长度 */
-    xf_ble_gatt_chara_desc_type_t desc_type;    /*!< 特征描述符类型，见 @ref xf_ble_gatt_chara_desc_type_t */
+    xf_ble_gatt_chara_desc_type_t desc_type;    /*!< 特征描述符类型，见 @ref xf_ble_gatt_chara_desc_type_t 
+                                                 * 目前未启用，未来将用于快捷配置常用描述符 */
 } xf_ble_gatts_chara_desc_t;
 
 /**
@@ -80,7 +81,6 @@ typedef struct {
 typedef struct {
     uint8_t *value;                             /*!< 特征值 */
     uint16_t value_len;                         /*!< 特征值长度 */
-    xf_ble_gatt_attr_permission_t permission;   /*!< 特征值权限，见 @ref xf_ble_gatt_attr_permission_t */
 } xf_ble_gatts_chara_value_t;
 
 /**
@@ -88,6 +88,7 @@ typedef struct {
  */
 typedef struct _xf_ble_gatts_chara_t {
     xf_ble_attr_handle_t chara_handle;          /*!< 特征句柄，见 @ref xf_ble_attr_handle_t */
+    xf_ble_gatt_attr_permission_t permission;   /*!< 特征值权限，见 @ref xf_ble_gatt_attr_permission_t */
     xf_ble_gatt_chara_property_t properties;    /*!< 特征特性，见 @ref xf_ble_gatt_chara_property_t */
     xf_ble_attr_handle_t chara_value_handle;    /*!< 特征值句柄，见 @ref xf_ble_attr_handle_t */
     xf_ble_uuid_info_t *chara_uuid;             /*!< 特征 UUID ，见 @ref xf_ble_uuid_info_t */
@@ -182,6 +183,11 @@ typedef union {
     xf_ble_common_evt_param_pair_end_t pair_end;/*!< 配对结束事件的参数，
                                                  *  @ref xf_ble_common_evt_param_pair_end_t
                                                  *  XF_BLE_COMMON_EVT_PAIR_END
+                                                 */
+    xf_ble_common_evt_conn_param_upd_t conn_param_upd;
+                                                /*!< 连接参数更新事件的参数，
+                                                 *  @ref xf_ble_common_evt_conn_param_upd_t
+                                                 *  XF_BLE_COMMON_EVT_CONN_PARAMS_UPDATE,
                                                  */
     xf_ble_gatts_evt_param_exchange_mtu_t mtu;  /*!< MTU 协商事件的参数，
                                                  *  @ref xf_ble_gatts_evt_param_exchange_mtu_t

@@ -75,10 +75,10 @@ extern "C" {
  *  离线文档: https://www.bluetooth.com/specifications/specs/core-specification-amended-5-4/
  */
 typedef enum {
-    XF_BT_ADDR_TYPE_PUBLIC_DEV  = 0x00,     /*!< 公有地址 */
-    XF_BT_ADDR_TYPE_RANDOM_DEV  = 0x01,     /*!< 随机地址 */
-    XF_BT_ADDR_TYPE_RPA_PUBLIC  = 0x02,     /*!< 不可解析私有地址：地址定时更新 */
-    XF_BT_ADDR_TYPE_RPA_RANDOM  = 0x03,     /*!< 可解析私有地址：地址加密生成 */
+    XF_BLE_ADDR_TYPE_PUBLIC_DEV  = 0x00,    /*!< 公有地址 */
+    XF_BLE_ADDR_TYPE_RANDOM_DEV  = 0x01,    /*!< 随机地址 */
+    XF_BLE_ADDR_TYPE_RPA_PUBLIC  = 0x02,    /*!< 不可解析私有地址：地址定时更新 */
+    XF_BLE_ADDR_TYPE_RPA_RANDOM  = 0x03,    /*!< 可解析私有地址：地址加密生成 */
 } xf_ble_addr_type_t;
 
 /**
@@ -103,7 +103,7 @@ typedef enum {
  */
 typedef struct __packed _xf_ble_uuid_info_t {
     union {
-        xf_ble_uuid_type_t len_type;                 /*!< UUID 长度类型，见 @ref xf_ble_uuid_type_t */
+        xf_ble_uuid_type_t type;                    /*!< UUID 长度类型，见 @ref xf_ble_uuid_type_t */
         uint8_t _invalid;                           /*!< 用于固定 UUID 长度类型变量的大小为 8-bit */
     };
     union {
@@ -113,77 +113,44 @@ typedef struct __packed _xf_ble_uuid_info_t {
     };
 } xf_ble_uuid_info_t;
 
-/**
- * @brief BLE 16-bit UUID 信息
- */
-typedef struct __packed _xf_ble_uuid16_info_t {
-    union {
-        xf_ble_uuid_type_t type;                     /*!< UUID 长度类型，见 @ref xf_ble_uuid_type_t */
-        uint8_t _invalid;                           /*!< 用于固定 UUID 长度类型变量的大小为 8-bit */
-    };
-    uint16_t value;                                 /*!< 16-bit UUID */
-} xf_ble_uuid16_info_t;
-
-/**
- * @brief BLE 32-bit UUID 信息
- */
-typedef struct __packed _xf_ble_uuid32_info_t {
-    union {
-        xf_ble_uuid_type_t type;                     /*!< UUID 长度类型，见 @ref xf_ble_uuid_type_t */
-        uint8_t _invalid;                           /*!< 用于固定 UUID 长度类型变量的大小为 8-bit */
-    };
-    uint32_t value;                                 /*!< 32-bit UUID */
-} xf_ble_uuid32_info_t;
-
-/**
- * @brief BLE 128-bit UUID 信息
- */
-typedef struct __packed _xf_ble_uuid128_info_t {
-    union {
-        xf_ble_uuid_type_t type;                     /*!< UUID 长度类型，见 @ref xf_ble_uuid_type_t */
-        uint8_t _invalid;                           /*!< 用于固定 UUID 长度类型变量的大小为 8-bit */
-    };
-    uint8_t value[XF_BLE_UUID_TYPE_128];            /*!< 128-bit UUID */
-} xf_ble_uuid128_info_t;
-
-#define _XF_BLE_UUID16_INIT(uuid16)         \
+#define XF_BLE_UUID16_INIT(uuid16_val)      \
     {                                       \
         .type = XF_BLE_UUID_TYPE_16,        \
-        .value = (uuid16),                  \
+        .uuid16 = (uuid16_val),             \
     }
 
-#define _XF_BLE_UUID32_INIT(uuid32)         \
+#define XF_BLE_UUID32_INIT(uuid32_val)      \
     {                                       \
         .type = XF_BLE_UUID_TYPE_32,        \
-        .value = (uuid32),                  \
+        .uuid32 = (uuid32_val),             \
     }
 
-#define _XF_BLE_UUID128_INIT(uuid128 ...)   \
+#define XF_BLE_UUID128_INIT(uuid128_expr)   \
     {                                       \
         .type = XF_BLE_UUID_TYPE_128,       \
-        .value = { uuid128 },               \
+        .uuid128 = { uuid128_expr },        \
     }
 
 /**
  * @brief BLE 声明一个 16-bit UUID
  * @note 通常用于填充服务结构时填入常量 UUID
  */
-#define XF_BLE_DECLARE_UUID16(uuid16) \
-    ((xf_ble_uuid_info_t *) (&(xf_ble_uuid16_info_t) _XF_BLE_UUID16_INIT(uuid16)))
+#define XF_BLE_UUID16_DECLARE(uuid16) \
+    ((&(xf_ble_uuid_info_t) XF_BLE_UUID16_INIT(uuid16)))
 
 /**
  * @brief BLE 声明一个 32-bit UUID
  * @note 通常用于填充服务结构时填入常量 UUID
  */
-#define XF_BLE_DECLARE_UUID32(uuid32) \
-    ((xf_ble_uuid_info_t *) (&(xf_ble_uuid32_info_t) _XF_BLE_UUID32_INIT(uuid32)))
+#define XF_BLE_UUID32_DECLARE(uuid32) \
+    ((&(xf_ble_uuid_info_t) XF_BLE_UUID32_INIT(uuid32)))
 
 /**
  * @brief BLE 声明一个 128-bit UUID
  * @note 通常用于填充服务结构时填入常量 UUID
  */
-#define XF_BLE_DECLARE_UUID128(uuid128...) \
-    ((xf_ble_uuid_info_t *) (&(xf_ble_uuid128_info_t) _XF_BLE_UUID128_INIT(uuid128)))
+#define XF_BLE_UUID128_DECLARE(uuid128...) \
+    ((&(xf_ble_uuid_info_t) XF_BLE_UUID128_INIT(uuid128)))
 
 /**
  * @brief BLE 无效属性句柄

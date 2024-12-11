@@ -364,7 +364,7 @@ typedef enum {
  * @brief BLE GAP 连接参数更新数据结构
  */
 typedef struct {
-    uint16_t conn_handle;        /*!< 连接 ID */
+    uint16_t conn_id;               /*!< 连接 ID */
     uint16_t min_interval;       /*!< 最小连接间隔，[N * 0.625 ms]，0xFFFF：表示没有特定值，
                                  *  范围：[0x0006,0x0C80] (看具体标准) */
     uint16_t max_interval;       /*!< 最大连接间隔，[N * 0.625 ms]，0xFFFF：表示没有特定值，
@@ -399,7 +399,6 @@ typedef enum {
  */
 typedef struct {
     uint16_t conn_id;                       /*!< 链接(连接) ID */
-    uint16_t conn_handle;                   /*!< 链接的句柄 */
     xf_ble_gap_link_role_type_t link_role;  /*!< 链路角色，见 @ref xf_ble_gap_link_role_type_t */
     xf_ble_addr_t peer_addr;                /*!< 对端地址，见 @ref xf_ble_addr_t */
 } xf_ble_common_evt_param_connect_t;
@@ -431,6 +430,16 @@ typedef struct {
     uint8_t adv_data_len;                       /*!< 广播数据的长度 (指整个广播数据 AdvData ) */
     uint8_t *adv_data;                          /*!< 广播数据 (指整个广播数据 AdvData ) */
 } xf_ble_common_evt_param_scan_result_t;
+
+/**
+ * @brief BLE 连接参数更新事件的参数
+ */
+typedef struct {
+    uint16_t conn_id;                           /*!< 链接 (连接) ID */
+    uint16_t interval;                          /*!< 链接间隔，单位 slot */
+    uint16_t latency;                           /*!< 链接延迟，单位 slot */
+    uint16_t timeout;                           /*!< 链接超时 (断连) 时间 */
+} xf_ble_common_evt_conn_param_upd_t;
 
 /* ==================== [Global Prototypes] ================================= */
 

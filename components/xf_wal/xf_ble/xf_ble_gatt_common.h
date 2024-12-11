@@ -90,12 +90,24 @@ typedef enum {
  * @brief BLE GATT 特征描述符类型
  */
 typedef enum {
-    XF_BLE_GATT_CHARA_DESC_TYPE_CHARA_EXT_PROPERTIES,       /*!< 0x2900, CEP:Characteristic Extended Properties */
-    XF_BLE_GATT_CHARA_DESC_TYPE_CHARA_USER_DESC,            /*!< 0x2901, CUD:Characteristic User Description */
-    XF_BLE_GATT_CHARA_DESC_TYPE_CLIENT_CHARA_CFG,           /*!< 0x2902, CCC:Client Characteristic Configuration */
-    XF_BLE_GATT_CHARA_DESC_TYPE_SERVER_CHARA_CFG,           /*!< 0x2903, SCC:Server Characteristic Configuration */
-    XF_BLE_GATT_CHARA_DESC_TYPE_CHARA_PRESENTATION_FORMAT,  /*!< 0x2904, CPF:Characteristic Presentation Format */
-    XF_BLE_GATT_CHARA_DESC_TYPE_CHARA_AGGREGATE_FORMAT,     /*!< 0x2903, CAF:Characteristic Aggregate Format */
+    XF_BLE_GATT_CHARA_DESC_TYPE_CHARA_EXT_PROPERTIES,       /*!< 0x2900, CEP:Characteristic Extended Properties,
+                                                             *  特征扩展属性描述符, 用于扩展特征属性的功能 */
+    XF_BLE_GATT_CHARA_DESC_TYPE_CHARA_USER_DESC,            /*!< 0x2901, CUD:Characteristic User Description,
+                                                             *  特征用户描述符, 用于提供特征的用户可读描述 */
+    XF_BLE_GATT_CHARA_DESC_TYPE_CLIENT_CHARA_CFG,           /*!< 0x2902, CCC:Client Characteristic Configuration
+                                                             *  客户端特征配置描述符, 用于配置特征的通知和指示  */
+    XF_BLE_GATT_CHARA_DESC_TYPE_SERVER_CHARA_CFG,           /*!< 0x2903, SCC:Server Characteristic Configuration,
+                                                             *  服务器特征配置描述符, 用于服务器侧的配置 */
+    XF_BLE_GATT_CHARA_DESC_TYPE_CHARA_PRESENTATION_FORMAT,  /*!< 0x2904, CPF:Characteristic Presentation Format,
+                                                             *  特征表示格式描述符, 用于定义特征的表示格式 */
+    XF_BLE_GATT_CHARA_DESC_TYPE_CHARA_AGGREGATE_FORMAT,     /*!< 0x2905, CAF:Characteristic Aggregate Format,
+                                                             *  特征聚合格式描述符, 用于定义多个特征的聚合表示格式 */
+    XF_BLE_GATT_CHARA_DESC_TYPE_CHARA_VALID_RANGE,          /*!< 0x2906, Valid Range, 
+                                                             *  有效范围描述符, 用于定义特征的有效值范围 */
+    XF_BLE_GATT_CHARA_DESC_TYPE_EXT_REPORT_REFERENCE,       /*!< 0x2907, External Report Reference, 
+                                                             *  外部报告参考描述符, 常用于HID（人机接口设备）服务 */
+    XF_BLE_GATT_CHARA_DESC_TYPE_REPORT_REFERENCE,           /*!< 0x2908, Report Reference,
+                                                             *  报告参考描述符, 通常用于HID服务来描述报告 */
 } xf_ble_gatt_chara_desc_type_t;
 
 /**

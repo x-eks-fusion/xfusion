@@ -64,12 +64,12 @@ static uint8_t chara_value_array[][10] = {
 
 static xf_ble_gatts_service_t service_set[] = {
     {
-        .service_uuid = XF_BLE_DECLARE_UUID16(DEFAULT_SERVICE_UUID),
+        .service_uuid = XF_BLE_UUID16_DECLARE(DEFAULT_SERVICE_UUID),
         .service_type = XF_BLE_GATT_SERVICE_TYPE_PRIMARY,
         .chara_set = (xf_ble_gatts_chara_t [])
         {
             {
-                .chara_uuid = XF_BLE_DECLARE_UUID16(DEFAULT_CHARA_UUID),
+                .chara_uuid = XF_BLE_UUID16_DECLARE(DEFAULT_CHARA_UUID),
                 .chara_value = {
                     .value = chara_value_array[0],
                     .value_len = sizeof(chara_value_array[0]),
@@ -92,7 +92,7 @@ static xf_ble_gatts_service_t service_set[] = {
 };
 
 static xf_ble_uuid_info_t app_uuid = {
-    .len_type = XF_BLE_UUID_TYPE_16,
+    .type = XF_BLE_UUID_TYPE_16,
     .uuid16 = 0x0000
 };
 static uint8_t app_id = 0;
@@ -284,12 +284,12 @@ static void sample_ble_set_adv_param(void)
         .adv_type = XF_BLE_GAP_ADV_TYPE_CONN_SCAN_UNDIR,
         .own_addr =
         {
-            .type = XF_BT_ADDR_TYPE_PUBLIC_DEV, // 本端地址类型
+            .type = XF_BLE_ADDR_TYPE_PUBLIC_DEV, // 本端地址类型
             .addr = {0x0},                       // 本端地址
         },
         .peer_addr =
         {
-            .type = XF_BT_ADDR_TYPE_PUBLIC_DEV, // 对端地址类型
+            .type = XF_BLE_ADDR_TYPE_PUBLIC_DEV, // 对端地址类型
             .addr = { 0x0 },                    // 对端地址
         },
         .channel_map = XF_BLE_GAP_ADV_CH_ALL,   // 使用37/38/39三个通道

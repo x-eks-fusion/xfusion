@@ -159,7 +159,12 @@ typedef union {
                                                  *  @ref xf_ble_common_evt_param_scan_result_t
                                                  *  XF_BLE_COMMON_EVT_SCAN_RESULT
                                                  */
-    xf_ble_gattc_evt_param_exchange_mtu_t mtu;      /*!< MTU 协商事件的参数，
+    xf_ble_common_evt_conn_param_upd_t conn_param_upd;
+                                                /*!< 连接参数更新事件的参数，
+                                                 *  @ref xf_ble_common_evt_conn_param_upd_t
+                                                 *  XF_BLE_COMMON_EVT_CONN_PARAMS_UPDATE,
+                                                 */
+    xf_ble_gattc_evt_param_exchange_mtu_t mtu;  /*!< MTU 协商事件的参数，
                                                  *  @ref xf_ble_gattc_evt_param_exchange_mtu_t
                                                  *  XF_BLE_GATTC_EVT_EXCHANGE_MTU,
                                                  */
