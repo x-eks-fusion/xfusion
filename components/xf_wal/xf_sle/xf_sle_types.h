@@ -95,7 +95,7 @@ typedef enum {
  */
 typedef struct __packed _xf_sle_uuid_info_t {
     union {
-        xf_sle_uuid_type_t len_type;                /*!< UUID 长度类型，见 @ref xf_sle_uuid_type_t */
+        xf_sle_uuid_type_t type;                    /*!< UUID 长度类型，见 @ref xf_sle_uuid_type_t */
         uint8_t _invalid;                           /*!< 用于固定 UUID 长度类型变量的大小为 8-bit */
     };
     union {
