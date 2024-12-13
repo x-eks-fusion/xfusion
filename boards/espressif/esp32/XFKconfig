@@ -1,0 +1,15 @@
+
+menu "Board And Porting Configuration"
+
+    config PORT_XF_FAL_ENABLE
+        bool "Enable the interconnection between esp32 and xf fal."
+        default y
+
+    config PORT_PARTITION_NAME_FOR_XF_FAL
+        string "The partition name provided for fal management in esp32."
+        depends on PORT_XF_FAL_ENABLE
+        default "storage"
+        help
+            xf_fal will segment and manage user partitions based on this partition.
+
+endmenu
