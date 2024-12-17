@@ -30,6 +30,7 @@
 /* ==================== [Defines] =========================================== */
 
 #define _ESP_PARTITION_LEN                  (~0)  /*!< 没什么用，只是为了防止 xf_fal 错误判断 */
+#define _ESP_FLASH_DEV_PAGE_SIZE            (256)
 #define _ESP_PARTITION_IO_SIZE              (1)
 
 #if defined(CONFIG_PORT_PARTITION_NAME_FOR_XF_FAL)
@@ -91,11 +92,12 @@ static int port_xf_fal(void)
     }
 
     /* 准备默认 flash 设备 */
-
+    /* TODO 暂未获取真实页大小 */
     sp_ctx()->flash_dev.name            = XF_FAL_DEFAULT_FLASH_DEVICE_NAME;
     sp_ctx()->flash_dev.addr            = 0;
     sp_ctx()->flash_dev.len             = _ESP_PARTITION_LEN;
     sp_ctx()->flash_dev.sector_size     = sp_ctx()->esp_partition->erase_size;
+    sp_ctx()->flash_dev.page_size       = _ESP_FLASH_DEV_PAGE_SIZE;
     sp_ctx()->flash_dev.io_size         = _ESP_PARTITION_IO_SIZE;
     sp_ctx()->flash_dev.ops.init        = _esp_partition_init;
     sp_ctx()->flash_dev.ops.deinit      = _esp_partition_deinit;
