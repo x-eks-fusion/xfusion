@@ -51,7 +51,7 @@ void xfusion_init(void)
     xf_task_manager_default_init(xf_task_on_idle);
 
 #if XF_TASK_MBUS_IS_ENABLE
-    xf_ntask_create_loop(mbus_handle, NULL, 0, 10);
+    xf_ttask_create_loop(mbus_handle, NULL, 0, 10);
 #endif
 
     xf_main();

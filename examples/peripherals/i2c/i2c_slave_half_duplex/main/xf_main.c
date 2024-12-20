@@ -48,7 +48,7 @@ static void i2c_task(xf_task_t task);
 void xf_main(void)
 {
     i2c_master_init();
-    xf_ntask_create_loop(i2c_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
+    xf_ttask_create_loop(i2c_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
 }
 
 /* ==================== [Static Functions] ================================== */

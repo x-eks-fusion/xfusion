@@ -56,7 +56,7 @@ void xf_main(void)
 
     xf_hal_gpio_set_intr_enable(INTERRUPT_INPUT_IO);
 
-    xf_ntask_create_loop(gpio_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
+    xf_ttask_create_loop(gpio_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
 }
 
 /* ==================== [Static Functions] ================================== */
