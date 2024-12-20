@@ -92,11 +92,9 @@ void xf_main(void)
     XF_LOGI(TAG, "STAR scan CMPL");
 
     // 创建发现任务
-    xf_ntask_create(discovery_task, NULL, TASK_PRIORITY, TASK_DELAY_MS,
-                    XF_NTASK_INFINITE_LOOP);
+    xf_ttask_create_loop(discovery_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
     // 创建读写任务
-    xf_ntask_create(read_write_task, NULL, TASK_PRIORITY, TASK_DELAY_MS,
-                    XF_NTASK_INFINITE_LOOP);
+    xf_ttask_create_loop(read_write_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
 }
 
 /* ==================== [Static Functions] ================================== */
@@ -267,14 +265,14 @@ static void read_write_task(xf_task_t task)
         /* 向对端服务端发送 读请求 第1次 */
         is_read_cmpl = false;
         ret = xf_ble_gattc_request_read_by_handle(s_app_id, s_conn_id,
-              service->chara_set_info->set[DEFAULT_CHARA_READ_INDEX].value_handle);
+                service->chara_set_info->set[DEFAULT_CHARA_READ_INDEX].value_handle);
         if (ret != XF_OK) {
             XF_LOGE(TAG, "REQ READ:failed:%#X", ret);
         }
         /* 向对端服务端发送 读请求 第2次 */
         is_read_cmpl = false;
         ret = xf_ble_gattc_request_read_by_handle(s_app_id, s_conn_id,
-              service->chara_set_info->set[DEFAULT_CHARA_READ_INDEX].value_handle);
+                service->chara_set_info->set[DEFAULT_CHARA_READ_INDEX].value_handle);
         if (ret != XF_OK) {
             XF_LOGE(TAG, "REQ READ:failed:%#X", ret);
         }

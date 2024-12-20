@@ -44,7 +44,7 @@ void xf_main(void)
 {
     xf_hal_adc_init(ADC_NUM);
     xf_hal_adc_enable(ADC_NUM);
-    xf_ntask_create_loop(adc_read_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
+    xf_ttask_create_loop(adc_read_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
 }
 
 /* ==================== [Static Functions] ================================== */

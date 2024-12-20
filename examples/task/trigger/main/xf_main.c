@@ -40,9 +40,9 @@ static xf_task_t *task1;
 void xf_main(void)
 {
     // 创建一个任务用于触发task1
-    xf_ntask_create_loop(ntask, (void *)1, 1, 2000);
+    xf_ttask_create_loop(ntask, (void *)1, 1, 2000);
     // 当延时为0的时候，只能通过外部信号触发
-    task1 = xf_ntask_create_loop(ntask_trigger, (void *)2, 1, 0);
+    task1 = xf_ttask_create_loop(ntask_trigger, (void *)2, 1, 0);
 }
 
 /* ==================== [Static Functions] ================================== */
