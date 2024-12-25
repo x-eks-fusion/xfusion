@@ -1,12 +1,12 @@
 /**
  * @file port_adc.c
  * @author dotc (dotchan@qq.com)
- * @brief 
+ * @brief
  * @version 0.1
  * @date 2024-11-14
- * 
+ *
  * @copyright Copyright (c) 2024
- * 
+ *
  */
 
 /* ==================== [Includes] ========================================== */
@@ -20,7 +20,7 @@
 #include "cJSON.h"
 #include "cJSON_Utils.h"
 #include "port_utils.h"
-#include "websocket.h"
+#include "tcp.h"
 #include "port_common.h"
 #include "xf_heap.h"
 
@@ -107,10 +107,10 @@ static xf_err_t port_adc_ioctl(xf_hal_dev_t *dev, uint32_t cmd, void *config)
     CJSON_SET_VAL_WITH_STRUCT(cJSON_SetBoolValue,   adc->json, adc_config, enable);
     CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, adc->json, adc_config, resolution);
     CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, adc->json, adc_config, sample_rate);
-    
+
     adc->json_str = cJSON_PrintUnformatted(adc->json);
     unsigned int size = strlen(adc->json_str);
-    websocket_send(XF_HAL_CONFIG_ID, adc->json_str, size);
+    tcp_send(XF_HAL_CONFIG_ID, adc->json_str, size);
     return XF_OK;
 }
 
@@ -118,11 +118,7 @@ static int port_adc_read(xf_hal_dev_t *dev, void *buf, size_t count)
 {
     port_adc_t *adc = (port_adc_t *)dev->platform_data;
 
-    char req_read[64] = {0};
-    // 因为上层使用的是 uint32_t ，所以长度为 sizeof(uint32_t)
-    snprintf(req_read, sizeof(req_read),"{\"id\":%d,\"len\":%ld}", adc->id, sizeof(uint32_t));
-    websocket_send(XF_HAL_GET_ID, req_read, strlen(req_read));
-    websocket_recv(buf);
+    tcp_get(adc->id, buf, count);
     return XF_OK;
 }
 

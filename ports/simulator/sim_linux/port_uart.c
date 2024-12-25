@@ -1,12 +1,12 @@
 /**
  * @file port_uart.c
  * @author dotc (dotchan@qq.com)
- * @brief 
+ * @brief
  * @version 0.1
  * @date 2024-11-14
- * 
+ *
  * @copyright Copyright (c) 2024
- * 
+ *
  */
 
 /* ==================== [Includes] ========================================== */
@@ -20,7 +20,7 @@
 #include "cJSON.h"
 #include "cJSON_Utils.h"
 #include "port_utils.h"
-#include "websocket.h"
+#include "tcp.h"
 #include "port_common.h"
 #include "xf_heap.h"
 
@@ -99,7 +99,7 @@ static xf_err_t port_uart_ioctl(xf_hal_dev_t *dev, uint32_t cmd, void *config)
 {
     port_uart_t *uart = (port_uart_t *)dev->platform_data;
     xf_hal_uart_config_t *uart_config = (xf_hal_uart_config_t *)config;
-    
+
     if (cmd == XF_HAL_UART_CMD_DEFAULT) {
         uart_config->data_bits      = XF_HAL_UART_DEFAULT_DATA_BITS;
         uart_config->stop_bits      = XF_HAL_UART_DEFAULT_STOP_BITS;
@@ -136,26 +136,23 @@ static xf_err_t port_uart_ioctl(xf_hal_dev_t *dev, uint32_t cmd, void *config)
 
     uart->json_str = cJSON_PrintUnformatted(uart->json);
     unsigned int size = strlen(uart->json_str);
-    websocket_send(XF_HAL_CONFIG_ID, uart->json_str, size);
+    tcp_send(XF_HAL_CONFIG_ID, uart->json_str, size);
     return XF_OK;
 }
 
 static int port_uart_read(xf_hal_dev_t *dev, void *buf, size_t count)
 {
     port_uart_t *uart = (port_uart_t *)dev->platform_data;
-    
-    char req_read[64] = {0};
-    snprintf(req_read, sizeof(req_read),"{\"id\":%d,\"len\":%ld}", uart->id, count);
-    websocket_send(XF_HAL_GET_ID, req_read, strlen(req_read));
-    count = websocket_recv(buf);
-    return count;
+
+    size_t size = tcp_get(uart->id, buf, count);
+    return size;
 }
 
 static int port_uart_write(xf_hal_dev_t *dev, const void *buf, size_t count)
 {
     port_uart_t *uart = (port_uart_t *)dev->platform_data;
 
-    websocket_send(uart->id, (unsigned char *)buf, count);
+    tcp_send(uart->id, (unsigned char *)buf, count);
     return count;
 }
 
