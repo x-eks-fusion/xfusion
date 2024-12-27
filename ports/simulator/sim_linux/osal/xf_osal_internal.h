@@ -38,7 +38,11 @@ extern "C" {
 
 /* ==================== [Global Functions] ================================== */
 
+#if XF_OSAL_THREAD_IS_ENABLE
+
 xf_osal_thread_t port_osal_thread_get_by_pid(pthread_t pid);
+
+#endif
 
 #ifdef __cplusplus
 } /* extern "C" */
