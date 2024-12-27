@@ -5,11 +5,11 @@ from pathlib import Path
 import os
 import shutil
 
-hookimpl = xf_build.get_hookimpl()
+
 
 
 class esp32():
-    @hookimpl
+
     def build(self, args):
         api.apply_components_template("components.j2", "CMakeLists.txt")
         api.apply_template("project.j2", api.XF_TARGET_PATH / "CMakeLists.txt")
@@ -40,7 +40,7 @@ class esp32():
         # 执行底层指令
         api.exec_cmd(["idf.py", "build", *args])
 
-    @hookimpl
+
     def clean(self, args):
         api.cd_to_target()
         idf_components = api.XF_TARGET_PATH / "components"
@@ -48,20 +48,20 @@ class esp32():
             shutil.rmtree(idf_components)
         api.exec_cmd(["idf.py", "fullclean"])
 
-    @hookimpl
+
     def flash(self, args):
         api.cd_to_target()
         api.exec_cmd(["idf.py", "flash", *args])
 
-    @hookimpl
+
     def export(self, args):
         print("export")
 
-    @hookimpl
+
     def update(self, args):
         print("update")
 
-    @hookimpl
+
     def menuconfig(self, args):
         if args[0] == "sub":
             api.cd_to_target()

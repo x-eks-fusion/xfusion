@@ -15,11 +15,11 @@ SDK_PATH: Path = api.XF_ROOT / "sdks/fbb_ws63/src"
 SDK_OUTPUT_PATH: Path = SDK_PATH / "output"
 XF_PROJECT_BUILD_PATH: Path = api.PROJECT_BUILD_PATH
 
-hookimpl = xf_build.get_hookimpl()
+
 
 
 class ws63():
-    @hookimpl
+
     def build(self, args):
         project_cmake_file: Path = XF_PROJECT_BUILD_PATH / "build_environ.cmake"
         api.apply_template("cmake_project.j2", project_cmake_file)
@@ -48,24 +48,24 @@ class ws63():
             except:
                 print(f"copy sdk firmware failed!", sys.exc_info())
 
-    @hookimpl
+
     def clean(self, args):
         if SDK_OUTPUT_PATH.exists() == True:
             shutil.rmtree(SDK_OUTPUT_PATH)
 
-    @hookimpl
+
     def flash(self, args):
         pass
 
-    @hookimpl
+
     def export(self, args):
         pass
 
-    @hookimpl
+
     def update(self, args):
         pass
 
-    @hookimpl
+
     def menuconfig(self, args):
         # 第一个拓展参数为 sub 时 打开SDK 侧 menuconfig
         if args[0] == "sub":
