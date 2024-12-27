@@ -6,6 +6,7 @@ import shutil
 import glob
 import sys
 from pathlib import Path
+import subprocess
 
 # xf 构建相关的描述文件输出的路径
 XF_BUILD_DESC_FILE_PATH: Path = api.XF_TARGET_PATH / ".xfusion"
@@ -13,11 +14,9 @@ SDK_OUTPUT_PATH: Path = api.XF_TARGET_PATH / "build"
 XF_PROJECT_BUILD_PATH: Path = api.PROJECT_BUILD_PATH
 XF_PROJECT_NAME = os.environ.get("XF_PROJECT")
 
-hookimpl = xf_build.get_hookimpl()
-
 
 class sim_linux():
-    @hookimpl
+
     def build(self, args):
         if XF_BUILD_DESC_FILE_PATH.exists() is False:
             os.mkdir(XF_BUILD_DESC_FILE_PATH)
@@ -25,9 +24,9 @@ class sim_linux():
         project_xmake_file: Path = XF_BUILD_DESC_FILE_PATH / "xmake.lua"
         api.apply_template("xmake_project.j2", project_xmake_file)
         api.cd_to_target()
-        
-        api.exec_cmd(["xmake", "f -m debug"])
-        api.exec_cmd(["xmake", "-b"])
+
+        self.runCmd(["xmake", "f",  "-m", "debug"])
+        self.runCmd(["xmake", "-b"])
 
         # 尝试将构建输出的文件复制到工程目录下的 build/sdk 目录（如无则创建）
         list_path_sdk_exec_file = glob.glob(
@@ -43,27 +42,29 @@ class sim_linux():
                 )
             except:
                 print("copy sdk firmware failed!", sys.exc_info())
+                exit(1)
 
-    @hookimpl
     def clean(self, args):
         if SDK_OUTPUT_PATH.exists() is True:
             shutil.rmtree(SDK_OUTPUT_PATH)
         api.cd_to_target()
-        os.system("xmake c")
+        self.runCmd(["xmake", "c"])
 
-    @hookimpl
     def flash(self, args):
         api.cd_to_target()
-        os.system("xmake r")
+        self.runCmd(["xmake", "r"])
 
-    @hookimpl
     def export(self, args):
         pass
 
-    @hookimpl
     def update(self, args):
         pass
 
-    @hookimpl
     def menuconfig(self, args):
         pass
+
+    def runCmd(self, cmd):
+        result = subprocess.run(cmd)
+        if result.returncode != 0:
+            logging.error(f"{cmd} failed!")
+            exit(result.returncode)

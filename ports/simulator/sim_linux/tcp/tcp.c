@@ -124,7 +124,6 @@ static void on_read(uv_stream_t *stream, ssize_t nread, const uv_buf_t *buf)
         s_recv_flag = 1;
         s_recv_buf.len = *(size_t *)(buf->base + sizeof(unsigned int));
         memcpy(s_recv_buf.base, buf->base + HEADER_SIZE, s_recv_buf.len);
-        printf("Received from server: %.*s\n", (int)s_recv_buf.len, s_recv_buf.base);
     } else if (nread < 0) {
         if (nread != UV_EOF) {
             fprintf(stderr, "Read error: %s\n", uv_err_name(nread));

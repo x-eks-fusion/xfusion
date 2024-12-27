@@ -1,12 +1,12 @@
 /**
  * @file port_spi.c
  * @author dotc (dotchan@qq.com)
- * @brief 
+ * @brief
  * @version 0.1
  * @date 2024-11-14
- * 
+ *
  * @copyright Copyright (c) 2024
- * 
+ *
  */
 
 /* ==================== [Includes] ========================================== */
@@ -20,6 +20,7 @@
 #include "cJSON.h"
 #include "cJSON_Utils.h"
 #include "port_utils.h"
+#include "tcp.h"
 #include "port_common.h"
 #include "xf_heap.h"
 
@@ -152,26 +153,23 @@ static xf_err_t port_spi_ioctl(xf_hal_dev_t *dev, uint32_t cmd, void *config)
 
     spi->json_str = cJSON_PrintUnformatted(spi->json);
     unsigned int size = strlen(spi->json_str);
-    websocket_send(XF_HAL_CONFIG_ID, spi->json_str, size);
+    tcp_send(XF_HAL_CONFIG_ID, spi->json_str, size);
     return XF_OK;
 }
 
 static int port_spi_read(xf_hal_dev_t *dev, void *buf, size_t count)
 {
     port_spi_t *spi = (port_spi_t *)dev->platform_data;
-    
-    char req_read[64] = {0};
-    snprintf(req_read, sizeof(req_read),"{\"id\":%d,\"len\":%ld}", spi->id, count);
-    websocket_send(XF_HAL_GET_ID, req_read, strlen(req_read));
-    count = websocket_recv(buf);
-    return count;
+
+    size_t size = tcp_get(spi->id, buf, count);
+    return size;
 }
 
 static int port_spi_write(xf_hal_dev_t *dev, const void *buf, size_t count)
 {
     port_spi_t *spi = (port_spi_t *)dev->platform_data;
 
-    websocket_send(spi->id, (unsigned char *)buf, count);
+    tcp_send(spi->id, (unsigned char *)buf, count);
     return count;
 }
 

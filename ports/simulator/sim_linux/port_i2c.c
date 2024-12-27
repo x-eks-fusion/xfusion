@@ -1,12 +1,12 @@
 /**
  * @file port_i2c.c
  * @author dotc (dotchan@qq.com)
- * @brief 
+ * @brief
  * @version 0.1
  * @date 2024-11-13
- * 
+ *
  * @copyright Copyright (c) 2024
- * 
+ *
  */
 
 /* ==================== [Includes] ========================================== */
@@ -20,6 +20,7 @@
 #include "cJSON.h"
 #include "cJSON_Utils.h"
 #include "port_utils.h"
+#include "tcp.h"
 #include "port_common.h"
 #include "xf_heap.h"
 
@@ -150,7 +151,7 @@ static xf_err_t port_i2c_ioctl(xf_hal_dev_t *dev, uint32_t cmd, void *config)
 
     i2c->json_str = cJSON_PrintUnformatted(i2c->json);
     unsigned int size = strlen(i2c->json_str);
-    websocket_send(XF_HAL_CONFIG_ID, i2c->json_str, size);
+    tcp_send(XF_HAL_CONFIG_ID, i2c->json_str, size);
     return XF_OK;
 }
 
@@ -161,14 +162,11 @@ static int port_i2c_read(xf_hal_dev_t *dev, void *buf, size_t count)
     /* 是读寄存器内容的情况需要先发寄存器地址 */
     if (i2c->config->mem_addr_en == XF_HAL_I2C_MEM_ADDR_ENABLE) {
         uint8_t addr_size = (i2c->config->mem_addr_width + 1)*8;
-        websocket_send(i2c->id, (unsigned char *)&i2c->config->mem_addr, addr_size);
+        tcp_send(i2c->id, (unsigned char *)&i2c->config->mem_addr, addr_size);
     }
 
-    char req_read[64] = {0};
-    snprintf(req_read, sizeof(req_read),"{\"id\":%d,\"len\":%ld}", i2c->id, count);
-    websocket_send(XF_HAL_GET_ID, req_read, strlen(req_read));
-    count = websocket_recv(buf);
-    return count;
+    size_t size = tcp_get(i2c->id, buf, count);
+    return size;
 }
 
 static int port_i2c_write(xf_hal_dev_t *dev, const void *buf, size_t count)
@@ -178,10 +176,10 @@ static int port_i2c_write(xf_hal_dev_t *dev, const void *buf, size_t count)
     /* 是写寄存器内容的情况需要先发寄存器地址 */
     if (i2c->config->mem_addr_en == XF_HAL_I2C_MEM_ADDR_ENABLE) {
         uint8_t addr_size = (i2c->config->mem_addr_width + 1)*8;
-        websocket_send(i2c->id, (unsigned char *)&i2c->config->mem_addr, addr_size);
+        tcp_send(i2c->id, (unsigned char *)&i2c->config->mem_addr, addr_size);
     }
 
-    websocket_send(i2c->id, (unsigned char *)buf, count);
+    tcp_send(i2c->id, (unsigned char *)buf, count);
     return count;
 }
 

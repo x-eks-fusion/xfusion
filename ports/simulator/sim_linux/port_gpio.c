@@ -121,7 +121,7 @@ static int port_gpio_read(xf_hal_dev_t *dev, void *buf, size_t count)
     unsigned char msg[128];
     port_gpio_t *gpio = (port_gpio_t *)dev->platform_data;
     size_t size = tcp_get(gpio->id, buf, count);
-    return count;
+    return size;
 }
 
 static int port_gpio_write(xf_hal_dev_t *dev, const void *buf, size_t count)

@@ -1,12 +1,12 @@
 /**
  * @file port_dac.c
  * @author dotc (dotchan@qq.com)
- * @brief 
+ * @brief
  * @version 0.1
  * @date 2024-11-14
- * 
+ *
  * @copyright Copyright (c) 2024
- * 
+ *
  */
 
 /* ==================== [Includes] ========================================== */
@@ -20,6 +20,7 @@
 #include "cJSON.h"
 #include "cJSON_Utils.h"
 #include "port_utils.h"
+#include "tcp.h"
 #include "port_common.h"
 #include "xf_heap.h"
 
@@ -111,10 +112,10 @@ static xf_err_t port_dac_ioctl(xf_hal_dev_t *dev, uint32_t cmd, void *config)
     CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, dac->json, dac_config, speed);
     CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, dac->json, dac_config, value_max);
     CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, dac->json, dac_config, verf_mv);
-    
+
     dac->json_str = cJSON_PrintUnformatted(dac->json);
     unsigned int size = strlen(dac->json_str);
-    websocket_send(XF_HAL_CONFIG_ID, dac->json_str, size);
+    tcp_send(XF_HAL_CONFIG_ID, dac->json_str, size);
     return XF_OK;
 }
 
@@ -128,8 +129,7 @@ static int port_dac_write(xf_hal_dev_t *dev, const void *buf, size_t count)
 {
     port_dac_t *dac = (port_dac_t *)dev->platform_data;
 
-    uint32_t value = *(uint32_t *)buf;
-    websocket_send(dac->id, (unsigned char *)&value, sizeof(value));
+    tcp_send(dac->id, (unsigned char *)buf, count);
     return XF_OK;
 }
 
