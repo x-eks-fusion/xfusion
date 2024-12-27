@@ -1,3 +1,8 @@
+/**
+ * @example examples/wireless/sle/sample_ssap_client/main/xf_main.c
+ * xf_wal sle ssap 客户端 示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"
@@ -26,8 +31,8 @@ static xf_err_t sample_ssapc_event_cb(
     xf_sle_ssapc_event_t event,
     xf_sle_ssapc_evt_cb_param_t *param);
 static void sample_sle_set_seek_param(void);
-static xf_err_t ssaps_event_seek_result_cb(
-    xf_sle_evt_param_seek_result *result);
+static xf_err_t ssapc_event_seek_result_cb(
+    xf_sle_evt_param_seek_result_t *result);
 
 /* ==================== [Static Variables] ================================== */
 
@@ -70,9 +75,9 @@ void xf_main(void)
     xf_sle_ssapc_event_cb_register(sample_ssapc_event_cb, XF_SLE_EVT_ALL);
 
     // 注册 ssaps 客户端 app
-    ret = xf_sle_ssapc_register_app(&s_app_uuid, &s_app_id);
+    ret = xf_sle_ssapc_app_register(&s_app_uuid, &s_app_id);
     XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
-             "xf_sle_ssapc_register_app error:%#X", ret);
+             "xf_sle_ssapc_app_register error:%#X", ret);
     XF_LOGI(TAG, ">> register app:aap_id:%d", s_app_id);
 
     /* 设置扫描参数 */
@@ -84,7 +89,7 @@ void xf_main(void)
              "xf_sle_start_seek error:%#X", ret);
     XF_LOGI(TAG, ">> STAR seek CMPL");
 
-    xf_ntask_create_loop(sle_client_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
+    xf_ttask_create_loop(sle_client_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
 
 }
 
@@ -112,7 +117,7 @@ static void sle_client_task(xf_task_t task)
                 s_app_id, s_conn_id, prop_struct.start_hdl);
         uint8_t data_write[] = "I M SSAPC WRITE REQ!";
         ret = xf_sle_ssapc_request_write_data(s_app_id, s_conn_id,
-                                              XF_SLE_SSAP_PROPERTY_TYPE_VALUE, prop_struct.start_hdl,
+                                              prop_struct.start_hdl, XF_SLE_SSAP_PROPERTY_TYPE_VALUE,
                                               data_write, sizeof(data_write));
         if (ret != XF_OK) {
             XF_LOGE(TAG, ">> request write cmd error: %#X", ret);
@@ -164,7 +169,7 @@ static xf_err_t sample_ssapc_event_cb(
                 s_conn_id, XF_SLE_ADDR_EXPAND_TO_ARG(param->connect.peer_addr.addr));
     } break;
     case XF_SLE_SEEK_EVT_RESULT: {
-        ssaps_event_seek_result_cb(&param->seek_result);
+        ssapc_event_seek_result_cb(&param->seek_result);
     } break;
     case XF_SLE_SSAPC_EVT_RECV_WRITE_CFM: {
         XF_LOGI(TAG, "EV:WRITE confirm:conn_id:%d,hdl:%d",
@@ -188,8 +193,8 @@ static xf_err_t sample_ssapc_event_cb(
     return XF_OK;
 }
 
-static xf_err_t ssaps_event_seek_result_cb(
-    xf_sle_evt_param_seek_result *result)
+static xf_err_t ssapc_event_seek_result_cb(
+    xf_sle_evt_param_seek_result_t *result)
 {
     xf_err_t ret = XF_OK;
 
@@ -206,7 +211,7 @@ static xf_err_t ssaps_event_seek_result_cb(
         switch (ad_type) {
         case XF_SLE_ADV_STRUCT_TYPE_COMPLETE_LOCAL_NAME: {
             uint8_t *local_name = &adv_pos[2];
-            uint8_t local_name_size = struct_data_len - XF_BLE_GAP_ADV_STRUCT_AD_TYPE_SIZE;
+            uint8_t local_name_size = struct_data_len - XF_SLE_ADV_STRUCT_TYPE_FILED_SIZE;
             if (strncmp((char *)target_device_name, (char *)local_name, local_name_size) == 0) {
 
                 XF_LOGD(TAG, "EV:seek result:evt_type:%d,rssi:%d"
@@ -225,7 +230,7 @@ static xf_err_t ssaps_event_seek_result_cb(
             XF_LOGD(TAG, "EV:scan_result:uncaring ad_type:%#2X", ad_type);
         } break;
         }
-        adv_pos += (struct_data_len + XF_BLE_GAP_ADV_STRUCT_LEN_SIZE);
+        adv_pos += (struct_data_len + XF_SLE_ADV_STRUCT_LEN_FILED_SIZE);
     }
     return XF_OK;
 }

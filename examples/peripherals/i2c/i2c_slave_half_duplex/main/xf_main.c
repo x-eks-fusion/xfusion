@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/peripherals/i2c/i2c_slave_half_duplex/main/xf_main.c
+ * xf_hal i2c 从机半双工示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"
@@ -43,7 +48,7 @@ static void i2c_task(xf_task_t task);
 void xf_main(void)
 {
     i2c_master_init();
-    xf_ntask_create_loop(i2c_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
+    xf_ttask_create_loop(i2c_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
 }
 
 /* ==================== [Static Functions] ================================== */

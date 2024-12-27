@@ -153,7 +153,7 @@ xf_ip4_addr_t ex_easy_wifi_ap_get_last_sta_ip(void)
         XF_LOGE(TAG, "xf_netif_dhcps_get_clients_by_mac-%s", xf_err_to_name(xf_ret));
         goto l_err;
     }
-    ip4_addr.addr = xf_netif_htonl(pair_mac_ip[0].ip.addr);
+    ip4_addr.addr = pair_mac_ip[0].ip.addr;
     return ip4_addr;
 
 l_err:;

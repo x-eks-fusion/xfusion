@@ -1,3 +1,8 @@
+/**
+ * @example examples/wireless/sle/sample_ssap_server/main/xf_main.c
+ * xf_wal sle ssap 服务端 示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"
@@ -95,7 +100,7 @@ void xf_main(void)
              "xf_sle_set_local_name error:%#X", ret);
 
     // 注册 ssaps 服务端 app
-    ret = xf_sle_ssaps_register_app(&s_app_uuid, &s_aap_id);
+    ret = xf_sle_ssaps_app_register(&s_app_uuid, &s_aap_id);
     XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
              "xf_sle_set_local_name error:%#X", ret);
 
@@ -157,7 +162,7 @@ static xf_err_t sample_ssaps_event_cb(
             .value = s_rsp_value,
             .value_len = sizeof(s_rsp_value),
         };
-        xf_err_t ret = xf_ble_ssaps_send_response(s_aap_id,
+        xf_err_t ret = xf_sle_ssaps_send_response(s_aap_id,
                        param->req_read.conn_id, param->req_read.trans_id,
                        XF_OK, &rsp
                                                  );

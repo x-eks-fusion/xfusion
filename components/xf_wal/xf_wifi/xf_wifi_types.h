@@ -19,6 +19,13 @@
 #include "xf_mac.h"
 #include "xf_netif_types.h"
 
+/**
+ * @cond (XFAPI_USER || XFAPI_PORT)
+ * @addtogroup group_xf_wal_wifi
+ * @endcond
+ * @{
+ */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -138,7 +145,7 @@ typedef struct _xf_wifi_station_configuration_t {
     xf_wifi_sta_cfg_ext_t *p_cfg_ext;           /*!< 扩展配置，传入 NULL 时表示使用平台默认配置。
                                                  *   只有在调用 xf_wifi_sta_init() 时有效。
                                                  */
-    xf_wifi_static_ip_cfg_t *p_static_ip;       /*!< 静态 IP 配置。填入 NULL 时表示使用 DHCP. 
+    xf_wifi_static_ip_cfg_t *p_static_ip;       /*!< 静态 IP 配置。填入 NULL 时表示使用 DHCP.
                                                  *   只有在调用 xf_wifi_sta_init() 时有效。
                                                  */
 } xf_wifi_sta_cfg_t;
@@ -274,5 +281,10 @@ typedef void (*xf_wifi_cb_t)(
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
+
+/**
+ * End of addtogroup group_xf_wal_wifi
+ * @}
+ */
 
 #endif /* __XF_WIFI_TYPES_H__ */

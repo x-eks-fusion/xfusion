@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/protocols/http_request/main/xf_main.c
+ * http 请求示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include <string.h>

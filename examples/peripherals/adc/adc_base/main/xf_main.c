@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/peripherals/adc/adc_base/main/xf_main.c
+ * xf_hal adc 基础示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"
@@ -39,7 +44,7 @@ void xf_main(void)
 {
     xf_hal_adc_init(ADC_NUM);
     xf_hal_adc_enable(ADC_NUM);
-    xf_ntask_create_loop(adc_read_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
+    xf_ttask_create_loop(adc_read_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
 }
 
 /* ==================== [Static Functions] ================================== */

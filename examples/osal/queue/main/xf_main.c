@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/osal/queue/main/xf_main.c
+ * xf_osal 消息队列示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"

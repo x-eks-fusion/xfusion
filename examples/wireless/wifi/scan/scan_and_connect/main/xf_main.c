@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example examples/wireless/wifi/scan/scan_and_connect/main/xf_main.c
+ * xf_wal wifi 扫描和连接 示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_utils.h"
@@ -137,7 +142,7 @@ void xf_main(void)
     ERROR_CHECK(xf_wifi_sta_init(NULL));
 
     /* 4. 开始扫描任务 */
-    xf_ntask_create_loop(_wifi_ntask, NULL,
+    xf_ttask_create_loop(_wifi_ntask, NULL,
                          EXAMPLE_WIFI_NTASK_PRIORITY,
                          EXAMPLE_WIFI_NTASK_PERIOD_MS);
 }

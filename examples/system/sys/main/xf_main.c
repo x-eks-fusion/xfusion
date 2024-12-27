@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example examples/system/sys/main/xf_main.c
+ * 系统级 API 示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_sys.h"

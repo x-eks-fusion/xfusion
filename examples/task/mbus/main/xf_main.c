@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example examples/task/mbus/main/xf_main.c
+ * xf_task 发布订阅示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_task.h"
@@ -35,7 +40,7 @@ static void bus_cb(const void *const data, void *user_data);
 void xf_main(void)
 {
     // 创建协作式任务
-    xf_ntask_create_loop(task_pub, (void *)1, 1, 2000);
+    xf_ttask_create_loop(task_pub, (void *)1, 1, 2000);
     // 绑定topic到任务管理器上
     xf_task_mbus_reg_topic(TOPIC_ID, sizeof(int));
     // 订阅这个topic，设置处理topic的回调

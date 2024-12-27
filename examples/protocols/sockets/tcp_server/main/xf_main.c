@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/protocols/sockets/tcp_server/main/xf_main.c
+ * sockets tcp 服务端 示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "lwip/err.h"

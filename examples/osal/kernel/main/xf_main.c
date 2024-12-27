@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/osal/kernel/main/xf_main.c
+ * xf_osal 内核示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"

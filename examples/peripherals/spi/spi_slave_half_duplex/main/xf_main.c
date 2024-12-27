@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/peripherals/spi/spi_slave_half_duplex/main/xf_main.c
+ * xf_hal spi 从机半双工示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"
@@ -62,7 +67,7 @@ void xf_main(void)
     xf_hal_spi_set_mode(DEFAULT_SPI_NUM, DEFAULT_SPI_SAMPLE_MODE);
     xf_hal_spi_enable(DEFAULT_SPI_NUM);
 
-    xf_ntask_create_loop(spi_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
+    xf_ttask_create_loop(spi_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
 }
 
 /* ==================== [Static Functions] ================================== */

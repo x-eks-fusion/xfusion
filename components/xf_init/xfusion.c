@@ -23,12 +23,12 @@
 /* ==================== [Static Prototypes] ================================= */
 
 #if XF_TASK_MBUS_IS_ENABLE
-    /**
-    * @brief 发布订阅默认处理函数。
-    *
-    * @param task 当前任务句柄。
-    */
-    static void mbus_handle(xf_task_t task);
+/**
+* @brief 发布订阅默认处理函数。
+*
+* @param task 当前任务句柄。
+*/
+static void mbus_handle(xf_task_t task);
 #endif
 
 static void xf_task_on_idle(unsigned long int max_idle_ms);
@@ -51,7 +51,7 @@ void xfusion_init(void)
     xf_task_manager_default_init(xf_task_on_idle);
 
 #if XF_TASK_MBUS_IS_ENABLE
-    xf_ntask_create_loop(mbus_handle, NULL, 0, 10);
+    xf_ttask_create_loop(mbus_handle, NULL, 0, 10);
 #endif
 
     xf_main();
@@ -61,7 +61,6 @@ void xfusion_run(void)
 {
     xf_task_manager_run_default();
 }
-
 
 /* ==================== [Static Functions] ================================== */
 
@@ -75,11 +74,9 @@ static void mbus_handle(xf_task_t task)
 
 #endif
 
-
 static void xf_task_on_idle(unsigned long int max_idle_ms)
 {
 #if XF_OSAL_ENABLE
     xf_osal_delay_ms(max_idle_ms);
 #endif
 }
-

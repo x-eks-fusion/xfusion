@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/peripherals/uart/uart_echo/main/xf_main.c
+ * xf_hal uart 回显示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"
@@ -42,7 +47,7 @@ void xf_main(void)
     xf_hal_uart_set_gpio(UART_NUM, UART_TX_NUM, UART_RX_NUM);
     xf_hal_uart_enable(UART_NUM);
     xf_hal_uart_write(UART_NUM, (const uint8_t *)"uart echo\n", 11);
-    xf_ntask_create_loop(uart_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
+    xf_ttask_create_loop(uart_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
 }
 
 /* ==================== [Static Functions] ================================== */

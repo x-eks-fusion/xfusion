@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/system/heap/main/xf_main.c
+ * 动态内存示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_utils.h"
@@ -43,7 +48,6 @@ void xf_main(void)
 
     size =  xf_heap_get_free_size();
     XF_LOGI(TAG, "free size:%d", size);
-
 }
 
 /* ==================== [Static Functions] ================================== */

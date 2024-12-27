@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/osal/mutex/main/xf_main.c
+ * xf_osal 互斥锁示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"

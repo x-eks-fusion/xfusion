@@ -1,3 +1,8 @@
+/**
+ * @example examples/wireless/ble/sample_gatt_server/main/xf_main.c
+ * xf_wal ble gatt 服务端 示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"
@@ -84,7 +89,7 @@ static xf_ble_gatts_service_t service_set[] = {
     {.service_uuid = XF_BLE_ATTR_SET_END_FLAG}
 };
 
-static xf_bt_uuid_info_t app_uuid = {
+static xf_ble_uuid_info_t app_uuid = {
     .len_type = XF_BLE_UUID_TYPE_16,
     .uuid16 = 0x0000
 };
@@ -111,7 +116,7 @@ void xf_main(void)
     xf_ble_gap_set_local_appearance(XF_BLE_APPEARANCE_HID_DIGITIZER_TABLET);
 
     // 注册 gatts app_profile
-    ret = xf_ble_gatts_register_app_profile(&app_uuid, &app_id);
+    ret = xf_ble_gatts_app_register(&app_uuid, &app_id);
     XF_CHECK(ret != XF_OK || app_id == 0, XF_RETURN_VOID, TAG,
              "REGISTER app profile failed:%#X app_id:%d", ret, app_id);
 
@@ -156,7 +161,7 @@ static xf_err_t sample_ble_gatts_event_cb(
         xf_ble_gatts_ntf_ind_t indication_param = {
             .value = read_req_indication,
             .value_len = sizeof(read_req_indication),
-            .chara_value_handle = param.read_req.handle
+            .handle = param.read_req.handle
         };
         xf_err_t ret = xf_ble_gatts_send_notification(
                            app_id, param.read_req.conn_id, &indication_param);
@@ -175,7 +180,7 @@ static xf_err_t sample_ble_gatts_event_cb(
             xf_ble_gatts_ntf_ind_t indication_param = {
                 .value = write_req_indication,
                 .value_len = sizeof(write_req_indication),
-                .chara_value_handle = param.write_req.handle,
+                .handle = param.write_req.handle,
             };
             xf_err_t ret = xf_ble_gatts_send_notification(
                                app_id, param.write_req.conn_id, &indication_param);
@@ -191,10 +196,10 @@ static xf_err_t sample_ble_gatts_event_cb(
     /* 事件: 连接  */
     case XF_BLE_GAP_EVT_CONNECT: {
         XF_LOGI(TAG, "EV:peer connect:app_id:%d,conn_id:%d,"
-                "addr_type:%d,addr:"XF_BT_ADDR_PRINT_FMT,
+                "addr_type:%d,addr:"XF_BLE_ADDR_PRINT_FMT,
                 app_id, param.connect.conn_id,
                 param.connect.peer_addr.type,
-                XF_BT_ADDR_EXPAND_TO_ARG(param.connect.peer_addr.addr));
+                XF_BLE_ADDR_EXPAND_TO_ARG(param.connect.peer_addr.addr));
 
         xf_ble_sm_authen_req_t authen_req = XF_BLE_SM_AUTHEN_REQ_SC_MITM_BOND;
         xf_ble_sm_io_cap_t io_capability = XF_BLE_SM_IO_CAP_NONE;
@@ -211,19 +216,19 @@ static xf_err_t sample_ble_gatts_event_cb(
     } break;
     case XF_BLE_GAP_EVT_PAIR_END: {
         XF_LOGI(TAG, "EV:pair end:app_id:%d,conn_id:%d,"
-                "addr_type:%d,addr:"XF_BT_ADDR_PRINT_FMT,
+                "addr_type:%d,addr:"XF_BLE_ADDR_PRINT_FMT,
                 app_id, param.connect.conn_id,
                 param.connect.peer_addr.type,
-                XF_BT_ADDR_EXPAND_TO_ARG(param.connect.peer_addr.addr));
+                XF_BLE_ADDR_EXPAND_TO_ARG(param.connect.peer_addr.addr));
     } break;
     /* 事件: 断连  */
     case XF_BLE_GAP_EVT_DISCONNECT: {
         XF_LOGI(TAG, "EV:peer disconnect:app_id:%d,conn_id:%d,reason:%u,"
-                "addr_type:%d,addr:"XF_BT_ADDR_PRINT_FMT,
+                "addr_type:%d,addr:"XF_BLE_ADDR_PRINT_FMT,
                 app_id, param.disconnect.conn_id,
                 param.disconnect.reason,
                 param.disconnect.peer_addr.type,
-                XF_BT_ADDR_EXPAND_TO_ARG(param.disconnect.peer_addr.addr));
+                XF_BLE_ADDR_EXPAND_TO_ARG(param.disconnect.peer_addr.addr));
         XF_LOGI(TAG, "It will restart ADV");
         xf_ble_gap_start_adv();
     } break;
@@ -263,7 +268,7 @@ static void sample_ble_set_adv_param(void)
         .max_interval = DEFAULT_BLE_GAP_ADV_MAX_INTERVAL,
 
         // 广播类型
-        .adv_type = XF_BLE_ADV_TYPE_CONN_SCAN_UNDIR,
+        .adv_type = XF_BLE_GAP_ADV_TYPE_CONN_SCAN_UNDIR,
         .own_addr =
         {
             .type = XF_BT_ADDR_TYPE_PUBLIC_DEV, // 本端地址类型

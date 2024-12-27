@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example examples/wireless/wifi/static_ip/station/main/xf_main.c
+ * xf_wal wifi 静态 IP 示例(station)。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include <string.h>
@@ -101,7 +106,7 @@ void xf_main(void)
     ERROR_CHECK(xf_wifi_sta_init(&s_sta_cfg));
 
     /* 5. 开始 wifi 任务 */
-    xf_ntask_create_loop(_wifi_ntask, NULL,
+    xf_ttask_create_loop(_wifi_ntask, NULL,
                          EXAMPLE_WIFI_NTASK_PRIORITY,
                          EXAMPLE_WIFI_NTASK_PERIOD_MS);
 }

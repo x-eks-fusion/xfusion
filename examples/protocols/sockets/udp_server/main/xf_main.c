@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/protocols/sockets/udp_server/main/xf_main.c
+ * sockets udp 服务端 示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "lwip/err.h"

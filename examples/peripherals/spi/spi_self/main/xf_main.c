@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/peripherals/spi/spi_self/main/xf_main.c
+ * xf_hal spi 自测示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_hal.h"

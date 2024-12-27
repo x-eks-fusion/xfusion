@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example examples/task/task_pool/main/xf_main.c
+ * xf_task 任务池示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_task.h"

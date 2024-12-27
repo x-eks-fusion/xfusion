@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/protocols/iperf/softap/main/xf_main.c
+ * wifi iperf 示例(softap)。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xfconfig.h"
@@ -102,8 +107,8 @@ static void _example_thread(void *argument)
         xf_iperf_cfg_t cfg  = XF_IPERF_DEFAULT_CONFIG();
         cfg.type            = IPERF_IP_TYPE_IPV4;
         cfg.time            = CONFIG_EXAMPLE_IPERF_TIME;
-        cfg.destination_ip4 = dest_ip4.addr;
-        cfg.source_ip4      = src_ip4.addr;
+        cfg.dip.u_addr.ip4.addr = dest_ip4.addr;
+        cfg.sip.u_addr.ip4.addr = src_ip4.addr;
 
 #ifdef CONFIG_EXAMPLE_IPERF_AUTO_TEST
         if (s_iperf_test_item[test_idx] & IPERF_FLAG_CLIENT) {
@@ -125,15 +130,14 @@ static void _example_thread(void *argument)
 #endif /* CONFIG_EXAMPLE_IPERF_AUTO_TEST */
 
         XF_LOGI(TAG,
-                "mode=%s-%s sip=%" PRId32 ".%" PRId32 ".%" PRId32 ".%" PRId32 ":%d,"
-                "dip=%" PRId32 ".%" PRId32 ".%" PRId32 ".%" PRId32 ":%d,"
+                "mode=%s-%s "
+                "sip=" XF_IPSTR ":%d,"
+                "dip=" XF_IPSTR ":%d,"
                 "interval=%" PRId32 ", time=%" PRId32 "",
                 cfg.flag & IPERF_FLAG_TCP ? "tcp" : "udp",
                 cfg.flag & IPERF_FLAG_SERVER ? "server" : "client",
-                cfg.source_ip4 & 0xFF, (cfg.source_ip4 >> 8) & 0xFF, (cfg.source_ip4 >> 16) & 0xFF,
-                (cfg.source_ip4 >> 24) & 0xFF, cfg.sport,
-                cfg.destination_ip4 & 0xFF, (cfg.destination_ip4 >> 8) & 0xFF,
-                (cfg.destination_ip4 >> 16) & 0xFF, (cfg.destination_ip4 >> 24) & 0xFF, cfg.dport,
+                XF_IP2STR(&cfg.sip.u_addr.ip4), (int)cfg.sport,
+                XF_IP2STR(&cfg.dip.u_addr.ip4), (int)cfg.dport, 
                 cfg.interval, cfg.time);
 
         xf_iperf_start(&cfg, NULL, NULL);

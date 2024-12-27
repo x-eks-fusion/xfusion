@@ -9,6 +9,11 @@
  *
  */
 
+/**
+ * @example{lineno} examples/system/init/main/xf_main.c
+ * 自动初始化示例。
+ */
+
 /* ==================== [Includes] ========================================== */
 
 #include "xf_init.h"

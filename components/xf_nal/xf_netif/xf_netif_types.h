@@ -19,6 +19,13 @@
 #include "xf_mac.h"
 #include "xf_netif_ip_addr_types.h"
 
+/**
+ * @cond (XFAPI_USER || XFAPI_PORT)
+ * @addtogroup group_xf_init
+ * @endcond
+ * @{
+ */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -32,7 +39,7 @@ extern "C" {
 #if XF_NETIF_TODO
 /**
  * @brief 网络设备类型码，用于查询 netif 句柄归属。
- * 
+ *
  * @todo 暂未使用。
  */
 typedef enum _xf_netif_type_code_t {
@@ -69,7 +76,7 @@ typedef enum _xf_netif_dns_type_t {
  * @brief DNS 服务器信息。
  */
 typedef struct _xf_netif_dns_info_t {
-    xf_ip_addr_t ip; /*!< DNS 服务器的 IPV4 地址 */
+    xf_ip_addr_t ip; /*!< DNS 服务器地址 */
 } xf_netif_dns_info_t;
 
 /**
@@ -132,5 +139,10 @@ typedef void (*xf_ip_cb_t)(
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
+
+/**
+ * End of addtogroup group_xf_init
+ * @}
+ */
 
 #endif /* __XF_NETIF_TYPES_H__ */

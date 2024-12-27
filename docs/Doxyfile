@@ -42,13 +42,13 @@ DOXYFILE_ENCODING      = UTF-8
 # title of most generated pages and in a few other places.
 # The default value is: My Project.
 
-PROJECT_NAME           = xfusion_docs
+PROJECT_NAME           = XFusion API
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number. This
 # could be handy for archiving the generated documentation or if some version
 # control system is used.
 
-PROJECT_NUMBER         =
+PROJECT_NUMBER         = "v1.2.0"
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer a
@@ -61,7 +61,7 @@ PROJECT_BRIEF          =
 # pixels and the maximum width should not exceed 200 pixels. Doxygen will copy
 # the logo to the output directory.
 
-PROJECT_LOGO           =
+PROJECT_LOGO           = public/image/xfusion_icon.svg
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) path
 # into which the generated documentation will be written. If a relative path is
@@ -184,7 +184,7 @@ FULL_PATH_NAMES        = YES
 # will be relative from the directory where doxygen is started.
 # This tag requires that the tag FULL_PATH_NAMES is set to YES.
 
-STRIP_FROM_PATH        =
+STRIP_FROM_PATH        = ..
 
 # The STRIP_FROM_INC_PATH tag can be used to strip a user-defined part of the
 # path mentioned in the documentation of a class, which tells the reader which
@@ -496,7 +496,7 @@ LOOKUP_CACHE_SIZE      = 0
 # DOT_NUM_THREADS setting.
 # Minimum value: 0, maximum value: 32, default value: 1.
 
-NUM_PROC_THREADS       = 1
+NUM_PROC_THREADS       = 0
 
 # If the TIMESTAMP tag is set different from NO then each generated page will
 # contain the date or date and time when the page was generated. Setting this to
@@ -504,7 +504,7 @@ NUM_PROC_THREADS       = 1
 # Possible values are: YES, NO, DATETIME and DATE.
 # The default value is: NO.
 
-TIMESTAMP              = NO
+TIMESTAMP              = YES
 
 #---------------------------------------------------------------------------
 # Build related configuration options
@@ -759,7 +759,9 @@ GENERATE_DEPRECATEDLIST= YES
 # sections, marked by \if <section_label> ... \endif and \cond <section_label>
 # ... \endcond blocks.
 
-ENABLED_SECTIONS       =
+ENABLED_SECTIONS       = XFAPI_USER \
+                        #  XFAPI_PORT 
+                        #  XFAPI_INTERNAL 
 
 # The MAX_INITIALIZER_LINES tag determines the maximum number of lines that the
 # initial value of a variable or macro / define can have for it to appear in the
@@ -945,6 +947,7 @@ WARN_LOGFILE           = ./build/doxygen_log.txt
 
 INPUT                  = ./manual \
                          ./manual/mainpage.md \
+                         ../examples \
                          ../components \
 
 # This tag can be used to specify the character encoding of the source files
@@ -990,7 +993,10 @@ FILE_PATTERNS          = *.h \
                          *.hxx \
                          *.hpp \
                          *.h++ \
-                         *.inc
+                         *.inc \
+                         *.c \
+                         *.cc \
+                         *.cpp \
 
 # The RECURSIVE tag can be used to specify whether or not subdirectories should
 # be searched for input files as well.
@@ -1005,23 +1011,19 @@ RECURSIVE              = YES
 # Note that relative paths are relative to the directory from which doxygen is
 # run.
 
-EXCLUDE                = backup \
-                         temp \
-                         .vscode \
-                         .xmake \
-                         doxygen-awesome-css \
+EXCLUDE                = ../components/xf_fal/xf_fal/example \
                          ../components/xf_hal/xf_hal/example \
                          ../components/xf_hal/xf_hal/port \
                          ../components/xf_heap/xf_heap/example \
                          ../components/xf_heap/xf_heap/test \
                          ../components/xf_init/xf_init/examples \
-                         ../components/xf_log/xf_log/config_template \
                          ../components/xf_log/xf_log/examples \
+                         ../components/xf_osal/xf_osal/port \
+                         ../components/xf_sys/xf_sys/example \
                          ../components/xf_task/xf_task/example \
                          ../components/xf_task/xf_task/port \
                          ../components/xf_utils/xf_utils/examples \
                          ../components/xf_utils/xf_utils/port \
-                         ../components/xf_wal \
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded
@@ -1037,7 +1039,14 @@ EXCLUDE_SYMLINKS       = NO
 # Note that the wildcards are matched against the file with absolute path, so to
 # exclude all test directories for example use the pattern */test/*
 
-EXCLUDE_PATTERNS       =
+EXCLUDE_PATTERNS       = backup \
+                         .backup \
+                         .vscode \
+                         .xmake \
+                         temp \
+                         build \
+                         test \
+                         doxygen-awesome-css \
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the
@@ -1052,21 +1061,21 @@ EXCLUDE_SYMBOLS        =
 # command).
 
 EXAMPLE_PATH           = ./manual \
-                         ../components/xf_init/xf_init/README.md
+                         ../examples \
 
 # If the value of the EXAMPLE_PATH tag contains directories, you can use the
 # EXAMPLE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp and
 # *.h) to filter out the source-files in the directories. If left blank all
 # files are included.
 
-EXAMPLE_PATTERNS       = *
+EXAMPLE_PATTERNS       = *.c
 
 # If the EXAMPLE_RECURSIVE tag is set to YES then subdirectories will be
 # searched for input files to be used with the \include or \dontinclude commands
 # irrespective of the value of the RECURSIVE tag.
 # The default value is: NO.
 
-EXAMPLE_RECURSIVE      = NO
+EXAMPLE_RECURSIVE      = YES
 
 # The IMAGE_PATH tag can be used to specify one or more files or directories
 # that contain images that are to be included in the documentation (see the
@@ -2685,7 +2694,7 @@ INCLUDED_BY_GRAPH      = NO
 # The default value is: NO.
 # This tag requires that the tag HAVE_DOT is set to YES.
 
-CALL_GRAPH             = YES
+CALL_GRAPH             = NO
 
 # If the CALLER_GRAPH tag is set to YES then doxygen will generate a caller
 # dependency graph for every global function or class method.
@@ -2697,7 +2706,7 @@ CALL_GRAPH             = YES
 # The default value is: NO.
 # This tag requires that the tag HAVE_DOT is set to YES.
 
-CALLER_GRAPH           = YES
+CALLER_GRAPH           = NO
 
 # If the GRAPHICAL_HIERARCHY tag is set to YES then doxygen will graphical
 # hierarchy of all classes instead of a textual one.

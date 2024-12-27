@@ -1,3 +1,4 @@
 # Welcome to xfusion
 # CONFIG_XF_NET_APPS_ENABLE is not set
 CONFIG_XF_OSAL_CMSIS=y
+# CONFIG_XF_CMSIS_THREAD_ENUMERATE_ENABLE is not set
