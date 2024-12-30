@@ -153,6 +153,14 @@ typedef uint8_t xf_ble_gap_adv_struct_type_t;
 #define XF_BLE_GAP_ADV_STRUCT_LEN_FIELD_SIZE      1
 
 /**
+ * @brief BLE 广播数据单元数据的最大长度
+ * @note 按广播数据包最大长度定义，一般是 37 字节 (地址占 6 字节，即仅 31 字节可用)
+ *  BLE 5.0 是 254 字节
+ * @note 该宏一般只用于对接广播数据设置时，XF 便捷方法的处理。
+ */
+#define XF_BLE_GAP_ADV_STRUCT_DATA_MAX_SIZE        (254)
+
+/**
  * @brief BLE GAP 广播数据单元的数据 ( AD Data )
  *
  * @note 以下暂时仅列出部分类型的广播数据单元数据成员
@@ -211,6 +219,23 @@ typedef struct {                                                \
     xf_ble_gap_adv_struct_type_t ad_type;                       \
     /* AD_Data */                                               \
     uint8_t ad_data[adv_data_array_size];                       \
+}type_name
+
+/**
+ * @brief 定义一个严格遵循蓝牙标准的广播数据单元结构，单元数据 ( AD Data ) 为固定大小数组的类型
+ *
+ * @param type_name 指定定义的类型名
+ * @note 一般仅用于平台对接时使用，便于 XF BLE 广播数据单元结构与符号标准的广播数据结构间的转换
+ * @warning 注意，此处数组大小为广播包最大大小，并不代表广播数据单元 (adv struct) 的实际有效大小
+ */
+#define XF_BLE_GAP_ADV_STRUCT_TYPE_ARRAY_FIXED(type_name)           \
+typedef struct {                                                \
+    /* len of struct */                                         \
+    uint8_t struct_data_len;                                    \
+    /* AD_Type */                                               \
+    xf_ble_gap_adv_struct_type_t ad_type;                       \
+    /* AD_Data */                                               \
+    uint8_t ad_data[XF_BLE_GAP_ADV_STRUCT_DATA_MAX_SIZE];       \
 }type_name
 
 /**

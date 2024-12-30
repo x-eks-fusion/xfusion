@@ -68,6 +68,12 @@ typedef enum {
 #define XF_SLE_ADV_STRUCT_LEN_FILED_SIZE        1
 
 /**
+ * @brief SLE 广播数据单元数据的最大长度
+ * @note 该宏一般只用于对接广播数据设置时，XF 便捷方法的处理。
+ */
+#define XF_SLE_ADV_STRUCT_DATA_MAX_SIZE        (254)
+
+/**
  * @brief SLE 广播数据单元的数据
  *
  * @note 以下暂时仅列出部分类型的广播数据单元数据成员
@@ -120,6 +126,20 @@ typedef struct {                                                \
     xf_sle_adv_struct_type_t ad_type;                           \
     uint8_t ad_data_len;                                        \
     uint8_t ad_data[adv_data_array_size];                       \
+}type_name
+
+/**
+ * @brief 定义一个严格遵循星闪标准的广播数据单元结构，单元数据 ( AD Data ) 为固定大小数组的类型
+ *
+ * @param type_name 指定定义的类型名
+ * @note 一般仅用于平台对接时使用，便于 XF SLE 广播数据单元结构与符号标准的广播数据结构间的转换
+ * @warning 注意，此处数组大小为广播包最大大小，并不代表广播数据单元 (adv struct) 的实际有效大小
+ */
+#define XF_SLE_ADV_STRUCT_TYPE_ARRAY_FIXED(type_name)           \
+typedef struct {                                                \
+    xf_sle_adv_struct_type_t ad_type;                           \
+    uint8_t ad_data_len;                                        \
+    uint8_t ad_data[XF_SLE_ADV_STRUCT_DATA_MAX_SIZE];           \
 }type_name
 
 /**
