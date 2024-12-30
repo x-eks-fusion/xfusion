@@ -1,0 +1,4 @@
+# Welcome to xfusion
+# CONFIG_XF_NET_APPS_ENABLE is not set
+CONFIG_XF_INIT_IMPL_BY_CONSTRUCTOR_ENABLE=y
+# CONFIG_XF_OSAL_ENABLE is not set

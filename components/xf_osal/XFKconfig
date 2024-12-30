@@ -68,6 +68,11 @@ config XF_OSAL_CMSIS
     help
         Use this option if you are using CMSIS as the OS abstraction layer.
 
+config XF_OSAL_USER
+    bool "USER OSAL"
+    help
+        Use this option if you are using other custom methods as the OS abstraction layer.
+
 endchoice
 
 menu "CMSIS config"

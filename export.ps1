@@ -72,7 +72,7 @@ if ($VENV_RESULT -eq 1 -or $VENV_RESULT -eq 2) {
 
 # Upgrade pip and install necessary packages
 & python -m pip install --upgrade pip
-& pip install xf_build==0.3.9
+& pip install xf_build==0.4.1
 & pip install windows-curses
 
 Write-Output "XF_ROOT:           $Env:XF_ROOT"

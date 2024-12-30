@@ -80,7 +80,7 @@ if "%VENV_RESULT%"=="1" (
 )
 
 python.exe -m pip install --upgrade pip
-pip install xf_build==0.3.9
+pip install xf_build==0.4.1
 pip install windows-curses
 
 echo XF_ROOT:           %XF_ROOT%

@@ -17,11 +17,9 @@ SDK_PATH: Path = api.XF_ROOT / "sdks/bs2x_sdk/"
 SDK_BUILD_OUTPUT_PATH: Path = SDK_PATH / "output"
 XF_PROJECT_BUILD_PATH: Path = api.PROJECT_BUILD_PATH
 
-hookimpl = xf_build.get_hookimpl()
-
 
 class bs21():
-    @hookimpl
+
     def build(self, args):
         project_cmake_file: Path = XF_PROJECT_BUILD_PATH / "build_environ.cmake"
         api.apply_template("cmake_project.j2", project_cmake_file)
@@ -50,12 +48,10 @@ class bs21():
             except:
                 print("copy sdk firmware failed!", sys.exc_info())
 
-    @hookimpl
     def clean(self, args):
         if SDK_BUILD_OUTPUT_PATH.exists() is True:
             shutil.rmtree(SDK_BUILD_OUTPUT_PATH)
 
-    @hookimpl
     def flash(self, args):
         framware_path = "build/sdk/fwpkg/bs21e-sle-ble-slp-central-peripheral/bs21e_all_in_one.fwpkg"
         if not os.path.exists(framware_path):
@@ -82,15 +78,12 @@ class bs21():
         for port in ports:
             os.system(f"burn {framware_path}  -p {port.device}")
 
-    @hookimpl
     def export(self, args):
         pass
 
-    @hookimpl
     def update(self, args):
         pass
 
-    @hookimpl
     def menuconfig(self, args):
         # 第一个拓展参数为 sub 时 打开SDK 侧 menuconfig
         if args[0] == "sub":
