@@ -44,11 +44,11 @@ static void sample_ble_set_adv_param(void);
 
 static xf_err_t sample_ble_gap_event_cb(
     xf_ble_gap_event_t event,
-    xf_ble_gap_evt_cb_param_t param);
+    xf_ble_gap_evt_cb_param_t *param);
 
 static xf_err_t sample_ble_gatts_event_cb(
     xf_ble_gatts_event_t event,
-    xf_ble_gatts_evt_cb_param_t param);
+    xf_ble_gatts_evt_cb_param_t *param);
 
 /* ==================== [Static Variables] ================================== */
 
@@ -204,7 +204,7 @@ void xf_main(void)
 
 static xf_err_t sample_ble_gap_event_cb(
     xf_ble_gap_event_t event,
-    xf_ble_gap_evt_cb_param_t param)
+    xf_ble_gap_evt_cb_param_t *param)
 {
     UNUSED(s_app_id);
     UNUSED(param);
@@ -213,9 +213,9 @@ static xf_err_t sample_ble_gap_event_cb(
     case XF_BLE_GAP_EVT_CONNECT: {
         XF_LOGI(TAG, "EV:peer connect:s_app_id:%d,conn_id:%d,"
                 "addr_type:%d,addr:"XF_BLE_ADDR_PRINT_FMT,
-                s_app_id, param.connect.conn_id,
-                param.connect.peer_addr.type,
-                XF_BLE_ADDR_EXPAND_TO_ARG(param.connect.peer_addr.addr));
+                s_app_id, param->connect.conn_id,
+                param->connect.peer_addr.type,
+                XF_BLE_ADDR_EXPAND_TO_ARG(param->connect.peer_addr.addr));
 
         xf_ble_sm_authen_req_t authen_req = XF_BLE_SM_AUTHEN_REQ_SC_MITM_BOND;
         xf_ble_sm_io_cap_t io_capability = XF_BLE_SM_IO_CAP_NONE;
@@ -233,18 +233,18 @@ static xf_err_t sample_ble_gap_event_cb(
     case XF_BLE_GAP_EVT_PAIR_END: {
         XF_LOGI(TAG, "EV:pair end:s_app_id:%d,conn_id:%d,"
                 "addr_type:%d,addr:"XF_BLE_ADDR_PRINT_FMT,
-                s_app_id, param.connect.conn_id,
-                param.connect.peer_addr.type,
-                XF_BLE_ADDR_EXPAND_TO_ARG(param.connect.peer_addr.addr));
+                s_app_id, param->connect.conn_id,
+                param->connect.peer_addr.type,
+                XF_BLE_ADDR_EXPAND_TO_ARG(param->connect.peer_addr.addr));
     } break;
     /* 事件: 断连  */
     case XF_BLE_GAP_EVT_DISCONNECT: {
         XF_LOGI(TAG, "EV:peer disconnect:s_app_id:%d,conn_id:%d,reason:%u,"
                 "addr_type:%d,addr:"XF_BLE_ADDR_PRINT_FMT,
-                s_app_id, param.disconnect.conn_id,
-                param.disconnect.reason,
-                param.disconnect.peer_addr.type,
-                XF_BLE_ADDR_EXPAND_TO_ARG(param.disconnect.peer_addr.addr));
+                s_app_id, param->disconnect.conn_id,
+                param->disconnect.reason,
+                param->disconnect.peer_addr.type,
+                XF_BLE_ADDR_EXPAND_TO_ARG(param->disconnect.peer_addr.addr));
         XF_LOGI(TAG, "It will restart ADV");
         xf_ble_gap_start_adv(&s_adv_id, &s_adv_param, &s_adv_data);
     } break;
@@ -257,7 +257,7 @@ static xf_err_t sample_ble_gap_event_cb(
 
 static xf_err_t sample_ble_gatts_event_cb(
     xf_ble_gatts_event_t event,
-    xf_ble_gatts_evt_cb_param_t param)
+    xf_ble_gatts_evt_cb_param_t *param)
 {
     UNUSED(s_app_id);
     UNUSED(param);
@@ -265,35 +265,35 @@ static xf_err_t sample_ble_gatts_event_cb(
     /* 事件: 读请求  */
     case XF_BLE_GATTS_EVT_READ_REQ: {
         XF_LOGI(TAG, "EV:RECV READ_REQ:s_app_id:%d,conn_id:%d,need_rsp:%d,attr_handle:%d",
-                s_app_id, param.read_req.conn_id, param.read_req.need_rsp,
-                param.read_req.handle);
+                s_app_id, param->read_req.conn_id, param->read_req.need_rsp,
+                param->read_req.handle);
 
         xf_ble_gatts_ntf_t ntf_param = {
             .value = read_req_indication,
             .value_len = sizeof(read_req_indication),
-            .handle = param.read_req.handle
+            .handle = param->read_req.handle
         };
         xf_err_t ret = xf_ble_gatts_send_notification(
-                           s_app_id, param.read_req.conn_id, &ntf_param);
+                           s_app_id, param->read_req.conn_id, &ntf_param);
         XF_CHECK(ret != XF_OK, ret, TAG,
                  "send_notify_indicate failed:%#X", ret);
     } break;
     /* 事件: 写请求  */
     case XF_BLE_GATTS_EVT_WRITE_REQ: {
         XF_LOGI(TAG, "EV:RECV WRITE_REQ:s_app_id:%d,conn_id:%d,need_rsp:%d,attr_handle:%d",
-                s_app_id, param.write_req.conn_id, param.write_req.need_rsp,
-                param.write_req.handle);
-        XF_LOG_BUFFER_HEXDUMP(param.write_req.value, param.write_req.value_len);
+                s_app_id, param->write_req.conn_id, param->write_req.need_rsp,
+                param->write_req.handle);
+        XF_LOG_BUFFER_HEXDUMP(param->write_req.value, param->write_req.value_len);
 
         /* 如果是需要响应的请求类型->返回响应 */
-        if (param.write_req.need_rsp == true) {
+        if (param->write_req.need_rsp == true) {
             xf_ble_gatts_ntf_t ntf_param = {
                 .value = write_req_indication,
                 .value_len = sizeof(write_req_indication),
-                .handle = param.write_req.handle,
+                .handle = param->write_req.handle,
             };
             xf_err_t ret = xf_ble_gatts_send_notification(
-                               s_app_id, param.write_req.conn_id, &ntf_param);
+                               s_app_id, param->write_req.conn_id, &ntf_param);
             XF_CHECK(ret != XF_OK, ret, TAG,
                      "send_notify_indicate failed:%#X s_app_id:%d", ret);
         }
@@ -301,7 +301,7 @@ static xf_err_t sample_ble_gatts_event_cb(
     /* 事件: MTU 协商  */
     case XF_BLE_GATTS_EVT_EXCHANGE_MTU: {
         XF_LOGI(TAG, "EV:mtu changed:s_app_id:%d,conn_id:%d,mtu_size:%d",
-                s_app_id, param.mtu.conn_id, param.mtu.mtu_size);
+                s_app_id, param->mtu.conn_id, param->mtu.mtu_size);
     } break;
     default:
         break;

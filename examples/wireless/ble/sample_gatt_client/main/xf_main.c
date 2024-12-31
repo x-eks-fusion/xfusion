@@ -33,10 +33,10 @@
 static xf_err_t sample_ble_set_scan_param(void);
 static xf_err_t sample_ble_gap_event_cb(
     xf_ble_gap_event_t event,
-    xf_ble_gap_evt_cb_param_t param);
+    xf_ble_gap_evt_cb_param_t *param);
 static xf_err_t sample_ble_gattc_event_cb(
     xf_ble_gattc_event_t event,
-    xf_ble_gattc_evt_cb_param_t param);
+    xf_ble_gattc_evt_cb_param_t *param);
 static xf_err_t gap_event_scan_result_cb(xf_ble_gap_evt_cb_param_t *param);
 
 /* ==================== [Static Variables] ================================== */
@@ -111,17 +111,17 @@ void xf_main(void)
 
 static xf_err_t sample_ble_gap_event_cb(
     xf_ble_gap_event_t event,
-    xf_ble_gap_evt_cb_param_t param)
+    xf_ble_gap_evt_cb_param_t *param)
 {
     UNUSED(param);
     xf_err_t ret = XF_OK;
     switch (event) {
     case XF_BLE_GAP_EVT_SCAN_RESULT: {
-        ret = gap_event_scan_result_cb(&param);
+        ret = gap_event_scan_result_cb(param);
     } break;
     case XF_BLE_GAP_EVT_CONNECT: {
-        s_conn_id = param.connect.conn_id;
-        peer_addr = param.connect.peer_addr;
+        s_conn_id = param->connect.conn_id;
+        peer_addr = param->connect.peer_addr;
 
         XF_LOGI(TAG, "EV:connect:s_conn_id:%d,addr_type:%u,addr:"
                 XF_BLE_ADDR_PRINT_FMT,
@@ -138,29 +138,29 @@ static xf_err_t sample_ble_gap_event_cb(
 
 static xf_err_t sample_ble_gattc_event_cb(
     xf_ble_gattc_event_t event,
-    xf_ble_gattc_evt_cb_param_t param)
+    xf_ble_gattc_evt_cb_param_t *param)
 {
     UNUSED(param);
     xf_err_t ret = XF_OK;
     switch (event) {
     case XF_BLE_GATTC_EVT_READ_CFM: {
-        if (param.read_cfm.value_len != 0) {
-            XF_LOGI(TAG, "EV:read CMPL:handle:%d", param.read_cfm.handle);
-            XF_LOG_BUFFER_HEXDUMP(param.read_cfm.value,
-                                  param.read_cfm.value_len);
+        if (param->read_cfm.value_len != 0) {
+            XF_LOGI(TAG, "EV:read CMPL:handle:%d", param->read_cfm.handle);
+            XF_LOG_BUFFER_HEXDUMP(param->read_cfm.value,
+                                  param->read_cfm.value_len);
             is_read_cmpl = true;
         }
     } break;
     case XF_BLE_GATTC_EVT_WRITE_CFM: {
         XF_LOGI(TAG, "EV:write CMPL:handle:%d,it will disconnect",
-                param.write_cfm.handle);
+                param->write_cfm.handle);
         xf_ble_gap_disconnect(&peer_addr);
     } break;
     case XF_BLE_GATTC_EVT_NOTIFICATION: {
-        if (param.ntf.value_len != 0) {
-            XF_LOGI(TAG, "EV:read ntf/ind:chara_handle:%d", param.ntf.handle);
-            XF_LOG_BUFFER_HEXDUMP(param.ntf.value,
-                                  param.ntf.value_len);
+        if (param->ntf.value_len != 0) {
+            XF_LOGI(TAG, "EV:read ntf/ind:chara_handle:%d", param->ntf.handle);
+            XF_LOG_BUFFER_HEXDUMP(param->ntf.value,
+                                  param->ntf.value_len);
         }
     } break;
     default:

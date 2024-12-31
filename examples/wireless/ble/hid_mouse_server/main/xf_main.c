@@ -47,7 +47,7 @@ static void sample_ble_set_adv_data(void);
 static void sample_ble_set_adv_param(void);
 static xf_err_t sample_ble_gap_event_cb(
     xf_ble_gap_event_t event,
-    xf_ble_gap_evt_cb_param_t param);
+    xf_ble_gap_evt_cb_param_t *param);
 static void sample_gpio_irq(xf_gpio_num_t gpio_num, bool level, void *user_data);
 
 /* ==================== [Static Variables] ================================== */
@@ -374,7 +374,7 @@ static void sample_gpio_irq(xf_gpio_num_t gpio_num, bool level, void *user_data)
 
 static xf_err_t sample_ble_gap_event_cb(
     xf_ble_gap_event_t event,
-    xf_ble_gap_evt_cb_param_t param)
+    xf_ble_gap_evt_cb_param_t *param)
 {
     UNUSED(s_app_id);
     UNUSED(param);
@@ -383,20 +383,20 @@ static xf_err_t sample_ble_gap_event_cb(
     case XF_BLE_GAP_EVT_CONNECT: {
         XF_LOGI(TAG, "EV:peer connect:s_app_id:%d,conn_id:%d,"
                 "addr_type:%d,addr:"XF_BLE_ADDR_PRINT_FMT,
-                s_app_id, param.connect.conn_id,
-                param.connect.peer_addr.type,
-                XF_BLE_ADDR_EXPAND_TO_ARG(param.connect.peer_addr.addr));
+                s_app_id, param->connect.conn_id,
+                param->connect.peer_addr.type,
+                XF_BLE_ADDR_EXPAND_TO_ARG(param->connect.peer_addr.addr));
 
-        s_conn_id = param.connect.conn_id;
+        s_conn_id = param->connect.conn_id;
     } break;
     /* 事件: 断连  */
     case XF_BLE_GAP_EVT_DISCONNECT: {
         XF_LOGI(TAG, "EV:peer disconnect:s_app_id:%d,conn_id:%d,reason:%u,"
                 "addr_type:%d,addr:"XF_BLE_ADDR_PRINT_FMT,
-                s_app_id, param.disconnect.conn_id,
-                param.disconnect.reason,
-                param.disconnect.peer_addr.type,
-                XF_BLE_ADDR_EXPAND_TO_ARG(param.disconnect.peer_addr.addr));
+                s_app_id, param->disconnect.conn_id,
+                param->disconnect.reason,
+                param->disconnect.peer_addr.type,
+                XF_BLE_ADDR_EXPAND_TO_ARG(param->disconnect.peer_addr.addr));
         XF_LOGI(TAG, "It will restart ADV");
         xf_ble_gap_start_adv(&s_adv_id, &s_adv_param, &s_adv_data);
     } break;

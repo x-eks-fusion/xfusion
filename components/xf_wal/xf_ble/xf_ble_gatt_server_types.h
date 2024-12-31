@@ -209,7 +209,7 @@ typedef enum {
  */
 typedef xf_err_t (*xf_ble_gatts_event_cb_t)(
     xf_ble_gatts_event_t event,
-    xf_ble_gatts_evt_cb_param_t param);
+    xf_ble_gatts_evt_cb_param_t *param);
 
 /* ==================== [Global Prototypes] ================================= */
 
