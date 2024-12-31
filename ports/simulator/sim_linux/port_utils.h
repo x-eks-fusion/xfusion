@@ -1,12 +1,12 @@
 /**
  * @file port_utils.h
  * @author dotc (dotchan@qq.com)
- * @brief 
+ * @brief
  * @version 0.1
  * @date 2024-11-13
- * 
+ *
  * @copyright Copyright (c) 2024
- * 
+ *
  */
 
 #ifndef __PORT_UTILS_H__

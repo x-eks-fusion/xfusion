@@ -90,7 +90,7 @@ void xf_main(void)
 
 static void task1(void *argument)
 {
-    XF_LOGI(TAG,"%s:%p", __func__, xf_osal_thread_get_current());
+    XF_LOGI(TAG, "%s:%p", __func__, xf_osal_thread_get_current());
     while (1) {
         if (xf_osal_mutex_acquire(mutex, 100) == XF_OK) {
             XF_LOGI(TAG, "Task1: Accessing shared resource...");
@@ -108,7 +108,7 @@ static void task1(void *argument)
 
 static void task2(void *argument)
 {
-    XF_LOGI(TAG,"%s:%p", __func__, xf_osal_thread_get_current());
+    XF_LOGI(TAG, "%s:%p", __func__, xf_osal_thread_get_current());
     while (1) {
         if (xf_osal_mutex_acquire(mutex, XF_OSAL_WAIT_FOREVER) == XF_OK) {
             XF_LOGI(TAG, "Task2: Accessing shared resource...");

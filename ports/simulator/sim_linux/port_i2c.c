@@ -92,11 +92,11 @@ static xf_err_t port_i2c_open(xf_hal_dev_t *dev)
     dev->platform_data = i2c;
 
     cJSON_AddNumberToObject(json, "id",             i2c->id);
-    cJSON_AddBoolToObject(  json, "enable",         0);
+    cJSON_AddBoolToObject(json, "enable",         0);
     cJSON_AddNumberToObject(json, "hosts",          0);
     cJSON_AddNumberToObject(json, "address_width",  0);
     cJSON_AddNumberToObject(json, "mem_addr",       0);
-    cJSON_AddBoolToObject(  json, "mem_addr_en",    0);
+    cJSON_AddBoolToObject(json, "mem_addr_en",    0);
     cJSON_AddNumberToObject(json, "mem_addr_width", 0);
     cJSON_AddNumberToObject(json, "speed",          0);
     cJSON_AddNumberToObject(json, "scl_num",        0);
@@ -137,17 +137,17 @@ static xf_err_t port_i2c_ioctl(xf_hal_dev_t *dev, uint32_t cmd, void *config)
         i2c->json_str = NULL;
     }
 
-    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetBoolValue,   i2c->json, i2c_config, enable         );
-    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, i2c->json, i2c_config, hosts          );
-    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, i2c->json, i2c_config, address_width  );
-    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, i2c->json, i2c_config, address        );
-    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, i2c->json, i2c_config, mem_addr       );
-    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetBoolValue,   i2c->json, i2c_config, mem_addr_en    );
-    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, i2c->json, i2c_config, mem_addr_width );
-    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, i2c->json, i2c_config, speed          );
-    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, i2c->json, i2c_config, scl_num        );
-    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, i2c->json, i2c_config, sda_num        );
-    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, i2c->json, i2c_config, timeout_ms     );
+    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetBoolValue,   i2c->json, i2c_config, enable);
+    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, i2c->json, i2c_config, hosts);
+    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, i2c->json, i2c_config, address_width);
+    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, i2c->json, i2c_config, address);
+    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, i2c->json, i2c_config, mem_addr);
+    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetBoolValue,   i2c->json, i2c_config, mem_addr_en);
+    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, i2c->json, i2c_config, mem_addr_width);
+    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, i2c->json, i2c_config, speed);
+    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, i2c->json, i2c_config, scl_num);
+    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, i2c->json, i2c_config, sda_num);
+    CJSON_SET_VAL_WITH_STRUCT(cJSON_SetNumberValue, i2c->json, i2c_config, timeout_ms);
 
     i2c->json_str = cJSON_PrintUnformatted(i2c->json);
     unsigned int size = strlen(i2c->json_str);
@@ -161,7 +161,7 @@ static int port_i2c_read(xf_hal_dev_t *dev, void *buf, size_t count)
 
     /* 是读寄存器内容的情况需要先发寄存器地址 */
     if (i2c->config->mem_addr_en == XF_HAL_I2C_MEM_ADDR_ENABLE) {
-        uint8_t addr_size = (i2c->config->mem_addr_width + 1)*8;
+        uint8_t addr_size = (i2c->config->mem_addr_width + 1) * 8;
         tcp_send(i2c->id, (unsigned char *)&i2c->config->mem_addr, addr_size);
     }
 
@@ -175,7 +175,7 @@ static int port_i2c_write(xf_hal_dev_t *dev, const void *buf, size_t count)
 
     /* 是写寄存器内容的情况需要先发寄存器地址 */
     if (i2c->config->mem_addr_en == XF_HAL_I2C_MEM_ADDR_ENABLE) {
-        uint8_t addr_size = (i2c->config->mem_addr_width + 1)*8;
+        uint8_t addr_size = (i2c->config->mem_addr_width + 1) * 8;
         tcp_send(i2c->id, (unsigned char *)&i2c->config->mem_addr, addr_size);
     }
 

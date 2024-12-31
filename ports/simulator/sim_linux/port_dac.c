@@ -76,7 +76,7 @@ static xf_err_t port_dac_open(xf_hal_dev_t *dev)
     dev->platform_data = dac;
 
     cJSON_AddNumberToObject(json, "id",         dac->id);
-    cJSON_AddBoolToObject(  json, "enable",     0);
+    cJSON_AddBoolToObject(json, "enable",     0);
     cJSON_AddNumberToObject(json, "resolution", 0);
     cJSON_AddNumberToObject(json, "speed",      0);
     cJSON_AddNumberToObject(json, "value_max",  0);

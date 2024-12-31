@@ -81,7 +81,7 @@ static xf_err_t port_uart_open(xf_hal_dev_t *dev)
     dev->platform_data = uart;
 
     cJSON_AddNumberToObject(json, "id",             uart->id);
-    cJSON_AddBoolToObject(  json, "enable",         0);
+    cJSON_AddBoolToObject(json, "enable",         0);
     cJSON_AddNumberToObject(json, "data_bits",      0);
     cJSON_AddNumberToObject(json, "stop_bits",      0);
     cJSON_AddNumberToObject(json, "parity_bits",    0);

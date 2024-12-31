@@ -72,7 +72,6 @@ void xf_main(void)
         return;
     }
 
-
     xf_osal_thread_t thread1 = xf_osal_thread_create(task1, NULL, &attr1);
     if (thread1 == NULL) {
         XF_LOGE(TAG, "xf thread1 create error");

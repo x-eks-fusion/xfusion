@@ -138,7 +138,7 @@ static void task2(void *argument)
         tick_count = xf_osal_kernel_get_tick_count();
         count = xf_osal_thread_get_count();
         XF_LOGI(TAG, "task2 active count: %ld", count);
-        /* 
+        /*
             从 get_tick_count() 时刻开始，绝对延迟到 1000 ms 后，
             意味着 XF_LOGI() 的耗时也属于延迟的一部分。
          */

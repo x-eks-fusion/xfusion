@@ -88,8 +88,7 @@ static int port_pwm_ioctl(xf_hal_dev_t *dev, uint32_t cmd, void *config)
         return XF_OK;
     }
 
-    if (cmd ==  XF_HAL_PWM_CMD_ALL)
-    {
+    if (cmd ==  XF_HAL_PWM_CMD_ALL) {
         return XF_OK;
     }
 

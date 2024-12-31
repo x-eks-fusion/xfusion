@@ -253,12 +253,9 @@ static int esp_i2c_read(xf_hal_dev_t *dev, xf_hal_i2c_config_t *i2c_config,
 end:
     i2c_cmd_link_delete(handle);
     /* 如果无错 -> 返回传入到大小（因为此处方法无返回实际大小（读或写） */
-    if(err == ESP_OK)
-    {
+    if (err == ESP_OK) {
         return count;
-    }
-    else if(err == ESP_FAIL)    // 有负数错误 -> 直接返回错误码
-    {
+    } else if (err == ESP_FAIL) { // 有负数错误 -> 直接返回错误码
         return err;
     }
     return -err;    // 有正数错误 -> 返回错误码的倒数（负数）
@@ -328,12 +325,9 @@ static int esp_i2c_read_mem(xf_hal_dev_t *dev, xf_hal_i2c_config_t *i2c_config,
 end:
     i2c_cmd_link_delete(handle);
     /* 如果无错 -> 返回传入到大小（因为此处方法无返回实际大小（读或写） */
-    if(err == ESP_OK)
-    {
+    if (err == ESP_OK) {
         return count;
-    }
-    else if(err == ESP_FAIL)    // 有负数错误 -> 直接返回错误码
-    {
+    } else if (err == ESP_FAIL) { // 有负数错误 -> 直接返回错误码
         return err;
     }
     return -err;    // 有正数错误 -> 返回错误码的倒数（负数）
@@ -386,12 +380,9 @@ static int esp_i2c_write(xf_hal_dev_t *dev, xf_hal_i2c_config_t *i2c_config,
 end:
     i2c_cmd_link_delete(handle);
     /* 如果无错 -> 返回传入到大小（因为此处方法无返回实际大小（读或写） */
-    if(err == ESP_OK)
-    {
+    if (err == ESP_OK) {
         return count;
-    }
-    else if(err == ESP_FAIL)    // 有负数错误 -> 直接返回错误码
-    {
+    } else if (err == ESP_FAIL) { // 有负数错误 -> 直接返回错误码
         return err;
     }
     return -err;    // 有正数错误 -> 返回错误码的倒数（负数）
@@ -441,12 +432,9 @@ static int esp_i2c_write_mem(xf_hal_dev_t *dev, xf_hal_i2c_config_t *i2c_config,
 end:
     i2c_cmd_link_delete(handle);
     /* 如果无错 -> 返回传入到大小（因为此处方法无返回实际大小（读或写） */
-    if(err == ESP_OK)
-    {
+    if (err == ESP_OK) {
         return count;
-    }
-    else if(err == ESP_FAIL)    // 有负数错误 -> 直接返回错误码
-    {
+    } else if (err == ESP_FAIL) { // 有负数错误 -> 直接返回错误码
         return err;
     }
     return -err;    // 有正数错误 -> 返回错误码的倒数（负数）

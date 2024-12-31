@@ -1,12 +1,12 @@
 /**
  * @file port_sys.c
  * @author dotc (dotchan@qq.com)
- * @brief 
+ * @brief
  * @version 0.1
  * @date 2024-11-05
- * 
+ *
  * @copyright Copyright (c) 2024
- * 
+ *
  */
 
 /* ==================== [Includes] ========================================== */
@@ -50,13 +50,12 @@ void xf_sys_reboot(void)
 
 /* ==================== [Static Functions] ================================== */
 
-
 static xf_us_t _port_xf_sys_get_us(void)
 {
     struct timespec current_time;
     clock_gettime(CLOCK_MONOTONIC, &current_time);
 
-    return current_time.tv_sec*(1000*1000) + current_time.tv_nsec/1000;
+    return current_time.tv_sec * (1000 * 1000) + current_time.tv_nsec / 1000;
 }
 
 static int port_sys_init()
