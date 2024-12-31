@@ -72,8 +72,14 @@ if ($VENV_RESULT -eq 1 -or $VENV_RESULT -eq 2) {
 
 # Upgrade pip and install necessary packages
 & python -m pip install --upgrade pip
-& pip install xf_build==0.4.1
+& pip install xf_build==0.4.2
 & pip install windows-curses
+
+$pluginRequirePath = "$env:XF_ROOT\plugins\$env:XF_TARGET\requirements.txt"
+if (Test-Path $pluginRequirePath) {
+    Write-Host "Find $pluginRequirePath, installing..."
+    & pip install -r $pluginRequirePath
+}
 
 Write-Output "XF_ROOT:           $Env:XF_ROOT"
 Write-Output "XF_TARGET:         $Env:XF_TARGET"

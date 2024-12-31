@@ -30,16 +30,12 @@ static void task(xf_task_t task);
 
 /* ==================== [Static Variables] ================================== */
 
-static xf_ntask_sem_t sem;
-
 /* ==================== [Macros] ============================================ */
 
 /* ==================== [Global Functions] ================================== */
 
 void xf_main(void)
 {
-    xf_ntask_sem_init(&sem, 0);
-
     xf_ttask_create_loop(task, (void *)1, 1, 10);
     xf_ttask_create(task, (void *)2, 1, 10, 1);
 }

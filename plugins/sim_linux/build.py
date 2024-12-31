@@ -54,10 +54,10 @@ class sim_linux():
         api.cd_to_target()
         self.runCmd(["xmake", "r"])
 
-    def export(self, args):
+    def export(self, name, args):
         pass
 
-    def update(self, args):
+    def update(self, name, args):
         pass
 
     def menuconfig(self, args):

@@ -1,12 +1,12 @@
 /**
  * @file port_common.c
  * @author catcatBlue (catcatblue@qq.com)
- * @brief 
+ * @brief
  * @version 1.0
  * @date 2024-09-12
- * 
+ *
  * @copyright Copyright (c) 2024
- * 
+ *
  */
 
 /* ==================== [Includes] ========================================== */

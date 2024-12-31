@@ -87,7 +87,7 @@ static xf_err_t port_spi_open(xf_hal_dev_t *dev)
     dev->platform_data = spi;
 
     cJSON_AddNumberToObject(json, "id",                 spi->id);
-    cJSON_AddBoolToObject(  json, "enable",             0);
+    cJSON_AddBoolToObject(json, "enable",             0);
     cJSON_AddNumberToObject(json, "bit_order",          0);
     cJSON_AddNumberToObject(json, "mode",               0);
     cJSON_AddNumberToObject(json, "data_width",         0);

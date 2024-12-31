@@ -31,3 +31,8 @@ config XF_HEAP_BYTE_ALIGNMENT
 config XF_HEAP_STATIC_SIZE
     int "static array size for xf_heap"
     default 4096
+
+config XF_HEAP_PORT_ENABLE
+    bool "Whether to use the default port code"
+    default y
+

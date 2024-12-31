@@ -1,4 +1,3 @@
-import xf_build
 from xf_build import api
 import os
 import shutil
@@ -78,10 +77,10 @@ class bs21():
         for port in ports:
             os.system(f"burn {framware_path}  -p {port.device}")
 
-    def export(self, args):
+    def export(self, name, args):
         pass
 
-    def update(self, args):
+    def update(self, name, args):
         pass
 
     def menuconfig(self, args):

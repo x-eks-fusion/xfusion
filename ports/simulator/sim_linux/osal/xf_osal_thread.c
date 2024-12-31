@@ -155,7 +155,7 @@ xf_err_t xf_osal_thread_delete(xf_osal_thread_t thread)
     pthread_mutex_unlock(&s_mutex_list);
     int ret = pthread_cancel(osal_thread->pid);
     XF_CHECK(ret != 0, NULL, TAG, "pthread_cancel err:%d", errno);
-    
+
     free(osal_thread);
     return XF_OK;
 }

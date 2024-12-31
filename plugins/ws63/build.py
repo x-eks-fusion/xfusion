@@ -18,8 +18,6 @@ SDK_OUTPUT_PATH: Path = SDK_PATH / "output"
 XF_PROJECT_BUILD_PATH: Path = api.PROJECT_BUILD_PATH
 
 
-
-
 class ws63():
 
     def build(self, args):
@@ -50,11 +48,9 @@ class ws63():
             except:
                 print(f"copy sdk firmware failed!", sys.exc_info())
 
-
     def clean(self, args):
         if SDK_OUTPUT_PATH.exists() == True:
             shutil.rmtree(SDK_OUTPUT_PATH)
-
 
     def flash(self, args):
         framware_path = "./build/sdk/fwpkg/ws63-liteos-app/ws63-liteos-app_all.fwpkg"
@@ -63,13 +59,16 @@ class ws63():
             return
         try:
             # 检查命令是否可用
-            subprocess.run(['burn', '--help'], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run(['burn', '--help'], check=True,
+                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         except FileNotFoundError:
             # 尝试安装相应的包
-            subprocess.run([sys.executable, '-m', 'pip', 'install', "xf_burn_tools"], check=True)
+            subprocess.run([sys.executable, '-m', 'pip',
+                           'install', "xf_burn_tools"], check=True)
             # 再次检查命令
             try:
-                subprocess.run(['burn', '--help'], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                subprocess.run(['burn', '--help'], check=True,
+                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             except FileNotFoundError:
                 logging.error("burn command not found")
         ports = serial.tools.list_ports.comports()
@@ -79,14 +78,11 @@ class ws63():
         for port in ports:
             os.system(f"burn {framware_path}  -p {port.device}")
 
+    def export(self, name, args):
+        print(args)
 
-    def export(self, args):
+    def update(self, name, args):
         pass
-
-
-    def update(self, args):
-        pass
-
 
     def menuconfig(self, args):
         # 第一个拓展参数为 sub 时 打开SDK 侧 menuconfig

@@ -60,7 +60,7 @@ void xf_main(void)
         XF_LOGE(TAG, "xf queue create error");
         return;
     }
-    
+
     xf_err_t err;
     xf_osal_queue_reset(queue);
     if (err != XF_OK) {

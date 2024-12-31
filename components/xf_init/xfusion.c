@@ -13,8 +13,11 @@
 
 #include "xfusion.h"
 #include "xf_task.h"
-#include "xf_osal.h"
 #include "xf_sys.h"
+
+#if XF_OSAL_ENABLE
+#include "xf_osal.h"
+#endif
 
 /* ==================== [Defines] =========================================== */
 

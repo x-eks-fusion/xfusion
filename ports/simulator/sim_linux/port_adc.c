@@ -74,10 +74,9 @@ static xf_err_t port_adc_open(xf_hal_dev_t *dev)
     dev->platform_data = adc;
 
     cJSON_AddNumberToObject(json, "id",         adc->id);
-    cJSON_AddBoolToObject(  json, "enable",     0);
+    cJSON_AddBoolToObject(json, "enable",     0);
     cJSON_AddNumberToObject(json, "resolution", 0);
-    cJSON_AddNumberToObject(json, "sample_rate",0);
-
+    cJSON_AddNumberToObject(json, "sample_rate", 0);
 
     return XF_OK;
 }
