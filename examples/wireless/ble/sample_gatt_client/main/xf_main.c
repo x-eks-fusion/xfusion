@@ -50,7 +50,7 @@ static xf_ble_uuid_info_t app_uuid = {
     .type = XF_BLE_UUID_TYPE_16,
     .uuid16 = 0x0000
 };
-static uint8_t s_app_id = 0;
+static uint8_t s_app_id = XF_BLE_GATT_APP_ID_INVALID;
 static uint8_t s_conn_id = 0;
 static bool is_need_discovery = false;
 static bool is_discovery_cmpl = false;

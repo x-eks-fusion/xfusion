@@ -20,14 +20,10 @@
 #define DEFAULT_INPUT_IO_MODE           XF_HAL_GPIO_PULL_UP
 #define DEFAULT_INPUT_IO_TRIGGER_TYPE   XF_HAL_GPIO_INTR_TYPE_ANY
 
-#define DEFAULT_BLE_GAP_ADV_ID              0x01
-
 /* ble 最小广播间隔 */
 #define DEFAULT_BLE_GAP_ADV_MIN_INTERVAL    0x30
 /* ble 最大广播间隔 */
 #define DEFAULT_BLE_GAP_ADV_MAX_INTERVAL    0x60
-/* ble 广播 id */
-#define DEFAULT_BLE_GAP_ADV_ID              0x01
 /* ble 广播持续时间 */
 #define DEFAULT_BLE_GAP_ADV_DURATION_FOREVER 0
 
@@ -57,8 +53,61 @@ static void sample_gpio_irq(xf_gpio_num_t gpio_num, bool level, void *user_data)
 /* ==================== [Static Variables] ================================== */
 
 static uint8_t s_gatts_device_name[] = "XF_BLE_MOUSE";
-static uint8_t s_app_id = 0;
+static uint8_t s_adv_id = XF_BLE_ADV_ID_INVALID;
+static uint8_t s_app_id = XF_BLE_GATT_APP_ID_INVALID;
 static uint16_t s_conn_id = 0;
+
+static xf_ble_gap_adv_param_t s_adv_param = {
+    /* 广播间隔 [N * 0.625ms] */
+    .min_interval = DEFAULT_BLE_GAP_ADV_MIN_INTERVAL,
+    .max_interval = DEFAULT_BLE_GAP_ADV_MAX_INTERVAL,
+
+    // 广播类型
+    .adv_type = XF_BLE_GAP_ADV_TYPE_CONN_SCAN_UNDIR,
+    .own_addr =
+    {
+        .type = XF_BLE_ADDR_TYPE_PUBLIC_DEV, // 本端地址类型
+        .addr = {0x0},                       // 本端地址
+    },
+    .peer_addr =
+    {
+        .type = XF_BLE_ADDR_TYPE_PUBLIC_DEV, // 对端地址类型
+        .addr = { 0x0 },                    // 对端地址
+    },
+    .channel_map = XF_BLE_GAP_ADV_CH_ALL,   // 使用37/38/39三个通道
+    .adv_filter_policy = XF_BLE_GAP_ADV_FILTER_ALLOW_SCAN_ANY_CON_ANY,
+    .duration = DEFAULT_BLE_GAP_ADV_DURATION_FOREVER,
+    .tx_power = 1,  // 发送功率,单位dbm,范围-127~20
+};
+
+static xf_ble_gap_adv_data_t s_adv_data = {
+    .adv_struct_set = (xf_ble_gap_adv_struct_t [])
+    {
+        {
+            .ad_type = XF_BLE_ADV_STRUCT_TYPE_FLAGS,
+            .ad_data_len = sizeof(uint8_t),
+            .ad_data.flag = (1 << 2) | (1 << 0),
+            .is_ptr = false,
+        }, {
+            .ad_type = XF_BLE_ADV_STRUCT_TYPE_LOCAL_NAME_ALL,
+            .ad_data_len = sizeof(s_gatts_device_name),
+            .ad_data.local_name = s_gatts_device_name,
+            .is_ptr = true,
+        }, {
+            .ad_type = XF_BLE_ADV_STRUCT_TYPE_APPEARANCE,
+            .ad_data_len = sizeof(xf_ble_appearance_t),
+            .ad_data.appearance = XF_BLE_APPEARANCE_HID_MOUSE,
+            .is_ptr = false,
+        },
+        {0}
+    },
+    .scan_rsp_struct_set = (xf_ble_gap_adv_struct_t [])
+    {
+        {
+            0
+        }
+    },
+};
 
 static usb_hid_report_mouse_t s_hid_report_mouse = {0};
 
@@ -293,13 +342,8 @@ void xf_main(void)
     XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
              "START service failed:%#X", ret);
 
-    /* 设置广播数据及参数 */
-    sample_ble_set_adv_data();
-    sample_ble_set_adv_param();
-    XF_LOGI(TAG, "CONFIG ADV CMPL");
-
-    // 开启广播
-    ret = xf_ble_gap_start_adv(DEFAULT_BLE_GAP_ADV_ID);
+    /* 设置广播数据及参数，开启广播 */
+    ret = xf_ble_gap_start_adv(&s_adv_id, &s_adv_param, &s_adv_data);
     XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
              "STAR ADV failed:%#X", ret);
     XF_LOGI(TAG, "STAR ADV CMPL");
@@ -354,70 +398,11 @@ static xf_err_t sample_ble_gap_event_cb(
                 param.disconnect.peer_addr.type,
                 XF_BLE_ADDR_EXPAND_TO_ARG(param.disconnect.peer_addr.addr));
         XF_LOGI(TAG, "It will restart ADV");
-        xf_ble_gap_start_adv(DEFAULT_BLE_GAP_ADV_ID);
+        xf_ble_gap_start_adv(&s_adv_id, &s_adv_param, &s_adv_data);
     } break;
     default:
         break;
     }
 
     return XF_OK;
-}
-
-static void sample_ble_set_adv_data(void)
-{
-    xf_ble_gap_adv_data_t adv_data = {
-        .adv_struct_set = (xf_ble_gap_adv_struct_t [])
-        {
-            {
-                .ad_type = XF_BLE_ADV_STRUCT_TYPE_FLAGS,
-                .ad_data_len = sizeof(uint8_t),
-                .ad_data.flag = (1 << 2) | (1 << 0),
-                .is_ptr = false,
-            }, {
-                .ad_type = XF_BLE_ADV_STRUCT_TYPE_LOCAL_NAME_ALL,
-                .ad_data_len = sizeof(s_gatts_device_name),
-                .ad_data.local_name = s_gatts_device_name,
-                .is_ptr = true,
-            }, {
-                .ad_type = XF_BLE_ADV_STRUCT_TYPE_APPEARANCE,
-                .ad_data_len = sizeof(xf_ble_appearance_t),
-                .ad_data.appearance = XF_BLE_APPEARANCE_HID_MOUSE,
-                .is_ptr = false,
-            },
-            {0}
-        },
-        .scan_rsp_struct_set = (xf_ble_gap_adv_struct_t [])
-        {
-            {
-                0
-            }
-        },
-    };
-    xf_ble_gap_set_adv_data(DEFAULT_BLE_GAP_ADV_ID, &adv_data);
-}
-static void sample_ble_set_adv_param(void)
-{
-    xf_ble_gap_adv_param_t adv_param = {
-        /* 广播间隔 [N * 0.625ms] */
-        .min_interval = DEFAULT_BLE_GAP_ADV_MIN_INTERVAL,
-        .max_interval = DEFAULT_BLE_GAP_ADV_MAX_INTERVAL,
-
-        // 广播类型
-        .adv_type = XF_BLE_GAP_ADV_TYPE_CONN_SCAN_UNDIR,
-        .own_addr =
-        {
-            .type = XF_BLE_ADDR_TYPE_PUBLIC_DEV, // 本端地址类型
-            .addr = {0x0},                       // 本端地址
-        },
-        .peer_addr =
-        {
-            .type = XF_BLE_ADDR_TYPE_PUBLIC_DEV, // 对端地址类型
-            .addr = { 0x0 },                    // 对端地址
-        },
-        .channel_map = XF_BLE_GAP_ADV_CH_ALL,   // 使用37/38/39三个通道
-        .adv_filter_policy = XF_BLE_GAP_ADV_FILTER_ALLOW_SCAN_ANY_CON_ANY,
-        .duration = DEFAULT_BLE_GAP_ADV_DURATION_FOREVER,
-        .tx_power = 1,  // 发送功率,单位dbm,范围-127~20
-    };
-    xf_ble_gap_set_adv_param(DEFAULT_BLE_GAP_ADV_ID, &adv_param);
 }

@@ -119,6 +119,11 @@ typedef uint16_t xf_ble_appearance_t;
 #define XF_BLE_ADV_DEVICE_ID_VENDOR_ID_SOURCE                   0x0204
 
 /**
+ * @brief 无效广播 ID
+ */
+#define XF_BLE_ADV_ID_INVALID   (0)
+
+/**
  * @brief BLE GAP 链接角色类型
  */
 typedef enum {
