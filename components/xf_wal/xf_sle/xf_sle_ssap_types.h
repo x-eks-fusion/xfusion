@@ -133,7 +133,7 @@ typedef struct {
 } xf_sle_ssap_exchange_info_t;
 
 
-#define XF_SLE_COMMON_EVT_ALL       (-1)        /*!< 所有事件 */
+#define XF_SLE_EVT_ALL       (-1)        /*!< 所有事件 */
 /**
  * @brief SLE SSAP 通用事件类型
  */
