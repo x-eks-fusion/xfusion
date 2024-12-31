@@ -49,9 +49,9 @@ typedef struct __packed _usb_hid_report_mouse_t {
 
 static void sample_ble_set_adv_data(void);
 static void sample_ble_set_adv_param(void);
-static xf_err_t sample_ble_gatts_event_cb(
-    xf_ble_gatts_event_t event,
-    xf_ble_gatts_evt_cb_param_t param);
+static xf_err_t sample_ble_gap_event_cb(
+    xf_ble_gap_event_t event,
+    xf_ble_gap_evt_cb_param_t param);
 static void sample_gpio_irq(xf_gpio_num_t gpio_num, bool level, void *user_data);
 
 /* ==================== [Static Variables] ================================== */
@@ -266,10 +266,10 @@ void xf_main(void)
     xf_hal_gpio_set_intr_cb(DEFAULT_INPUT_IO, sample_gpio_irq, NULL);
     xf_hal_gpio_set_intr_enable(DEFAULT_INPUT_IO);
 
-    // 注册 gatts 事件回调
-    ret = xf_ble_gatts_event_cb_register(sample_ble_gatts_event_cb, XF_BLE_COMMON_EVT_ALL);
+    // 注册 GAP 事件回调
+    ret = xf_ble_gap_event_cb_register(sample_ble_gap_event_cb, XF_BLE_EVT_ALL);
     XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
-             "REGISTER event cb failed:%#X", ret);
+             "REGISTER common event cb failed:%#X", ret);
 
     /* 设置本地名称、外观 */
     xf_ble_gap_set_local_name(s_gatts_device_name, sizeof(s_gatts_device_name));
@@ -328,15 +328,15 @@ static void sample_gpio_irq(xf_gpio_num_t gpio_num, bool level, void *user_data)
              "send_notify_indicate failed:%#X", ret);
 }
 
-static xf_err_t sample_ble_gatts_event_cb(
-    xf_ble_gatts_event_t event,
-    xf_ble_gatts_evt_cb_param_t param)
+static xf_err_t sample_ble_gap_event_cb(
+    xf_ble_gap_event_t event,
+    xf_ble_gap_evt_cb_param_t param)
 {
     UNUSED(s_app_id);
     UNUSED(param);
     switch (event) {
     /* 事件: 连接  */
-    case XF_BLE_COMMON_EVT_CONNECT: {
+    case XF_BLE_GAP_EVT_CONNECT: {
         XF_LOGI(TAG, "EV:peer connect:s_app_id:%d,conn_id:%d,"
                 "addr_type:%d,addr:"XF_BLE_ADDR_PRINT_FMT,
                 s_app_id, param.connect.conn_id,
@@ -346,7 +346,7 @@ static xf_err_t sample_ble_gatts_event_cb(
         s_conn_id = param.connect.conn_id;
     } break;
     /* 事件: 断连  */
-    case XF_BLE_COMMON_EVT_DISCONNECT: {
+    case XF_BLE_GAP_EVT_DISCONNECT: {
         XF_LOGI(TAG, "EV:peer disconnect:s_app_id:%d,conn_id:%d,reason:%u,"
                 "addr_type:%d,addr:"XF_BLE_ADDR_PRINT_FMT,
                 s_app_id, param.disconnect.conn_id,

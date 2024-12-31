@@ -145,25 +145,6 @@ typedef struct {
  * @brief BLE GATTC 客户端事件回调参数
  */
 typedef union {
-    xf_ble_common_evt_param_connect_t connect;  /*!< 连接事件的参数，
-                                                 *  @ref xf_ble_common_evt_param_connect_t
-                                                 *  XF_BLE_COMMON_EVT_CONNECT
-                                                 */
-    xf_ble_common_evt_param_disconnect_t disconnect;   
-                                                /*!< 断连事件的参数，
-                                                 *  @ref xf_ble_common_evt_param_disconnect_t
-                                                 *  XF_BLE_COMMON_EVT_DISCONNECT
-                                                 */
-    xf_ble_common_evt_param_scan_result_t scan_result; 
-                                                /*!< 收到扫描结果事件的参数，
-                                                 *  @ref xf_ble_common_evt_param_scan_result_t
-                                                 *  XF_BLE_COMMON_EVT_SCAN_RESULT
-                                                 */
-    xf_ble_common_evt_conn_param_upd_t conn_param_upd;
-                                                /*!< 连接参数更新事件的参数，
-                                                 *  @ref xf_ble_common_evt_conn_param_upd_t
-                                                 *  XF_BLE_COMMON_EVT_CONN_PARAMS_UPDATE,
-                                                 */
     xf_ble_gattc_evt_param_exchange_mtu_t mtu;  /*!< MTU 协商事件的参数，
                                                  *  @ref xf_ble_gattc_evt_param_exchange_mtu_t
                                                  *  XF_BLE_GATTC_EVT_EXCHANGE_MTU,
@@ -187,6 +168,32 @@ typedef union {
                                                  */
 } xf_ble_gattc_evt_cb_param_t;
 
+/**
+ * @brief BLE GATTC 事件
+ */
+typedef enum {
+    XF_BLE_GATTC_EVT_EXCHANGE_MTU,              /*!< MTU 协商事件 */
+    XF_BLE_GATTC_EVT_WRITE_CFM,                 /*!< 写确认事件 */
+    XF_BLE_GATTC_EVT_READ_CFM,                  /*!< 读确认事件 */
+    XF_BLE_GATTC_EVT_NOTIFICATION,              /*!< 收到通知事件 */
+    XF_BLE_GATTC_EVT_INDICATION,                /*!< 收到指示事件 */
+    _XF_BLE_GATTC_EVT_MAX,                      /*!< BLE GATTC 事件枚举结束值 */
+} xf_ble_gattc_event_t;
+
+/**
+ * @brief BLE GATTC 事件回调函数原型
+ *
+ * @param event 事件，见 @ref xf_ble_gattc_event_t
+ * @param param 事件回调参数，见 @ref xf_ble_gattc_evt_cb_param_t
+ * @return xf_err_t
+ *      - XF_OK                 成功
+ *      - XF_FAIL               失败
+ *      - (OTHER)               @ref xf_err_t
+ */
+typedef xf_err_t (*xf_ble_gattc_event_cb_t)(
+    xf_ble_gattc_event_t event,
+    xf_ble_gattc_evt_cb_param_t param);
+    
 /* ==================== [Global Prototypes] ================================= */
 
 /* ==================== [Macros] ============================================ */

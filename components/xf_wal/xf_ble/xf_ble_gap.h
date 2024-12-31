@@ -313,6 +313,22 @@ xf_err_t xf_ble_gap_get_bond_list(
 xf_err_t xf_ble_gap_set_security_param(
     xf_ble_sm_param_type_t param_type, void *value, uint8_t len);
 
+/**
+ * @brief BLE GAP 事件回调注册
+ *
+ * @param evt_cb 事件回调，见 @ref xf_ble_gap_event_cb_t
+ * @param events 事件，见 @ref xf_ble_gap_event_t
+ * @note 当前仅支持所有事件注册在同一个回调，暂不支持指定事件对应单独的回调，
+ * 所以 参数 'events' 填 0 即可
+ * @return xf_err_t
+ *      - XF_OK                 成功
+ *      - XF_FAIL               失败
+ *      - (OTHER)               @ref xf_err_t
+ */
+xf_err_t xf_ble_gap_event_cb_register(
+    xf_ble_gap_event_cb_t evt_cb,
+    xf_ble_gap_event_t events);
+
 /* ==================== [Macros] ============================================ */
 
 #ifdef __cplusplus

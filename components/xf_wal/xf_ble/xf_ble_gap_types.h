@@ -426,7 +426,7 @@ typedef struct {
     uint16_t conn_id;                       /*!< 链接(连接) ID */
     xf_ble_gap_link_role_type_t link_role;  /*!< 链路角色，见 @ref xf_ble_gap_link_role_type_t */
     xf_ble_addr_t peer_addr;                /*!< 对端地址，见 @ref xf_ble_addr_t */
-} xf_ble_common_evt_param_connect_t;
+} xf_ble_gap_evt_param_connect_t;
 
 /**
  * @brief BLE 断连事件的参数
@@ -435,7 +435,7 @@ typedef struct {
     uint16_t conn_id;                       /*!< 链接(连接) ID */
     xf_ble_addr_t peer_addr;                /*!< 对端地址，见 @ref xf_ble_addr_t */
     xf_ble_gap_disconnect_reason_t reason;  /*!< 断连原因，见 @ref xf_ble_gap_disconnect_reason_t */
-} xf_ble_common_evt_param_disconnect_t;
+} xf_ble_gap_evt_param_disconnect_t;
 
 /**
  * @brief BLE 配对结束事件的参数
@@ -443,7 +443,7 @@ typedef struct {
 typedef struct {
     uint16_t conn_id;                           /*!< 链接 (连接) ID */
     xf_ble_addr_t peer_addr;                    /*!< 对端地址， @ref xf_ble_addr_t */
-} xf_ble_common_evt_param_pair_end_t;
+} xf_ble_gap_evt_param_pair_end_t;
 
 /**
  * @brief BLE 收到扫描结果事件的参数
@@ -454,7 +454,7 @@ typedef struct {
     xf_ble_gap_scanned_adv_type_t adv_type;     /*!< 扫到的设备广播类型，见 @ref xf_ble_gap_scanned_adv_type_t */
     uint8_t adv_data_len;                       /*!< 广播数据的长度 (指整个广播数据 AdvData ) */
     uint8_t *adv_data;                          /*!< 广播数据 (指整个广播数据 AdvData ) */
-} xf_ble_common_evt_param_scan_result_t;
+} xf_ble_gap_evt_param_scan_result_t;
 
 /**
  * @brief BLE 连接参数更新事件的参数
@@ -464,7 +464,63 @@ typedef struct {
     uint16_t interval;                          /*!< 链接间隔，单位 slot */
     uint16_t latency;                           /*!< 链接延迟，单位 slot */
     uint16_t timeout;                           /*!< 链接超时 (断连) 时间 */
-} xf_ble_common_evt_conn_param_upd_t;
+} xf_ble_gap_evt_conn_param_upd_t;
+
+/**
+ * @brief BLE GAP 事件回调参数
+ */
+typedef union {
+    xf_ble_gap_evt_param_connect_t connect;  /*!< 连接事件的参数，
+                                                 *  @ref xf_ble_gap_evt_param_connect_t
+                                                 *  XF_BLE_GAP_EVT_CONNECT
+                                                 */
+    xf_ble_gap_evt_param_disconnect_t disconnect;   
+                                                /*!< 断连事件的参数，
+                                                 *  @ref xf_ble_gap_evt_param_disconnect_t
+                                                 *  XF_BLE_GAP_EVT_DISCONNECT
+                                                 */
+    xf_ble_gap_evt_param_scan_result_t scan_result; 
+                                                /*!< 收到扫描结果事件的参数，
+                                                 *  @ref xf_ble_gap_evt_param_scan_result_t
+                                                 *  XF_BLE_GAP_EVT_SCAN_RESULT
+                                                 */
+    xf_ble_gap_evt_conn_param_upd_t conn_param_upd;
+                                                /*!< 连接参数更新事件的参数，
+                                                 *  @ref xf_ble_gap_evt_conn_param_upd_t
+                                                 *  XF_BLE_GAP_EVT_CONN_PARAMS_UPDATE,
+                                                 */
+    
+    xf_ble_gap_evt_param_pair_end_t pair_end;/*!< 配对结束事件的参数，
+                                                 *  @ref xf_ble_gap_evt_param_pair_end_t
+                                                 *  XF_BLE_GAP_EVT_PAIR_END
+                                                 */
+} xf_ble_gap_evt_cb_param_t;
+
+/**
+ * @brief BLE GAP 事件
+ */
+typedef enum {
+    XF_BLE_GAP_EVT_CONNECT,                     /*!< 连接事件 */
+    XF_BLE_GAP_EVT_DISCONNECT,                  /*!< 断连事件 */
+    XF_BLE_GAP_EVT_SCAN_RESULT,                 /*!< 收到扫描结果事件 */
+    XF_BLE_GAP_EVT_PAIR_END,                    /*!< 配对结束事件 */
+    XF_BLE_GAP_EVT_CONN_PARAMS_UPDATE,          /*!< 连接参数更新事件 */
+    _XF_BLE_GAP_EVT_MAX,                        /*!< BLE GAP 事件枚举结束值 */
+} xf_ble_gap_event_t;
+
+/**
+ * @brief BLE GAP 事件回调函数原型
+ *
+ * @param event 事件，见 @ref xf_ble_gap_event_t
+ * @param param 事件回调参数，见 @ref xf_ble_gap_evt_cb_param_t
+ * @return xf_err_t
+ *      - XF_OK                 成功
+ *      - XF_FAIL               失败
+ *      - (OTHER)               @ref xf_err_t
+ */
+typedef xf_err_t (*xf_ble_gap_event_cb_t)(
+    xf_ble_gap_event_t event,
+    xf_ble_gap_evt_cb_param_t param);
 
 /* ==================== [Global Prototypes] ================================= */
 

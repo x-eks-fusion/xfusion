@@ -171,24 +171,6 @@ typedef struct {
  * @brief GATT 服务端事件回调参数
  */
 typedef union {
-    xf_ble_common_evt_param_connect_t connect;  /*!< 连接事件的参数，
-                                                 *  @ref xf_ble_common_evt_param_connect_t
-                                                 *  XF_BLE_COMMON_EVT_CONNECT
-                                                 */
-    xf_ble_common_evt_param_disconnect_t disconnect;   
-                                                /*!< 断连事件的参数，
-                                                 *  @ref xf_ble_common_evt_param_disconnect_t
-                                                 *  XF_BLE_COMMON_EVT_DISCONNECT
-                                                 */
-    xf_ble_common_evt_param_pair_end_t pair_end;/*!< 配对结束事件的参数，
-                                                 *  @ref xf_ble_common_evt_param_pair_end_t
-                                                 *  XF_BLE_COMMON_EVT_PAIR_END
-                                                 */
-    xf_ble_common_evt_conn_param_upd_t conn_param_upd;
-                                                /*!< 连接参数更新事件的参数，
-                                                 *  @ref xf_ble_common_evt_conn_param_upd_t
-                                                 *  XF_BLE_COMMON_EVT_CONN_PARAMS_UPDATE,
-                                                 */
     xf_ble_gatts_evt_param_exchange_mtu_t mtu;  /*!< MTU 协商事件的参数，
                                                  *  @ref xf_ble_gatts_evt_param_exchange_mtu_t
                                                  *  XF_BLE_GATTS_EVT_EXCHANGE_MTU,
@@ -204,6 +186,30 @@ typedef union {
      *  XF_BLE_GATTS_EVT_WRITE_REQ
      */
 } xf_ble_gatts_evt_cb_param_t;
+
+/**
+ * @brief BLE GATTS 事件
+ */
+typedef enum {                       
+    XF_BLE_GATTS_EVT_EXCHANGE_MTU,              /*!< MTU 协商事件 */
+    XF_BLE_GATTS_EVT_READ_REQ,                  /*!< 接收到读请求事件 */
+    XF_BLE_GATTS_EVT_WRITE_REQ,                 /*!< 接收到写请求事件 */
+    _XF_BLE_GATTS_EVT_MAX,                      /*!< BLE GATTS 事件枚举结束值 */
+} xf_ble_gatts_event_t;
+
+/**
+ * @brief BLE GATTS 事件回调函数原型
+ *
+ * @param event 事件，见 @ref xf_ble_gatts_event_t
+ * @param param 事件回调参数，见 @ref xf_ble_gatts_evt_cb_param_t
+ * @return xf_err_t
+ *      - XF_OK                 成功
+ *      - XF_FAIL               失败
+ *      - (OTHER)               @ref xf_err_t
+ */
+typedef xf_err_t (*xf_ble_gatts_event_cb_t)(
+    xf_ble_gatts_event_t event,
+    xf_ble_gatts_evt_cb_param_t param);
 
 /* ==================== [Global Prototypes] ================================= */
 

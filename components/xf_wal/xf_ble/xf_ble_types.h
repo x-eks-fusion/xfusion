@@ -184,38 +184,7 @@ typedef union _xf_ble_var_uintptr_t {
     uint32_t    array_u32[sizeof(uintptr_t) / sizeof(uint32_t)];
 } xf_ble_var_uintptr_t;
 
-#define XF_BLE_COMMON_EVT_ALL       (-1)    /*!< 所有事件 */
-/**
- * @brief BLE 通用事件
- */
-typedef enum {
-    XF_BLE_COMMON_EVT_CONNECT,              /*!< 连接事件 */
-    XF_BLE_COMMON_EVT_DISCONNECT,           /*!< 断连事件 */
-    XF_BLE_COMMON_EVT_SCAN_RESULT,          /*!< 收到扫描结果事件 */
-    XF_BLE_COMMON_EVT_PAIR_END,             /*!< 配对结束事件 */
-    XF_BLE_COMMON_EVT_CONN_PARAMS_UPDATE,   /*!< 连接参数更新事件 */
-    _XF_BLE_COMMON_EVT_ENUM_END,            /*!< BLE 通用事件枚举结束值 */
-} xf_ble_common_event_t;
-
-/**
- * @brief BLE GATTS 事件
- */
-typedef enum {                       
-    XF_BLE_GATTS_EVT_EXCHANGE_MTU = _XF_BLE_COMMON_EVT_ENUM_END,/*!< MTU 协商事件 */
-    XF_BLE_GATTS_EVT_READ_REQ,                                  /*!< 接收到读请求事件 */
-    XF_BLE_GATTS_EVT_WRITE_REQ,                                 /*!< 接收到写请求事件 */
-} xf_ble_gatts_event_t;
-
-/**
- * @brief BLE GATTC 事件
- */
-typedef enum {
-    XF_BLE_GATTC_EVT_EXCHANGE_MTU = _XF_BLE_COMMON_EVT_ENUM_END,/*!< MTU 协商事件 */
-    XF_BLE_GATTC_EVT_WRITE_CFM,                                 /*!< 写确认事件 */
-    XF_BLE_GATTC_EVT_READ_CFM,                                  /*!< 读确认事件 */
-    XF_BLE_GATTC_EVT_NOTIFICATION,                              /*!< 收到通知事件 */
-    XF_BLE_GATTC_EVT_INDICATION,                                /*!< 收到指示事件 */
-} xf_ble_gattc_event_t;
+#define XF_BLE_EVT_ALL       (-1)    /*!< 所有事件 */
 
 /* ==================== [Global Prototypes] ================================= */
 

@@ -31,10 +31,13 @@
 /* ==================== [Static Prototypes] ================================= */
 
 static xf_err_t sample_ble_set_scan_param(void);
+static xf_err_t sample_ble_gap_event_cb(
+    xf_ble_gap_event_t event,
+    xf_ble_gap_evt_cb_param_t param);
 static xf_err_t sample_ble_gattc_event_cb(
     xf_ble_gattc_event_t event,
     xf_ble_gattc_evt_cb_param_t param);
-static xf_err_t gattc_event_scan_result_cb(xf_ble_gattc_evt_cb_param_t *param);
+static xf_err_t gap_event_scan_result_cb(xf_ble_gap_evt_cb_param_t *param);
 
 /* ==================== [Static Variables] ================================== */
 
@@ -69,8 +72,13 @@ void xf_main(void)
     // 使能 ble
     xf_ble_enable();
 
+    // 注册 GAP 事件回调
+    ret = xf_ble_gap_event_cb_register(sample_ble_gap_event_cb, XF_BLE_EVT_ALL);
+    XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
+             "REGISTER common event cb failed:%#X", ret);
+
     // 注册 gattc 事件回调
-    ret = xf_ble_gattc_event_cb_register(sample_ble_gattc_event_cb, XF_BLE_COMMON_EVT_ALL);
+    ret = xf_ble_gattc_event_cb_register(sample_ble_gattc_event_cb, XF_BLE_EVT_ALL);
     XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
              "REGISTER event cb failed:%#X", ret);
 
@@ -101,17 +109,17 @@ void xf_main(void)
 
 /* ==================== [Static Functions] ================================== */
 
-static xf_err_t sample_ble_gattc_event_cb(
-    xf_ble_gattc_event_t event,
-    xf_ble_gattc_evt_cb_param_t param)
+static xf_err_t sample_ble_gap_event_cb(
+    xf_ble_gap_event_t event,
+    xf_ble_gap_evt_cb_param_t param)
 {
     UNUSED(param);
     xf_err_t ret = XF_OK;
     switch (event) {
-    case XF_BLE_COMMON_EVT_SCAN_RESULT: {
-        ret = gattc_event_scan_result_cb(&param);
+    case XF_BLE_GAP_EVT_SCAN_RESULT: {
+        ret = gap_event_scan_result_cb(&param);
     } break;
-    case XF_BLE_COMMON_EVT_CONNECT: {
+    case XF_BLE_GAP_EVT_CONNECT: {
         s_conn_id = param.connect.conn_id;
         peer_addr = param.connect.peer_addr;
 
@@ -121,6 +129,20 @@ static xf_err_t sample_ble_gattc_event_cb(
                 XF_BLE_ADDR_EXPAND_TO_ARG(peer_addr.addr));
         is_need_discovery = true;
     } break;
+    default:
+        break;
+    }
+
+    return ret;
+}
+
+static xf_err_t sample_ble_gattc_event_cb(
+    xf_ble_gattc_event_t event,
+    xf_ble_gattc_evt_cb_param_t param)
+{
+    UNUSED(param);
+    xf_err_t ret = XF_OK;
+    switch (event) {
     case XF_BLE_GATTC_EVT_READ_CFM: {
         if (param.read_cfm.value_len != 0) {
             XF_LOGI(TAG, "EV:read CMPL:handle:%d", param.read_cfm.handle);
@@ -160,7 +182,7 @@ static xf_err_t sample_ble_set_scan_param(void)
     return xf_ble_gap_set_scan_param(&scan_param);
 }
 
-static xf_err_t gattc_event_scan_result_cb(xf_ble_gattc_evt_cb_param_t *param)
+static xf_err_t gap_event_scan_result_cb(xf_ble_gap_evt_cb_param_t *param)
 {
     xf_err_t ret = XF_OK;
     XF_LOGD(TAG, "EV:scan_result:ADV:addr_type:%d,addr:" XF_BLE_ADDR_PRINT_FMT

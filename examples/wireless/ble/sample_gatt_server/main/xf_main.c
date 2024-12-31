@@ -51,6 +51,10 @@ static void sample_ble_set_adv_data(void);
 
 static void sample_ble_set_adv_param(void);
 
+static xf_err_t sample_ble_gap_event_cb(
+    xf_ble_gap_event_t event,
+    xf_ble_gap_evt_cb_param_t param);
+
 static xf_err_t sample_ble_gatts_event_cb(
     xf_ble_gatts_event_t event,
     xf_ble_gatts_evt_cb_param_t param);
@@ -73,12 +77,12 @@ static xf_ble_gatts_service_t service_set[] = {
                 .chara_value = {
                     .value = chara_value_array[0],
                     .value_len = sizeof(chara_value_array[0]),
-                    .permission =
-                    (
-                    XF_BLE_GATT_ATTR_PERMISSION_READ
-                    | XF_BLE_GATT_ATTR_PERMISSION_WRITE
-                    ),
                 },
+                .permission =
+                (
+                XF_BLE_GATT_ATTR_PERMISSION_READ
+                | XF_BLE_GATT_ATTR_PERMISSION_WRITE
+                ),
                 .properties =
                     (
                         XF_BLE_GATT_CHARA_PROPERTY_READ
@@ -108,10 +112,15 @@ void xf_main(void)
     // 使能 ble
     xf_ble_enable();
 
-    // 注册 gatts 事件回调
-    ret = xf_ble_gatts_event_cb_register(sample_ble_gatts_event_cb, XF_BLE_COMMON_EVT_ALL);
+    // 注册 GAP 事件回调
+    ret = xf_ble_gap_event_cb_register(sample_ble_gap_event_cb, XF_BLE_EVT_ALL);
     XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
-             "REGISTER event cb failed:%#X", ret);
+             "REGISTER common event cb failed:%#X", ret);
+
+    // 注册 gatts 事件回调
+    ret = xf_ble_gatts_event_cb_register(sample_ble_gatts_event_cb, XF_BLE_EVT_ALL);
+    XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
+             "REGISTER gatts event cb failed:%#X", ret);
 
     /* 设置本地名称、外观 */
     xf_ble_gap_set_local_name(sample_gatts_device_name, sizeof(sample_gatts_device_name));
@@ -146,6 +155,59 @@ void xf_main(void)
 }
 
 /* ==================== [Static Functions] ================================== */
+
+static xf_err_t sample_ble_gap_event_cb(
+    xf_ble_gap_event_t event,
+    xf_ble_gap_evt_cb_param_t param)
+{
+    UNUSED(app_id);
+    UNUSED(param);
+    switch (event) {
+    /* 事件: 连接  */
+    case XF_BLE_GAP_EVT_CONNECT: {
+        XF_LOGI(TAG, "EV:peer connect:app_id:%d,conn_id:%d,"
+                "addr_type:%d,addr:"XF_BLE_ADDR_PRINT_FMT,
+                app_id, param.connect.conn_id,
+                param.connect.peer_addr.type,
+                XF_BLE_ADDR_EXPAND_TO_ARG(param.connect.peer_addr.addr));
+
+        xf_ble_sm_authen_req_t authen_req = XF_BLE_SM_AUTHEN_REQ_SC_MITM_BOND;
+        xf_ble_sm_io_cap_t io_capability = XF_BLE_SM_IO_CAP_NONE;
+        xf_ble_sm_authen_option_t authen_option = XF_BLE_SM_AUTHEN_OPTION_DISABLE;
+        xf_err_t ret = XF_OK;
+        ret = xf_ble_gap_set_security_param(
+                  XF_BLE_SM_PARAM_AUTHEN_REQ_MODE, &authen_req, sizeof(authen_req));
+        XF_CHECK(ret != XF_OK, ret, TAG,
+                 "set_security_param failed:%#X", ret);
+        ret = xf_ble_gap_set_security_param(
+                  XF_BLE_SM_PARAM_IO_CAP_MODE, &io_capability, sizeof(io_capability));
+        XF_CHECK(ret != XF_OK, ret, TAG,
+                 "set_security_param failed:%#X", ret);
+    } break;
+    case XF_BLE_GAP_EVT_PAIR_END: {
+        XF_LOGI(TAG, "EV:pair end:app_id:%d,conn_id:%d,"
+                "addr_type:%d,addr:"XF_BLE_ADDR_PRINT_FMT,
+                app_id, param.connect.conn_id,
+                param.connect.peer_addr.type,
+                XF_BLE_ADDR_EXPAND_TO_ARG(param.connect.peer_addr.addr));
+    } break;
+    /* 事件: 断连  */
+    case XF_BLE_GAP_EVT_DISCONNECT: {
+        XF_LOGI(TAG, "EV:peer disconnect:app_id:%d,conn_id:%d,reason:%u,"
+                "addr_type:%d,addr:"XF_BLE_ADDR_PRINT_FMT,
+                app_id, param.disconnect.conn_id,
+                param.disconnect.reason,
+                param.disconnect.peer_addr.type,
+                XF_BLE_ADDR_EXPAND_TO_ARG(param.disconnect.peer_addr.addr));
+        XF_LOGI(TAG, "It will restart ADV");
+        xf_ble_gap_start_adv(DEFAULT_BLE_GAP_ADV_ID);
+    } break;
+    default:
+        break;
+    }
+
+    return XF_OK;
+}
 
 static xf_err_t sample_ble_gatts_event_cb(
     xf_ble_gatts_event_t event,
@@ -194,45 +256,6 @@ static xf_err_t sample_ble_gatts_event_cb(
     case XF_BLE_GATTS_EVT_EXCHANGE_MTU: {
         XF_LOGI(TAG, "EV:mtu changed:app_id:%d,conn_id:%d,mtu_size:%d",
                 app_id, param.mtu.conn_id, param.mtu.mtu_size);
-    } break;
-    /* 事件: 连接  */
-    case XF_BLE_COMMON_EVT_CONNECT: {
-        XF_LOGI(TAG, "EV:peer connect:app_id:%d,conn_id:%d,"
-                "addr_type:%d,addr:"XF_BLE_ADDR_PRINT_FMT,
-                app_id, param.connect.conn_id,
-                param.connect.peer_addr.type,
-                XF_BLE_ADDR_EXPAND_TO_ARG(param.connect.peer_addr.addr));
-
-        xf_ble_sm_authen_req_t authen_req = XF_BLE_SM_AUTHEN_REQ_SC_MITM_BOND;
-        xf_ble_sm_io_cap_t io_capability = XF_BLE_SM_IO_CAP_NONE;
-        xf_ble_sm_authen_option_t authen_option = XF_BLE_SM_AUTHEN_OPTION_DISABLE;
-        xf_err_t ret = XF_OK;
-        ret = xf_ble_gap_set_security_param(
-                  XF_BLE_SM_PARAM_AUTHEN_REQ_MODE, &authen_req, sizeof(authen_req));
-        XF_CHECK(ret != XF_OK, ret, TAG,
-                 "set_security_param failed:%#X", ret);
-        ret = xf_ble_gap_set_security_param(
-                  XF_BLE_SM_PARAM_IO_CAP_MODE, &io_capability, sizeof(io_capability));
-        XF_CHECK(ret != XF_OK, ret, TAG,
-                 "set_security_param failed:%#X", ret);
-    } break;
-    case XF_BLE_COMMON_EVT_PAIR_END: {
-        XF_LOGI(TAG, "EV:pair end:app_id:%d,conn_id:%d,"
-                "addr_type:%d,addr:"XF_BLE_ADDR_PRINT_FMT,
-                app_id, param.connect.conn_id,
-                param.connect.peer_addr.type,
-                XF_BLE_ADDR_EXPAND_TO_ARG(param.connect.peer_addr.addr));
-    } break;
-    /* 事件: 断连  */
-    case XF_BLE_COMMON_EVT_DISCONNECT: {
-        XF_LOGI(TAG, "EV:peer disconnect:app_id:%d,conn_id:%d,reason:%u,"
-                "addr_type:%d,addr:"XF_BLE_ADDR_PRINT_FMT,
-                app_id, param.disconnect.conn_id,
-                param.disconnect.reason,
-                param.disconnect.peer_addr.type,
-                XF_BLE_ADDR_EXPAND_TO_ARG(param.disconnect.peer_addr.addr));
-        XF_LOGI(TAG, "It will restart ADV");
-        xf_ble_gap_start_adv(DEFAULT_BLE_GAP_ADV_ID);
     } break;
     default:
         break;

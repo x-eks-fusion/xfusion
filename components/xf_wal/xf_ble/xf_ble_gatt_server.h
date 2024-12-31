@@ -167,9 +167,6 @@ xf_err_t xf_ble_gatts_send_response(
  *      - XF_FAIL               失败
  *      - (OTHER)               @ref xf_err_t
  */
-typedef xf_err_t (*xf_ble_gatts_event_cb_t)(
-    xf_ble_gatts_event_t event,
-    xf_ble_gatts_evt_cb_param_t param);
 
 /**
  * @brief BLE GATTS 事件回调注册
