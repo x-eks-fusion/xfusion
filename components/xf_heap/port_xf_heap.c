@@ -12,6 +12,9 @@
 /* ==================== [Includes] ========================================== */
 
 #include "xf_heap/src/xf_heap.h"
+
+#if defined(CONFIG_XF_HEAP_PORT_ENABLE)
+
 #include "xf_init.h"
 
 /* ==================== [Defines] =========================================== */
@@ -41,3 +44,5 @@ static int port_xf_heap_init(void)
 }
 
 XF_INIT_EXPORT_BOARD(port_xf_heap_init);
+
+#endif
