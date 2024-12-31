@@ -80,7 +80,7 @@ if "%VENV_RESULT%"=="1" (
 )
 
 python.exe -m pip install --upgrade pip
-pip install xf_build==0.4.1
+pip install xf_build==0.4.2
 pip install windows-curses
 
 set "PLUGIN_REQUIRE_PATH=%XF_ROOT%\plugins\%XF_TARGET%\requirements.txt"
