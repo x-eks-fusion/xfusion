@@ -6,8 +6,6 @@ import os
 import shutil
 
 
-
-
 class esp32():
 
     def build(self, args):
@@ -38,29 +36,27 @@ class esp32():
         # 复制user_main里面的文件夹到components下面
         shutil.copytree(user_main, idf_components / "user_main")
         # 执行底层指令
-        api.exec_cmd(["idf.py", "build", *args])
-
+        cmd = ["idf.py", "build", *args]
+        os.system(" ".join(cmd))
 
     def clean(self, args):
         api.cd_to_target()
         idf_components = api.XF_TARGET_PATH / "components"
         if idf_components.exists():
             shutil.rmtree(idf_components)
-        api.exec_cmd(["idf.py", "fullclean"])
-
+        cmd = ["idf.py", "fullclean", *args]
+        os.system(" ".join(cmd))
 
     def flash(self, args):
         api.cd_to_target()
-        api.exec_cmd(["idf.py", "flash", *args])
+        cmd = ["idf.py", "flash", *args]
+        os.system(" ".join(cmd))
 
-
-    def export(self, args):
+    def export(self, name, args):
         print("export")
 
-
-    def update(self, args):
+    def update(self, name, args):
         print("update")
-
 
     def menuconfig(self, args):
         if args[0] == "sub":

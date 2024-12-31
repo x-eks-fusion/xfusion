@@ -39,7 +39,7 @@ static xf_task_pool_t npool = NULL;
 
 void xf_main(void)
 {
-    npool = xf_ntask_pool_create(MAX_WORKERS, 1000, 1);
+    npool = xf_ttask_pool_create(MAX_WORKERS, 1000, 1);
     xf_task_init_from_pool(npool, ntask, (void *)1, 1);
 }
 

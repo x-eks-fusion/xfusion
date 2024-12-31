@@ -83,6 +83,13 @@ python.exe -m pip install --upgrade pip
 pip install xf_build==0.4.1
 pip install windows-curses
 
+set "PLUGIN_REQUIRE_PATH=%XF_ROOT%\plugins\%XF_TARGET%\requirements.txt"
+
+if exist "%PLUGIN_REQUIRE_PATH%" (
+    echo Find %PLUGIN_REQUIRE_PATH%, installing...
+    pip install -r "%PLUGIN_REQUIRE_PATH%"
+)
+
 echo XF_ROOT:           %XF_ROOT%
 echo XF_TARGET:         %XF_TARGET%
 echo XF_VERSION:        %XF_VERSION%
