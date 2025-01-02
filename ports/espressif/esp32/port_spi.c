@@ -205,22 +205,19 @@ static int port_spi_read(xf_hal_dev_t *dev, void *buf, size_t count)
         spi->master_trans.rx_buffer = buf;
         spi->master_trans.user = spi;
         err = spi_device_queue_trans(spi->handle, &spi->master_trans,
-                               pdMS_TO_TICKS(spi->spi_config->timeout_ms));
+                                     pdMS_TO_TICKS(spi->spi_config->timeout_ms));
     } else {
         memset(&spi->slave_trans, 0, sizeof(spi_slave_transaction_t));
         spi->slave_trans.length = count * 8;
         spi->slave_trans.rx_buffer = buf;
         spi->slave_trans.user = spi;
         err = spi_slave_transmit(spi->port, &spi->slave_trans,
-                           pdMS_TO_TICKS(spi->spi_config->timeout_ms));
+                                 pdMS_TO_TICKS(spi->spi_config->timeout_ms));
     }
     /* 如果无错 -> 返回传入到大小（因为此处方法无返回实际大小（读或写） */
-    if(err == ESP_OK)
-    {
+    if (err == ESP_OK) {
         return count;
-    }
-    else if(err == ESP_FAIL)    // 有负数错误 -> 直接返回错误码
-    {
+    } else if (err == ESP_FAIL) { // 有负数错误 -> 直接返回错误码
         return err;
     }
     return -err;    // 有正数错误 -> 返回错误码的倒数（负数）
@@ -238,7 +235,7 @@ static int port_spi_write(xf_hal_dev_t *dev, const void *buf, size_t count)
         spi->master_trans.user = spi;
         ESP_LOGD(tag, "handle:%p", (spi->handle));
         err = spi_device_queue_trans(spi->handle, &spi->master_trans,
-                               pdMS_TO_TICKS(spi->spi_config->timeout_ms));
+                                     pdMS_TO_TICKS(spi->spi_config->timeout_ms));
     } else {
         memset(&spi->slave_trans, 0, sizeof(spi_slave_transaction_t));
         spi->slave_trans.length = count * 8;
@@ -246,15 +243,12 @@ static int port_spi_write(xf_hal_dev_t *dev, const void *buf, size_t count)
         spi->slave_trans.user = spi;
 
         err = spi_slave_transmit(spi->port, &spi->slave_trans,
-                           pdMS_TO_TICKS(spi->spi_config->timeout_ms));
+                                 pdMS_TO_TICKS(spi->spi_config->timeout_ms));
     }
     /* 如果无错 -> 返回传入到大小（因为此处方法无返回实际大小（读或写） */
-    if(err == ESP_OK)
-    {
+    if (err == ESP_OK) {
         return count;
-    }
-    else if(err == ESP_FAIL)    // 有负数错误 -> 直接返回错误码
-    {
+    } else if (err == ESP_FAIL) { // 有负数错误 -> 直接返回错误码
         return err;
     }
     return -err;    // 有正数错误 -> 返回错误码的倒数（负数）

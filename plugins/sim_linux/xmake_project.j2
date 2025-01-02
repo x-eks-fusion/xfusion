@@ -1,0 +1,65 @@
+add_rules("mode.debug", "mode.release")
+add_rules("plugin.compile_commands.autoupdate", {outputdir = ".vscode"})
+
+xf_project_name = "{{project_name}}"
+
+target("xf_build_desc")
+    set_kind("static")
+    set_optimize("none")
+
+    {%- set all_inc_dirs = [] %}
+    {%- set _ = all_inc_dirs.append('"' ~ config_path ~ '"') %}
+    {%- for inc_dir in user_main.inc_dirs %}
+    {%- set _ = all_inc_dirs.append('\t\t"' ~ inc_dir ~ '"') %}
+    {%- endfor %}
+    {%- for key, cmpnt in public_components.items() %}
+    {%- for inc_dir in cmpnt.inc_dirs %}
+    {%- set _ = all_inc_dirs.append('\t\t"' ~ inc_dir ~ '"') %}
+    {%- endfor %}
+    {%- endfor %}
+    {%- for key, cmpnt in user_components.items() %}
+    {%- for inc_dir in cmpnt.inc_dirs %}
+    {%- set _ = all_inc_dirs.append('\t\t"' ~ inc_dir ~ '"') %}
+    {%- endfor %}
+    {%- endfor %}
+    {%- for key, cmpnt in user_dirs.items() %}
+    {%- for inc_dir in cmpnt.inc_dirs %}
+    {%- set _ = all_inc_dirs.append('\t\t"' ~ inc_dir ~ '"') %}
+    {%- endfor %}
+    {%- endfor %}
+    add_includedirs(
+        {{ all_inc_dirs | join(',\n') }},
+        {public = true}
+    )
+
+    {%- set all_srcs = [] %}
+    {%- for src in user_main.srcs %}
+    {%- set _ret = all_srcs.append('"' ~ src ~ '"') %}
+    {%- endfor %}
+    {%- for key, cmpnt in public_components.items() %}
+    {%- for src in cmpnt.srcs %}
+    {%- set _ret = all_srcs.append('\t\t"' ~ src ~ '"') %}
+    {%- endfor %}
+    {%- endfor %}
+    {%- for key, cmpnt in user_components.items() %}
+    {%- for src in cmpnt.srcs %}
+    {%- set _ret = all_srcs.append('\t\t"' ~ src ~ '"') %}
+    {%- endfor %}
+    {%- endfor %}
+    {%- for key, cmpnt in user_dirs.items() %}
+    {%- for src in cmpnt.srcs %}
+    {%- set _ret = all_srcs.append('\t\t"' ~ src ~ '"') %}
+    {%- endfor %}
+    {%- endfor %}
+    add_files(
+        {{ all_srcs | join(',\n') }}
+    )
+
+    {# TODO 目前 sdk 中的 xf_app 包含所有 xfusion 源码，共用 cflags, 暂不能每个组件单独配置 cflags #}
+    add_cflags(
+        {%- for key, cmpnt in user_components.items() %}    {# user_components #}
+            {%- for cflag in cmpnt.cflags %}
+        {{cflag}}
+            {%- endfor %}
+        {%- endfor %}
+    )

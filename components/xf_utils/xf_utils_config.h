@@ -110,6 +110,21 @@ extern "C" {
  */
 #define XF_LOG_DUMP_ENABLE                      CONFIG_XF_LOG_DUMP_ENABLE
 
+/**
+ * @brief 主要版本号 (X.x.x).
+ */
+#define XF_VERSION_MAJOR   1
+
+/**
+ * @brief 次要版本号 (x.X.x).
+ */
+#define XF_VERSION_MINOR   3
+
+/**
+ * @brief 补丁版本号 (x.x.X).
+ */
+#define XF_VERSION_PATCH   0
+
 /* ==================== [Typedefs] ========================================== */
 
 /* ==================== [Global Prototypes] ================================= */

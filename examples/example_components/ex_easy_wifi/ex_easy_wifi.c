@@ -146,7 +146,7 @@ xf_ip4_addr_t ex_easy_wifi_ap_get_last_sta_ip(void)
         goto l_err;
     }
     xf_netif_pair_mac_ip_t pair_mac_ip[1] = {0};
-    memcpy(pair_mac_ip[0].mac, sta_array[sta_num - 1].mac, ARRAY_SIZE(sta_array[0].mac));
+    xf_memcpy(pair_mac_ip[0].mac, sta_array[sta_num - 1].mac, ARRAY_SIZE(sta_array[0].mac));
     xf_ret = xf_netif_dhcps_get_clients_by_mac(
                  netif_hdl, pair_mac_ip, ARRAY_SIZE(pair_mac_ip));
     if (XF_OK != xf_ret) {

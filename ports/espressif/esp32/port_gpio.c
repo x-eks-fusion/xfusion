@@ -91,7 +91,6 @@ static xf_err_t port_gpio_open(xf_hal_dev_t *dev)
         return XF_ERR_INVALID_ARG;
     }
 
-
     gpio->pin = dev->id;
 
     dev->platform_data = gpio;
@@ -194,8 +193,7 @@ static int port_gpio_write(xf_hal_dev_t *dev, const void *buf, size_t count)
 {
     bool level = *(bool *)buf;
     esp_err_t ret = gpio_set_level(dev->id, level);
-    if (ret != XF_OK)
-    {
+    if (ret != XF_OK) {
         return -ret;
     }
 

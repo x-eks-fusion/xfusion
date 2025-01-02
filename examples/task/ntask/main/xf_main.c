@@ -46,11 +46,11 @@ xf_async_t test(xf_task_t task, int a)
     XF_NTASK_BEGIN(task);
 
     XF_LOGI(TAG, "task:%d", a);
-    xf_ntask_delay(task, 1000);
+    xf_ntask_delay(1000);
     a = xf_ntask_args_get_int(task, "a");
     XF_LOGI(TAG, "task:%d", a);
 
-    XF_NTASK_END(task);
+    XF_NTASK_END();
 }
 
 static void xf_main_task(xf_task_t task)
@@ -63,5 +63,5 @@ static void xf_main_task(xf_task_t task)
         xf_await(test(task, 1));
     }
 
-    XF_NTASK_END(task);
+    XF_NTASK_END();
 }

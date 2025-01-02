@@ -137,7 +137,7 @@ static void _example_thread(void *argument)
                 cfg.flag & IPERF_FLAG_TCP ? "tcp" : "udp",
                 cfg.flag & IPERF_FLAG_SERVER ? "server" : "client",
                 XF_IP2STR(&cfg.sip.u_addr.ip4), (int)cfg.sport,
-                XF_IP2STR(&cfg.dip.u_addr.ip4), (int)cfg.dport, 
+                XF_IP2STR(&cfg.dip.u_addr.ip4), (int)cfg.dport,
                 cfg.interval, cfg.time);
 
         xf_iperf_start(&cfg, NULL, NULL);
