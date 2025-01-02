@@ -1,7 +1,7 @@
 /**
  * @file xf_fal.h
  * @author cangyu (sky.kirto@qq.com)
- * @brief xfusion 硬件抽象层。
+ * @brief xfusion flash 抽象层。
  *        xfusion 用户实际包含的 xf_fal.h.
  *        使用 xf_utils_config.h 覆盖 xf_fal 内部的 xf_fal.h 的一些配置。
  * @version 0.1

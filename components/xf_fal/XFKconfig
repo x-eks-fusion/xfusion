@@ -1,0 +1,56 @@
+
+config XF_FAL_ENABLE
+    bool "Enable the xf_fal(Flash Abstraction Layer) module."
+    default n
+    help
+        Enable the xf_fal(Flash Abstraction Layer) module.
+
+if XF_FAL_ENABLE
+
+    config XF_FAL_LOCK_DISABLE
+        bool "Disable xf_fal Lock."
+        default n
+        help
+            Disables the xf_fal Lock functionality.
+
+    config XF_FAL_FLASH_DEVICE_NUM
+        int "Flash device number."
+        default 4
+        help
+            Number of flash devices temporarily stored in xf_fal.
+
+    config XF_FAL_PARTITION_TABLE_NUM
+        int "partition table number."
+        default 4
+        help
+            Number of partition table temporarily stored in xf_fal.
+
+    config XF_FAL_CACHE_NUM
+        int "Cache number."
+        default 16
+        help
+            The number of partitions cannot be greater than the number of caches.
+
+    config XF_FAL_DEV_NAME_MAX
+        int "Maximum length of device name string."
+        default 24
+        help
+            xf_fal Maximum number of characters for the device name (and partition table name).
+
+    config XF_FAL_DEFAULT_FLASH_DEVICE_NAME
+        string "Default Flash device name."
+        default "default_flash"
+
+    config XF_FAL_DEFAULT_PARTITION_NAME
+        string "Default partition name."
+        default "default_part"
+
+    config XF_FAL_DEFAULT_PARTITION_OFFSET
+        int "Default partition offset."
+        default 0
+
+    config XF_FAL_DEFAULT_PARTITION_LENGTH
+        int "Default partition length."
+        default 4096
+
+endif # XF_FAL_ENABLE
