@@ -1,0 +1,11 @@
+
+menu "xf_ota Configuration"
+
+    config XF_OTA_BIG_ENDIAN_ENABLE
+          bool "Whether the target platform is a big-end machine."
+          default n
+          help
+              If it is a big-end machine, there is no need to translate the address during network transmission.
+  
+endmenu # xf_ota Configuration
+  
