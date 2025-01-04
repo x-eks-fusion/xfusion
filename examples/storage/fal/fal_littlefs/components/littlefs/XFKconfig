@@ -1,0 +1,79 @@
+
+config PORT_LFS_DEBUG_ENABLE
+    bool "Enable debug mode."
+    default n
+
+config PORT_LFS_XF_FAL_PARTITION_NAME
+    string "The name of the partition in xf_fal provided for use by littlefs."
+    default XF_FAL_DEFAULT_PARTITION_NAME
+    help
+        The name of the partition in xf_fal provided for use by littlefs.
+
+config PORT_LFS_SHOW_XF_PART_TABLE_ENABLE
+    bool "Prints the partition table in xf_fal."
+    default y
+    help
+        Whether to print the partition table in xf_fal at initialization for reference.
+
+config PORT_LFS_CUSTOM_BLOCK_ENABLE
+    bool "Whether to customize flash-related parameters in littlefs."
+    default n
+    help
+        The block size is the minimum erase size. 
+        If not customized, xf_fal_flash_dev_t.sector_size will be read 
+        as the block size provided to littlefs for use.
+        The count of blocks is `xf_fal_partition_t.len / xf_fal_flash_dev_t.sector_size`.
+        Both read_size and prog_size use `xf_fal_flash_dev_t.page_size`.
+
+if PORT_LFS_CUSTOM_BLOCK_SIZE_ENABLE
+
+    config PORT_LFS_CUSTOM_BLOCK_SIZE
+        int "Customize the block_size in littlefs."
+        default 4096
+
+    config PORT_LFS_CUSTOM_BLOCK_COUNT
+        int "Customize the block_count in littlefs."
+        default 100
+
+    config PORT_LFS_READ_SIZE
+        int "Minimum size of a block read."
+        default 128
+        help
+            Minimum size of a block read. All read operations will be a
+            multiple of this value.
+
+    config PORT_LFS_WRITE_SIZE
+        int "Minimum size of a block write."
+        default 128
+        help
+            Minimum size of a block program. All write operations will be a
+            multiple of this value.
+
+endif
+
+config PORT_LFS_LOOKAHEAD_SIZE
+    int "Look ahead size."
+    default 128
+    help
+        Look ahead size. Must be a multiple of 8.
+
+config PORT_LFS_CACHE_SIZE
+    int "Cache Size"
+    default 512
+    help
+        Size of block caches. Each cache buffers a portion of a block in RAM.
+        The littlefs needs a read cache, a program cache, and one additional
+        cache per file. Larger caches can improve performance by storing more
+        data and reducing the number of disk accesses. Must be a multiple of
+        the read and program sizes, and a factor of the block size (4096).
+
+config PORT_LFS_BLOCK_CYCLES
+    int "LittleFS wear-leveling block cycles"
+    default 512
+    range -1 1024
+    help
+        Number of erase cycles before littlefs evicts metadata logs and moves 
+        the metadata to another block. Suggested values are in the
+        range 100-1000, with large values having better performance at the cost
+        of less consistent wear distribution.
+        Set to -1 to disable block-level wear-leveling.
