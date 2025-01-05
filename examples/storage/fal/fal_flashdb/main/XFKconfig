@@ -1,0 +1,30 @@
+
+config PORT_FDB_XF_FAL_FLASH_NAME
+    string "The name of the flash device provided to FlashDB and registered to xf_fal."
+    default XF_FAL_DEFAULT_FLASH_DEVICE_NAME
+    help
+        The name of the flash device provided to FlashDB and registered to xf_fal.
+
+config PORT_FDB_XF_FAL_KVDB_PARTITION_NAME
+    string "KVDB partition name."
+    default "fdb_kvdb"
+
+config PORT_FDB_XF_FAL_KVDB_PARTITION_OFFSET
+    int "KVDB partition offset."
+    default 0
+
+config PORT_FDB_XF_FAL_KVDB_PARTITION_LENGTH
+    int "KVDB partition length."
+    default 40960
+
+config PORT_FDB_XF_FAL_TSDB_PARTITION_NAME
+    string "TSDB partition name."
+    default "fdb_tsdb"
+
+config PORT_FDB_XF_FAL_TSDB_PARTITION_OFFSET
+    int "TSDB partition offset."
+    default 40960
+
+config PORT_FDB_XF_FAL_TSDB_PARTITION_LENGTH
+    int "TSDB partition length."
+    default 40960
