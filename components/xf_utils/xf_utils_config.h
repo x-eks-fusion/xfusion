@@ -131,6 +131,8 @@ extern "C" {
 
 /* ==================== [Macros] ============================================ */
 
+#define xf_log_printf(format, ...)              xf_log_printf(format, ##__VA_ARGS__)
+
 #define xf_log_dump_printf(format, ...)         xf_log_printf(format, ##__VA_ARGS__)
 
 /**
