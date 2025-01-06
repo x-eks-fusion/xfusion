@@ -1,0 +1,4 @@
+
+config FDB_DEBUG_ENABLE
+    bool "Enable debug mode."
+    default n
