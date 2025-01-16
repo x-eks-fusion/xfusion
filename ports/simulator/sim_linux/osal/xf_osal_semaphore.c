@@ -56,7 +56,7 @@ xf_err_t xf_osal_semaphore_acquire(xf_osal_semaphore_t semaphore, uint32_t timeo
         ret = sem_wait(osal_sem);
         XF_CHECK(ret != 0, XF_ERR_INVALID_STATE, TAG, "sem_wait err:%d", errno);
     } else {
-        struct timespec ts;
+        struct timespec ts = {0};
         clock_gettime(CLOCK_REALTIME, &ts);
         ts.tv_sec += timeout / 1000;
         ts.tv_nsec += (timeout % 1000) * 1000000;

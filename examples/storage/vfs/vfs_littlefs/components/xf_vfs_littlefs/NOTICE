@@ -1,0 +1,13 @@
+# 版权声明 Copyright Notice
+
+License: Other License
+
+Copyright 2020 Brian Pugh
+
+Original: https://github.com/joltwallet/esp_littlefs/releases/tag/v1.14.8
+
+Modifications:
+
+- Modified by CorAL on 2025-01-15:
+  1. modified the naming to prevent conflict with the original project.
+  2. removed esp-idf related dependencies.

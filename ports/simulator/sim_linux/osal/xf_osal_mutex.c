@@ -79,14 +79,14 @@ xf_err_t xf_osal_mutex_acquire(xf_osal_mutex_t mutex, uint32_t timeout)
 
     int ret = 0;
     xf_ms_t end_ms = xf_sys_time_get_ms() + timeout;
-    while (end_ms > xf_sys_time_get_ms()) {
+    do {
         ret = pthread_mutex_trylock(&osal_mutex->mutex);
         if (ret == 0) {
             osal_mutex->owner_pid = pthread_self();
             return XF_OK;
         }
         usleep(CHECK_INTERVAL_MS * 1000);
-    }
+    } while (end_ms > xf_sys_time_get_ms());
     return XF_ERR_TIMEOUT;
 }
 

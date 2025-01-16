@@ -18,5 +18,3 @@ if osal == "y":
         srcs.append("xf_osal/port/cmsis-os2/*.c")
 
     xf_build.collect(srcs=srcs, inc_dirs=incs, requires=["xf_utils"])
-else:
-    xf_build.collect()
