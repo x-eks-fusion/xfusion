@@ -48,7 +48,7 @@ PROJECT_NAME           = XFusion API
 # could be handy for archiving the generated documentation or if some version
 # control system is used.
 
-PROJECT_NUMBER         = "v1.2.0"
+PROJECT_NUMBER         = "v1.3.0"
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer a
@@ -734,7 +734,7 @@ STRICT_PROTO_MATCHING  = NO
 # list. This list is created by putting \todo commands in the documentation.
 # The default value is: YES.
 
-GENERATE_TODOLIST      = YES
+GENERATE_TODOLIST      = NO
 
 # The GENERATE_TESTLIST tag can be used to enable (YES) or disable (NO) the test
 # list. This list is created by putting \test commands in the documentation.
@@ -1024,6 +1024,10 @@ EXCLUDE                = ../components/xf_fal/xf_fal/example \
                          ../components/xf_task/xf_task/port \
                          ../components/xf_utils/xf_utils/examples \
                          ../components/xf_utils/xf_utils/port \
+                         ../components/xf_vfs/xf_vfs/example \
+                         ../examples/storage/fal/fal_flashdb/components \
+                         ../examples/storage/fal/fal_littlefs/components \
+                         ../examples/storage/vfs/vfs_littlefs/components \
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded
