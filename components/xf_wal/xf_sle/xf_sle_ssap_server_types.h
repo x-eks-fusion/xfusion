@@ -176,6 +176,20 @@ typedef union _xf_sle_ssaps_evt_cb_param_t {
 } xf_sle_ssaps_evt_cb_param_t;
 
 /**
+ * @brief SLE SSAPS 事件回调函数原型
+ *
+ * @param event 事件，见 @ref xf_sle_ssaps_event_t
+ * @param param 事件回调参数，见 @ref xf_sle_ssaps_evt_cb_param_t
+ * @return xf_err_t
+ *      - XF_OK                 成功
+ *      - XF_FAIL               失败
+ *      - (OTHER)               @ref xf_err_t
+ */
+typedef xf_err_t (*xf_sle_ssaps_event_cb_t)(
+    xf_sle_ssaps_event_t event,
+    xf_sle_ssaps_evt_cb_param_t *param);
+
+/**
  * @brief SLE SSAPS 响应 (回应) 值信息
  */
 typedef struct {

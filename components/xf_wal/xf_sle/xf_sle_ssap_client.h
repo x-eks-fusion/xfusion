@@ -181,20 +181,6 @@ xf_err_t xf_sle_ssapc_request_exchange_info(
     xf_sle_ssap_exchange_info_t *param);
 
 /**
- * @brief SLE SSAPC 事件回调函数原型
- *
- * @param event 事件，见 @ref xf_sle_ssapc_event_t
- * @param param 事件回调参数，见 @ref xf_sle_ssapc_evt_cb_param_t
- * @return xf_err_t
- *      - XF_OK                 成功
- *      - XF_FAIL               失败
- *      - (OTHER)               @ref xf_err_t
- */
-typedef xf_err_t (*xf_sle_ssapc_event_cb_t)(
-    xf_sle_ssapc_event_t event,
-    xf_sle_ssapc_evt_cb_param_t *param);
-
-/**
  * @brief SLE SSAPC 事件回调注册
  *
  * @param evt_cb 事件回调，见 @ref xf_sle_ssapc_event_cb_t
