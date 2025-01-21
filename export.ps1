@@ -60,7 +60,7 @@ if ([string]::IsNullOrEmpty($Env:XF_TARGET_PATH)) {
     exit 1
 }
 
-$Env:XF_VERSION = "v1.2.0"
+$Env:XF_VERSION = "v1.3.0"
 
 # Execute the check_virtualenv.py script and capture the return value
 & python "$Env:XF_ROOT\tools\export_script\check_virtualenv.py"
