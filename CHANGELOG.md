@@ -6,6 +6,68 @@
 
 本文记录 XFusion 当前版本的显著更改。
 
+## [1.3.0]
+
+1.  `components/xf_fal`
+
+    flash 抽象层。
+
+    1.  新增
+        1.  支持注册与注销分区表及 flash 设备。
+        1.  esp32 对接。
+        1.  sim_linux 对接示例可见 [port_xf_fal_by_memory](examples/storage/vfs/vfs_littlefs/components/sim_linux_ext_port/port_xf_fal_by_memory.c)。
+        1.  添加 xf_fal 对接 littlefs 示例 [fal_littlefs](examples/storage/fal/fal_littlefs).
+        1.  添加 fal_flashdb 示例 [fal_flashdb](examples/storage/fal/fal_flashdb).
+
+1.  `components/xf_heap`
+
+    动态内存。
+
+    1.  新增
+        1.  支持重定义 malloc、free 等函数实现。
+
+1.  `components/xf_task`
+
+    协作式调度器。
+
+    1.  修改
+        1.  原本定时任务由 ntask 更名为 ttask。
+        1.  无栈协程仍然使用 ntask 名字。
+    1.  新增
+        1.  支持 async 和 await，支持无栈协程嵌套。
+
+1.  `components/xf_ota`
+
+    ota 接口。
+
+    1.  新增
+        1.  首次新增。
+        1.  已添加 ws63，esp32 对接。
+        1.  示例见 [uart_ota_based_on_osal](examples/system/ota/uart_ota_based_on_osal)。
+
+1.  `components/xf_vfs`
+
+    虚拟文件系统。
+
+    1.  新增
+        1.  首次新增。
+        1.  已添加 esp32 对接。
+        1.  示例见 [vfs_littlefs](examples/storage/vfs/vfs_littlefs)。
+
+1.  `boards/simulator/sim_linux`
+
+    linux 模拟器。
+
+    1.  新增
+        1.  首次新增，可使用 `. ./export.sh sim_linux` 激活 linux 模拟器；或使用 `. ./export.sh <其他目标>` 后使用 `xf sim` 命令一键激活、编译、烧录。
+
+1.  `boards/espressif/esp32`
+
+    esp32 平台。
+
+    1.  修改
+        1.  更新分区表，默认使用 2 ota + 1 存储分区。
+
 ## [1.2.0]
 
 1.  `components/xf_fal`
