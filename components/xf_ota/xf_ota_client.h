@@ -20,6 +20,13 @@
 extern "C" {
 #endif
 
+/**
+ * @cond (XFAPI_USER || XFAPI_PORT)
+ * @addtogroup group_xf_iperf
+ * @endcond
+ * @{
+ */
+
 /* ==================== [Defines] =========================================== */
 
 /* ==================== [Typedefs] ========================================== */
@@ -273,6 +280,11 @@ xf_err_t xf_ota_write_to(
     xf_ota_t *p_hdl, size_t dst_offset, const void *src, size_t size);
 
 /* ==================== [Macros] ============================================ */
+
+/**
+ * End of addtogroup group_xf_iperf
+ * @}
+ */
 
 #ifdef __cplusplus
 } /* extern "C" */

@@ -10,7 +10,7 @@
  */
 
 /**
- * @example{lineno} examples/peripherals/fal/fal_base/main/xf_main.c
+ * @example{lineno} examples/storage/fal/fal_base/main/xf_main.c
  * xf_fal 基础示例。
  */
 

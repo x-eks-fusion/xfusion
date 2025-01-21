@@ -9,16 +9,6 @@
  *
  */
 
-#if defined(__DOXYGEN__) && defined(__XFUSION__) && defined(__DOXYGEN_ADD_COMPONENTS__)
-/**
- * @cond (XFAPI_USER || XFAPI_PORT || XFAPI_INTERNAL)
- * @ingroup group_components_internal
- * @defgroup group_xf_wal xf_wal
- * @brief xf_wal (无线抽象层) 封装了 ble、sle、wifi 接口。
- * @endcond
- */
-#endif
-
 /* ==================== [Includes] ========================================== */
 
 #ifdef __cplusplus

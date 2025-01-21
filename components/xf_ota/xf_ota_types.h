@@ -21,6 +21,13 @@
 extern "C" {
 #endif
 
+/**
+ * @cond (XFAPI_USER || XFAPI_PORT)
+ * @addtogroup group_xf_iperf
+ * @endcond
+ * @{
+ */
+
 /* ==================== [Defines] =========================================== */
 
 #define XF_OTA_PACKAGE_LEN_UNKNOWN      0xffffffff /*!< 如果固件大小未知 */
@@ -99,6 +106,11 @@ typedef struct _xf_ota_partition_info_t {
 /* ==================== [Global Prototypes] ================================= */
 
 /* ==================== [Macros] ============================================ */
+
+/**
+ * End of addtogroup group_xf_iperf
+ * @}
+ */
 
 #ifdef __cplusplus
 } /* extern "C" */

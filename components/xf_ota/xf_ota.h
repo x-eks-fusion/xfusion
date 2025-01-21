@@ -9,6 +9,13 @@
  *
  */
 
+/**
+ * @cond (XFAPI_USER || XFAPI_PORT || XFAPI_INTERNAL)
+ * @defgroup group_xf_ota xf_ota
+ * @brief 空中升级接口。
+ * @endcond
+ */
+
 #ifndef __XF_OTA_H__
 #define __XF_OTA_H__
 
