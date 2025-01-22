@@ -67,7 +67,7 @@ if "%XF_TARGET_PATH%"=="" (
     exit /b
 )
 
-set "XF_VERSION=v1.2.0"
+set "XF_VERSION=v1.3.0"
 
 python "%XF_ROOT%tools\export_script\check_virtualenv.py"
 set "VENV_RESULT=%ERRORLEVEL%"

@@ -105,7 +105,7 @@ __set_port(){
     fi
 
     export XF_TARGET="$1"
-    export XF_VERSION="v1.2.0"
+    export XF_VERSION="v1.3.0"
     export XF_TARGET_PATH="$(python3 ${XF_ROOT}/tools/export_script/get_path.py $1)"
 }
 
