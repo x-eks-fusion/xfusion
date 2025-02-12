@@ -33,6 +33,7 @@
     1.  修改
         1.  原本定时任务由 ntask 更名为 ttask。
         1.  无栈协程仍然使用 ntask 名字。
+        1.  重构了 mbus 和 task_pool。
     1.  新增
         1.  支持 async 和 await，支持无栈协程嵌套。
 

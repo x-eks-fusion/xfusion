@@ -28,7 +28,6 @@
 /* ==================== [Static Prototypes] ================================= */
 
 static void task_pub(xf_task_t task);
-static void mbus_handle(xf_task_t task);
 static void bus_cb(const void *const data, void *user_data);
 
 /* ==================== [Static Variables] ================================== */
@@ -63,11 +62,6 @@ static void task_pub(xf_task_t task)
     num++;
     // 同步发送（快，但是会阻塞本任务）
     xf_task_mbus_pub_sync(TOPIC_ID, &num);
-}
-
-static void mbus_handle(xf_task_t task)
-{
-    xf_task_mbus_handle();
 }
 
 /**
