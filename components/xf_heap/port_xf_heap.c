@@ -43,6 +43,6 @@ static int port_xf_heap_init(void)
     return 0;
 }
 
-XF_INIT_EXPORT_BOARD(port_xf_heap_init);
+XF_INIT_EXPORT_SETUP(port_xf_heap_init);
 
 #endif

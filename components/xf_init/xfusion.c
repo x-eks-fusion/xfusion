@@ -14,8 +14,9 @@
 #include "xfusion.h"
 #include "xf_task.h"
 #include "xf_sys.h"
+#include "xf_init.h"
 
-#if XF_OSAL_ENABLE
+#ifdef CONFIG_XF_OSAL_ENABLE
 #include "xf_osal.h"
 #endif
 
@@ -41,9 +42,6 @@ void xfusion_init(void)
 
     xf_init();
 
-    xf_task_tick_init(xf_sys_time_get_ms);
-    xf_task_manager_default_init(xf_task_on_idle);
-
     xf_main();
 }
 
@@ -56,10 +54,18 @@ void xfusion_run(void)
 
 static void xf_task_on_idle(unsigned long int max_idle_ms)
 {
-#if XF_OSAL_ENABLE
+#if CONFIG_XF_OSAL_ENABLE
     xf_osal_delay_ms(max_idle_ms);
 #else
     (void)max_idle_ms;
     xf_sys_watchdog_kick();
 #endif
 }
+
+static xf_err_t default_manager_init(void)
+{
+    xf_task_tick_init(xf_sys_time_get_ms);
+    return xf_task_manager_default_init(xf_task_on_idle);
+}
+
+XF_INIT_EXPORT_BOARD(default_manager_init);
