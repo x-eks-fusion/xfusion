@@ -28,3 +28,6 @@
 [submodule "components/xf_fal/xf_fal"]
 	path = components/xf_fal/xf_fal
 	url = https://github.com/x-eks-fusion/xf_fal.git
+[submodule "components/xf_ble/xf_ble"]
+	path = components/xf_ble/xf_ble
+	url = https://github.com/x-eks-fusion/xf_ble.git

@@ -2,8 +2,6 @@ import xf_build
 
 srcs = [
     "*.c",
-    "xf_ble/*.c",
-    "xf_ble/porting/*.c",
     "xf_sle/*.c",
     "xf_sle/porting/*.c",
     "xf_wifi/*.c",
@@ -11,8 +9,6 @@ srcs = [
 
 incs = [
     ".",
-    "xf_ble",
-    "xf_ble/porting",
     "xf_sle",
     "xf_sle/porting",
     "xf_wifi",

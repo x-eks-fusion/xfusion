@@ -1,0 +1,3 @@
+config XF_BLE_ENABLE
+    bool "Enable BLE Module"
+    default "n"
