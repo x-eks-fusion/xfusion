@@ -17,11 +17,9 @@ SDK_PATH: Path = api.XF_ROOT / "sdks/fbb_ws63/src"
 SDK_OUTPUT_PATH: Path = SDK_PATH / "output"
 XF_PROJECT_BUILD_PATH: Path = api.PROJECT_BUILD_PATH
 
-hookimpl = xf_build.get_hookimpl()
-
 
 class ws63():
-    @hookimpl
+
     def build(self, args):
         project_cmake_file: Path = XF_PROJECT_BUILD_PATH / "build_environ.cmake"
         api.apply_template("cmake_project.j2", project_cmake_file)
@@ -50,12 +48,10 @@ class ws63():
             except:
                 print(f"copy sdk firmware failed!", sys.exc_info())
 
-    @hookimpl
     def clean(self, args):
         if SDK_OUTPUT_PATH.exists() == True:
             shutil.rmtree(SDK_OUTPUT_PATH)
 
-    @hookimpl
     def flash(self, args):
         framware_path = "./build/sdk/fwpkg/ws63-liteos-app/ws63-liteos-app_all.fwpkg"
         if not os.path.exists(framware_path):
@@ -63,13 +59,16 @@ class ws63():
             return
         try:
             # 检查命令是否可用
-            subprocess.run(['burn', '--help'], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run(['burn', '--help'], check=True,
+                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         except FileNotFoundError:
             # 尝试安装相应的包
-            subprocess.run([sys.executable, '-m', 'pip', 'install', "xf_burn_tools"], check=True)
+            subprocess.run([sys.executable, '-m', 'pip',
+                           'install', "xf_burn_tools"], check=True)
             # 再次检查命令
             try:
-                subprocess.run(['burn', '--help'], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                subprocess.run(['burn', '--help'], check=True,
+                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             except FileNotFoundError:
                 logging.error("burn command not found")
         ports = serial.tools.list_ports.comports()
@@ -79,15 +78,12 @@ class ws63():
         for port in ports:
             os.system(f"burn {framware_path}  -p {port.device}")
 
-    @hookimpl
-    def export(self, args):
+    def export(self, name, args):
+        print(args)
+
+    def update(self, name, args):
         pass
 
-    @hookimpl
-    def update(self, args):
-        pass
-
-    @hookimpl
     def menuconfig(self, args):
         # 第一个拓展参数为 sub 时 打开SDK 侧 menuconfig
         if args[0] == "sub":

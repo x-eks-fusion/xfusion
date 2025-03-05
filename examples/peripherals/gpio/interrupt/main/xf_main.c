@@ -19,7 +19,6 @@
 #include "xf_hal.h"
 #include "xf_task.h"
 
-
 /* ==================== [Defines] =========================================== */
 
 #define OUTPUT_IO           5
@@ -56,7 +55,7 @@ void xf_main(void)
 
     xf_hal_gpio_set_intr_enable(INTERRUPT_INPUT_IO);
 
-    xf_ntask_create_loop(gpio_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
+    xf_ttask_create_loop(gpio_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
 }
 
 /* ==================== [Static Functions] ================================== */
@@ -72,4 +71,3 @@ static void gpio_task(xf_task_t task)
     level = !level;
     xf_hal_gpio_set_level(OUTPUT_IO, level);
 }
-

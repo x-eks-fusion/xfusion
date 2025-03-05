@@ -1,0 +1,48 @@
+
+config XF_VFS_ENABLE
+    bool "Enable the xf_vfs(Virtual Filesystem) module."
+    default n
+
+if XF_VFS_ENABLE
+
+    config XF_VFS_SUPPORT_IO_ENABLE
+        bool "Provide basic I/O functions"
+        default y
+
+    config XF_VFS_SUPPORT_DIR_ENABLE
+        bool "Provide directory related functions"
+        default y
+        depends on XF_VFS_SUPPORT_IO_ENABLE
+
+    config XF_VFS_SUPPORT_SELECT_ENABLE
+        bool "Provide select function"
+        default n
+        depends on XF_VFS_SUPPORT_IO_ENABLE
+
+    config XF_VFS_MAX_COUNT
+        int "Maximum Number of Virtual Filesystems"
+        default 8
+        range 1 20
+        depends on XF_VFS_SUPPORT_IO_ENABLE
+
+    config XF_VFS_CUSTOM_FD_SETSIZE_ENABLE
+        bool "Enable custom FD SETSIZE"
+        default n
+        depends on XF_VFS_SUPPORT_IO_ENABLE
+
+    config XF_VFS_CUSTOM_FD_SETSIZE
+        int "Enable custom FD SETSIZE"
+        default 64
+        depends on XF_VFS_CUSTOM_FD_SETSIZE_ENABLE
+
+    config XF_VFS_PATH_MAX
+        int "Maximum length of path prefix (not including zero terminator)"
+        default 15
+        depends on XF_VFS_SUPPORT_IO_ENABLE
+
+    config XF_VFS_DIRENT_NAME_SIZE
+        int "Maximum length of directory entry name (including zero terminator)"
+        default 256
+        depends on XF_VFS_SUPPORT_IO_ENABLE
+
+endif # XF_VFS_ENABLE

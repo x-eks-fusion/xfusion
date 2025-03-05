@@ -1,0 +1,19 @@
+
+config XF_YMODEM_EXAMPLE_UART_NUM
+    int "uart_num"
+    default 1 if PLATFORM_WS63
+    default 2 if PLATFORM_ESP32
+
+config XF_YMODEM_EXAMPLE_UART_BAUDRATE
+    int "uart_baudrate"
+    default 912600
+
+config XF_YMODEM_EXAMPLE_UART_TX_PIN
+    int "uart_tx_pin"
+    default 15 if PLATFORM_WS63
+    default 17 if PLATFORM_ESP32
+
+config XF_YMODEM_EXAMPLE_UART_RX_PIN
+    int "uart_rx_pin"
+    default 16 if PLATFORM_WS63
+    default 16 if PLATFORM_ESP32

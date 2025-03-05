@@ -28,7 +28,6 @@
 /* ==================== [Static Prototypes] ================================= */
 
 static void task_pub(xf_task_t task);
-static void mbus_handle(xf_task_t task);
 static void bus_cb(const void *const data, void *user_data);
 
 /* ==================== [Static Variables] ================================== */
@@ -40,7 +39,7 @@ static void bus_cb(const void *const data, void *user_data);
 void xf_main(void)
 {
     // 创建协作式任务
-    xf_ntask_create_loop(task_pub, (void *)1, 1, 2000);
+    xf_ttask_create_loop(task_pub, (void *)1, 1, 2000);
     // 绑定topic到任务管理器上
     xf_task_mbus_reg_topic(TOPIC_ID, sizeof(int));
     // 订阅这个topic，设置处理topic的回调
@@ -63,11 +62,6 @@ static void task_pub(xf_task_t task)
     num++;
     // 同步发送（快，但是会阻塞本任务）
     xf_task_mbus_pub_sync(TOPIC_ID, &num);
-}
-
-static void mbus_handle(xf_task_t task)
-{
-    xf_task_mbus_handle();
 }
 
 /**

@@ -100,11 +100,9 @@ void xf_main(void)
     XF_LOGI(TAG, "STAR scan CMPL");
 
     // 创建发现任务
-    xf_ntask_create(discovery_task, NULL, TASK_PRIORITY, TASK_DELAY_MS,
-                    XF_NTASK_INFINITE_LOOP);
+    xf_ttask_create_loop(discovery_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
     // 创建读写任务
-    xf_ntask_create(read_write_task, NULL, TASK_PRIORITY, TASK_DELAY_MS,
-                    XF_NTASK_INFINITE_LOOP);
+    xf_ttask_create_loop(read_write_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
 }
 
 /* ==================== [Static Functions] ================================== */

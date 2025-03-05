@@ -223,7 +223,7 @@ static void sample_sle_set_adv_param(void)
         announce_param.conn_max_latency = SAMPLE_SLE_CONN_MAX_LATENCY;
         announce_param.conn_supervision_timeout = SAMPLE_SLE_CONN_SUPERVISION_TIMEOUT;
     };
-    memcpy(announce_param.own_addr.addr, s_sle_mac_addr, XF_SLE_ADDR_LEN);
+    xf_memcpy(announce_param.own_addr.addr, s_sle_mac_addr, XF_SLE_ADDR_LEN);
 
     xf_err_t ret = xf_sle_set_announce_param(SAMPLE_ADV_ID, &announce_param);
     XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,

@@ -908,7 +908,6 @@ static void port_ap_netif_deinit(void)
     ctx_w()->netif_ap.esp_netif = NULL;
 }
 
-
 static void port_sta_netif_init(void)
 {
     if (ctx_w()->b_sta_netif_is_inited) {

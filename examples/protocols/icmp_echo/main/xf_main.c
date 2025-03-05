@@ -96,12 +96,12 @@ static void xf_ping_cb(
     switch (event_id) {
     case XF_PING_EVENT_SUCC: {
         xf_log_printf("%d bytes from " XF_IPSTR " icmp_seq=%d ttl=%d time=%d ms" "\n",
-                  hdl->recv_len, XF_IP2STR(&hdl->recv_addr.u_addr.ip4),
-                  hdl->packet_hdr->seqno, hdl->ttl, hdl->elapsed_time_ms);
+                      hdl->recv_len, XF_IP2STR(&hdl->recv_addr.u_addr.ip4),
+                      hdl->packet_hdr->seqno, hdl->ttl, hdl->elapsed_time_ms);
     } break;
     case XF_PING_EVENT_TIMEOUT: {
         xf_log_printf("From " XF_IPSTR " icmp_seq=%d timeout" "\n",
-                  XF_IP2STR(&hdl->recv_addr.u_addr.ip4), hdl->packet_hdr->seqno);
+                      XF_IP2STR(&hdl->recv_addr.u_addr.ip4), hdl->packet_hdr->seqno);
     } break;
     case XF_PING_EVENT_END: {
         uint32_t loss = (uint32_t)((1 - ((float)hdl->received) / hdl->transmitted) * 100);
@@ -113,7 +113,7 @@ static void xf_ping_cb(
             xf_log_printf("\n--- %s ping statistics ---\n", inet6_ntoa(*ip_2_ip6(&hdl->recv_addr)));
         }
         xf_log_printf("%d packets transmitted, %d received, %d%% packet loss, time %dms" "\n",
-                  hdl->transmitted, hdl->received, loss, hdl->total_time_ms);
+                      hdl->transmitted, hdl->received, loss, hdl->total_time_ms);
         s_ping_done = true;
     } break;
     default:

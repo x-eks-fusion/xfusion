@@ -50,7 +50,7 @@ void xf_main(void)
     xf_hal_gpio_init(INPUT_IO, XF_HAL_GPIO_DIR_IN);
     xf_hal_gpio_set_pull(INPUT_IO, INPUT_IO_MODE);
 
-    xf_ntask_create_loop(gpio_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
+    xf_ttask_create_loop(gpio_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
 }
 
 /* ==================== [Static Functions] ================================== */

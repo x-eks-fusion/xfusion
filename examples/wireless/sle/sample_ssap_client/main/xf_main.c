@@ -89,7 +89,7 @@ void xf_main(void)
              "xf_sle_start_seek error:%#X", ret);
     XF_LOGI(TAG, ">> STAR seek CMPL");
 
-    xf_ntask_create_loop(sle_client_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
+    xf_ttask_create_loop(sle_client_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
 
 }
 

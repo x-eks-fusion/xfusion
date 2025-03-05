@@ -105,7 +105,7 @@ __set_port(){
     fi
 
     export XF_TARGET="$1"
-    export XF_VERSION="v1.2.0"
+    export XF_VERSION="v1.3.0"
     export XF_TARGET_PATH="$(python3 ${XF_ROOT}/tools/export_script/get_path.py $1)"
 }
 
@@ -132,7 +132,15 @@ __enter_virtualenv()
         source ~/.xfusion/${XF_VERSION}/bin/activate
     fi
     python3 -m pip install --upgrade pip
-    pip install xf_build==0.3.9
+    pip install xf_build==0.4.2
+}
+
+__plugin_require_install() {
+    plugin_require_path="${XF_ROOT}/plugins/${XF_TARGET}/requirements.txt"
+    if [ -f "$plugin_require_path" ]; then
+        echo "Find $plugin_require_path, installing..."
+        pip install -r "$plugin_require_path"
+    fi
 }
 
 __print_value()
@@ -152,6 +160,7 @@ __cleanup() {
     unset res
     unset export_script
     unset result
+    unset plugin_require_path
 
     unset __realpath
     unset __main
@@ -160,6 +169,7 @@ __cleanup() {
     unset __set_port
     unset __enter_virtualenv
     unset __print_value
+    unset __plugin_require_install
 
     return $1
 }
@@ -181,6 +191,8 @@ if [ $? -ne 0 ]; then
 fi
 
 __enter_virtualenv
+
+__plugin_require_install
 
 __print_value
 
