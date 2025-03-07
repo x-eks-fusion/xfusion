@@ -1,0 +1,16 @@
+menu "Platform Config"
+    visible if XFKCONFIG_DEBUG_MODE
+
+    menu "BLE Config"
+        depends on XF_BLE_ENABLE="y"
+
+        config XF_BLE_ADV_ID_INVALID
+            int "BLE invalid ADV ID value"
+            default 255
+
+        config XF_BLE_CONN_ID_INVALID
+            int "BLE invalid CONN ID value"
+            default 255
+    endmenu # "BLE Config"
+    
+endmenu # "Platform Config"

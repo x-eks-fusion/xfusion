@@ -10,15 +10,14 @@
 #include "xf_ble_gatt_server.h"
 #include "string.h"
 #include "ble_hid_types.h"
-#include "xf_osal.h"
 
 /* ==================== [Defines] =========================================== */
 
-#define TAG "sample_gatts"
+#define TAG "hid_dev"
 
 #define DEFAULT_INPUT_IO                3
-#define DEFAULT_INPUT_IO_MODE           XF_HAL_GPIO_PULL_UP
-#define DEFAULT_INPUT_IO_TRIGGER_TYPE   XF_HAL_GPIO_INTR_TYPE_ANY
+#define DEFAULT_INPUT_IO_MODE           XF_HAL_GPIO_PULL_DOWN
+#define DEFAULT_INPUT_IO_TRIGGER_TYPE   XF_HAL_GPIO_INTR_TYPE_RISING
 
 /* ble 最小广播间隔 */
 #define DEFAULT_BLE_GAP_ADV_MIN_INTERVAL    0x30
@@ -43,18 +42,19 @@ typedef struct __packed _usb_hid_report_mouse_t {
 
 /* ==================== [Static Prototypes] ================================= */
 
-static void sample_ble_set_adv_data(void);
-static void sample_ble_set_adv_param(void);
-static xf_err_t sample_ble_gap_event_cb(
-    xf_ble_gap_event_t event,
+static xf_ble_evt_res_t sample_ble_gap_event_cb(
+    xf_ble_gap_evt_t event,
     xf_ble_gap_evt_cb_param_t *param);
+static xf_ble_evt_res_t sample_ble_gatts_event_cb(
+    xf_ble_gatts_evt_t event,
+    xf_ble_gatts_evt_cb_param_t *param);
 static void sample_gpio_irq(xf_gpio_num_t gpio_num, bool level, void *user_data);
 
 /* ==================== [Static Variables] ================================== */
 
 static uint8_t s_gatts_device_name[] = "XF_BLE_MOUSE";
 static uint8_t s_adv_id = XF_BLE_ADV_ID_INVALID;
-static uint8_t s_app_id = XF_BLE_GATT_APP_ID_INVALID;
+static uint8_t s_app_id = XF_BLE_APP_ID_INVALID;
 static uint16_t s_conn_id = 0;
 
 static xf_ble_gap_adv_param_t s_adv_param = {
@@ -63,7 +63,7 @@ static xf_ble_gap_adv_param_t s_adv_param = {
     .max_interval = DEFAULT_BLE_GAP_ADV_MAX_INTERVAL,
 
     // 广播类型
-    .adv_type = XF_BLE_GAP_ADV_TYPE_CONN_SCAN_UNDIR,
+    .type = XF_BLE_GAP_ADV_TYPE_CONN_SCAN_UNDIR,
     .own_addr =
     {
         .type = XF_BLE_ADDR_TYPE_PUBLIC_DEV, // 本端地址类型
@@ -75,8 +75,7 @@ static xf_ble_gap_adv_param_t s_adv_param = {
         .addr = { 0x0 },                    // 对端地址
     },
     .channel_map = XF_BLE_GAP_ADV_CH_ALL,   // 使用37/38/39三个通道
-    .adv_filter_policy = XF_BLE_GAP_ADV_FILTER_ALLOW_SCAN_ANY_CON_ANY,
-    .duration = DEFAULT_BLE_GAP_ADV_DURATION_FOREVER,
+    .filter_policy = XF_BLE_GAP_ADV_FILTER_POLICY_ANY_SCAN_ANY_CONN,
     .tx_power = 1,  // 发送功率,单位dbm,范围-127~20
 };
 
@@ -101,12 +100,7 @@ static xf_ble_gap_adv_data_t s_adv_data = {
         },
         {0}
     },
-    .scan_rsp_struct_set = (xf_ble_gap_adv_struct_t [])
-    {
-        {
-            0
-        }
-    },
+    .scan_rsp_struct_set = NULL,
 };
 
 static usb_hid_report_mouse_t s_hid_report_mouse = {0};
@@ -193,59 +187,52 @@ static xf_ble_gatts_chara_t s_chara_set[] = {
     /* 特征：HID information */
     [HID_CHARA_INDEX_INFO] =
     {
-        .chara_uuid = XF_BLE_UUID16_DECLARE(BLE_UUID_HID_INFORMATION),
-        .permission = XF_BLE_GATT_ATTR_PERMISSION_READ,
-        .properties = HID_INFORMATION_PROPERTIES,
-        .chara_value = {
-            .value = s_hid_infor_val,
-            .value_len = sizeof(s_hid_infor_val),
-        },
+        .uuid = XF_BLE_UUID16_DECLARE(BLE_UUID_HID_INFORMATION),
+        .perms = XF_BLE_GATT_ATTR_PERM_READ,
+        .props = HID_INFORMATION_PROPERTIES,
+        .value = s_hid_infor_val,
+        .value_len = sizeof(s_hid_infor_val),
     },
     /* 特征：HID report map */
     [HID_CHARA_INDEX_REPORT_MAP] =
     {
-        .chara_uuid = XF_BLE_UUID16_DECLARE(BLE_UUID_REPORT_MAP),
-        .permission = XF_BLE_GATT_ATTR_PERMISSION_READ
-        | XF_BLE_GATT_ATTR_PERMISSION_AUTHENTICATION_NEED,    // 需要认证
-        .properties = HID_REPORT_MAP_PROPERTIES,
-        .chara_value = {
-            .value = s_hid_report_map_mouse,
-            .value_len = sizeof(s_hid_report_map_mouse),
-        },
+        .uuid = XF_BLE_UUID16_DECLARE(BLE_UUID_REPORT_MAP),
+        .perms = XF_BLE_GATT_ATTR_PERM_READ
+        // | XF_BLE_GATT_ATTR_PERM_AUTHEN
+        ,    // 需要认证
+        .props = HID_REPORT_MAP_PROPERTIES,
+        .value = s_hid_report_map_mouse,
+        .value_len = sizeof(s_hid_report_map_mouse),
     },
     /* 特征：HID protocol mode */
     [HID_CHARA_INDEX_PROTOCOL_MODE] =
     {
-        .chara_uuid = XF_BLE_UUID16_DECLARE(BLE_UUID_PROTOCOL_MODE),
-        .permission = XF_BLE_GATT_ATTR_PERMISSION_READ,
-        .properties = HID_PROTOCOL_MODE_PROPERTIES,
-        .chara_value = {
-            .value = s_hid_protocol_mode_val,
-            .value_len = sizeof(s_hid_protocol_mode_val),
-        },
+        .uuid = XF_BLE_UUID16_DECLARE(BLE_UUID_PROTOCOL_MODE),
+        .perms = XF_BLE_GATT_ATTR_PERM_READ,
+        .props = HID_PROTOCOL_MODE_PROPERTIES,
+        .value = s_hid_protocol_mode_val,
+        .value_len = sizeof(s_hid_protocol_mode_val),
     },
     /* 特征：HID input report (device to host)*/
     [HID_CHARA_INDEX_INPUT_REPORT] =
     {
-        .chara_uuid = XF_BLE_UUID16_DECLARE(BLE_UUID_REPORT),
-        .permission = XF_BLE_GATT_ATTR_PERMISSION_READ,
-        .properties = HID_INPUT_REPORT_PROPERTIES,
-        .chara_value = {
-            .value = s_hid_input_report_val,
-            .value_len = sizeof(s_hid_input_report_val),
-        },
-        .desc_set = (xf_ble_gatts_chara_desc_t [])
+        .uuid = XF_BLE_UUID16_DECLARE(BLE_UUID_REPORT),
+        .perms = XF_BLE_GATT_ATTR_PERM_READ,
+        .props = HID_INPUT_REPORT_PROPERTIES,
+        .value = s_hid_input_report_val,
+        .value_len = sizeof(s_hid_input_report_val),
+        .desc_set = (xf_ble_gatts_desc_t [])
         {
             {
                 // CCC: Client Characteristic Configuration
-                .desc_uuid = XF_BLE_UUID16_DECLARE(BLE_UUID_CLIENT_CHARACTERISTIC_CONFIGURATION),
-                .permissions = XF_BLE_GATT_ATTR_PERMISSION_READ | XF_BLE_GATT_ATTR_PERMISSION_WRITE,
+                .uuid = XF_BLE_UUID16_DECLARE(BLE_UUID_CLIENT_CHARACTERISTIC_CONFIGURATION),
+                .perms = XF_BLE_GATT_ATTR_PERM_READ | XF_BLE_GATT_ATTR_PERM_WRITE,
                 .value = s_ccc_val,
                 .value_len = sizeof(s_ccc_val),
             }, {
                 // report reference, input
-                .desc_uuid = XF_BLE_UUID16_DECLARE(BLE_UUID_REPORT_REFERENCE),
-                .permissions = XF_BLE_GATT_ATTR_PERMISSION_READ,
+                .uuid = XF_BLE_UUID16_DECLARE(BLE_UUID_REPORT_REFERENCE),
+                .perms = XF_BLE_GATT_ATTR_PERM_READ,
                 .value = s_hid_report_ref_input_val,
                 .value_len = sizeof(s_hid_report_ref_input_val),
             },
@@ -255,19 +242,17 @@ static xf_ble_gatts_chara_t s_chara_set[] = {
     /* 特征：HID output report (host to device)*/
     [HID_CHARA_INDEX_OUTPUT_REPORT] =
     {
-        .chara_uuid = XF_BLE_UUID16_DECLARE(BLE_UUID_REPORT),
-        .permission = XF_BLE_GATT_ATTR_PERMISSION_READ,
-        .properties = HID_OUTPUT_REPORT_PROPERTIES,
-        .chara_value = {
-            .value = s_hid_output_report_val,
-            .value_len = sizeof(s_hid_output_report_val),
-        },
-        .desc_set = (xf_ble_gatts_chara_desc_t [])
+        .uuid = XF_BLE_UUID16_DECLARE(BLE_UUID_REPORT),
+        .perms = XF_BLE_GATT_ATTR_PERM_READ,
+        .props = HID_OUTPUT_REPORT_PROPERTIES,
+        .value = s_hid_output_report_val,
+        .value_len = sizeof(s_hid_output_report_val),
+        .desc_set = (xf_ble_gatts_desc_t [])
         {
             {
                 // report reference, output
-                .desc_uuid = XF_BLE_UUID16_DECLARE(BLE_UUID_REPORT_REFERENCE),
-                .permissions = XF_BLE_GATT_ATTR_PERMISSION_READ,
+                .uuid = XF_BLE_UUID16_DECLARE(BLE_UUID_REPORT_REFERENCE),
+                .perms = XF_BLE_GATT_ATTR_PERM_READ,
                 .value = s_hid_report_ref_output_val,
                 .value_len = sizeof(s_hid_report_ref_output_val),
             },
@@ -277,24 +262,19 @@ static xf_ble_gatts_chara_t s_chara_set[] = {
     /* 特征：HID control point */
     [HID_CHARA_INDEX_CTRL_POINT] =
     {
-        .chara_uuid = XF_BLE_UUID16_DECLARE(BLE_UUID_HID_CONTROL_POINT),
-        .permission = XF_BLE_GATT_ATTR_PERMISSION_READ,
-        .properties = HID_CONTROL_POINT_PROPERTIES,
-        .chara_value = {
-            .value = s_hid_control_point_val,
-            .value_len = sizeof(s_hid_control_point_val),
-        },
+        .uuid = XF_BLE_UUID16_DECLARE(BLE_UUID_HID_CONTROL_POINT),
+        .perms = XF_BLE_GATT_ATTR_PERM_READ,
+        .props = HID_CONTROL_POINT_PROPERTIES,
+        .value = s_hid_control_point_val,
+        .value_len = sizeof(s_hid_control_point_val),
     },
     {0}
 };
 
-static xf_ble_gatts_service_t s_svc_set[] = {
-    {
-        .service_uuid = XF_BLE_UUID16_DECLARE(BLE_UUID_HUMAN_INTERFACE_DEVICE),
-        .service_type = XF_BLE_GATT_SERVICE_TYPE_PRIMARY,
-        .chara_set = &s_chara_set,
-    },
-    {0}
+static xf_ble_gatts_service_t s_svc_set = {
+    .uuid = XF_BLE_UUID16_DECLARE(BLE_UUID_HUMAN_INTERFACE_DEVICE),
+    .type = XF_BLE_GATT_SERVICE_TYPE_PRIMARY,
+    .chara_set = s_chara_set,
 };
 
 /* ==================== [Macros] ============================================ */
@@ -310,15 +290,19 @@ void xf_main(void)
 
     /* 设置触发的 GPIO，设置中断任务回调位 HID 上报函数 */
     xf_hal_gpio_init(DEFAULT_INPUT_IO, XF_HAL_GPIO_DIR_IN);
-    xf_hal_gpio_set_pull(DEFAULT_INPUT_IO, XF_HAL_GPIO_PULL_NONE);
-    xf_hal_gpio_set_intr_type(DEFAULT_INPUT_IO, XF_HAL_GPIO_INTR_TYPE_RISING);
-    xf_hal_gpio_set_intr_cb(DEFAULT_INPUT_IO, sample_gpio_irq, NULL);
-    xf_hal_gpio_set_intr_enable(DEFAULT_INPUT_IO);
+    xf_hal_gpio_set_pull(DEFAULT_INPUT_IO, DEFAULT_INPUT_IO_MODE);
+    xf_hal_gpio_set_intr_type(DEFAULT_INPUT_IO, DEFAULT_INPUT_IO_TRIGGER_TYPE);
+    xf_hal_gpio_set_intr_isr(DEFAULT_INPUT_IO, sample_gpio_irq, NULL);
 
     // 注册 GAP 事件回调
     ret = xf_ble_gap_event_cb_register(sample_ble_gap_event_cb, XF_BLE_EVT_ALL);
     XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
              "REGISTER common event cb failed:%#X", ret);
+
+    // 注册 gatts 事件回调
+    ret = xf_ble_gatts_event_cb_register(sample_ble_gatts_event_cb, XF_BLE_EVT_ALL);
+    XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
+             "REGISTER gatts event cb failed:%#X", ret);
 
     /* 设置本地名称、外观 */
     xf_ble_gap_set_local_name(s_gatts_device_name, sizeof(s_gatts_device_name));
@@ -331,22 +315,35 @@ void xf_main(void)
     XF_CHECK(ret != XF_OK || s_app_id == 0, XF_RETURN_VOID, TAG,
              "REGISTER app profile failed:%#X s_app_id:%d", ret, s_app_id);
 
-    // 添加服务至 app_profile
-    ret = xf_ble_gatts_add_service_to_app(
-              s_app_id, &s_svc_set[0]);
+    /* 获取 服务属性的个数 */
+    xf_ble_gatts_svc_get_att_cnt(&s_svc_set);
+    XF_LOGI(TAG, "att item cnt[%d]", s_svc_set.att_cnt);
+
+    /* 获取 服务属性的映射表 */
+    xf_ble_gatts_svc_get_att_local_map(&s_svc_set);
+
+    // 添加服务至 app
+    ret = xf_ble_gatts_add_service(
+              s_app_id, &s_svc_set);
     XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
              "ADD service failed:%#X", ret);
-    XF_LOGI(TAG, ">>> HDL %d", s_svc_set[0].service_handle);
+
     // 启动服务
-    ret = xf_ble_gatts_start_service(s_app_id, s_svc_set[0].service_handle);
+    ret = xf_ble_gatts_start_service(s_app_id, s_svc_set.handle);
     XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
              "START service failed:%#X", ret);
 
-    /* 设置广播数据及参数，开启广播 */
-    ret = xf_ble_gap_start_adv(&s_adv_id, &s_adv_param, &s_adv_data);
+    /* 设置广播数据及参数，创建广播 */
+    ret = xf_ble_gap_create_adv(&s_adv_id, &s_adv_param, &s_adv_data);
     XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
-             "STAR ADV failed:%#X", ret);
-    XF_LOGI(TAG, "STAR ADV CMPL");
+             "Create ADV failed:%#X", ret);
+    XF_LOGI(TAG, "Create ADV CMPL");
+
+    /* 开启广播 */
+    ret = xf_ble_gap_start_adv(s_adv_id, DEFAULT_BLE_GAP_ADV_DURATION_FOREVER);
+    XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
+             "START ADV failed:%#X", ret);
+    XF_LOGI(TAG, "START ADV CMPL");
 }
 
 /* ==================== [Static Functions] ================================== */
@@ -355,25 +352,32 @@ static void sample_gpio_irq(xf_gpio_num_t gpio_num, bool level, void *user_data)
 {
     XF_LOGI(TAG, "HID report");
 
+    static uint8_t cnt = 0;
+    uint8_t base = 1;
+    if (cnt++%6 == 0)
+    {
+        base *= -1;
+    }
+
     s_hid_report_mouse.ac_pan = 0;
     s_hid_report_mouse.button_mask = 0;
     s_hid_report_mouse.wheel = 0;
-    s_hid_report_mouse.x = 60;
+    s_hid_report_mouse.x = 60*base;
     s_hid_report_mouse.y = 0;
 
     xf_ble_gatts_ntf_t ntf_param = {
-        .value = &s_hid_report_mouse,
+        .value = (uint8_t *)&s_hid_report_mouse,
         .value_len = sizeof(s_hid_report_mouse),
-        .handle = s_svc_set[0].chara_set[HID_CHARA_INDEX_INPUT_REPORT].chara_value_handle,
+        .handle = s_svc_set.chara_set[HID_CHARA_INDEX_INPUT_REPORT].value_handle,
     };
     xf_err_t ret = xf_ble_gatts_send_notification(
                        s_app_id, s_conn_id, &ntf_param);
-    XF_CHECK(ret != XF_OK, ret, TAG,
+    XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
              "send_notify_indicate failed:%#X", ret);
 }
 
-static xf_err_t sample_ble_gap_event_cb(
-    xf_ble_gap_event_t event,
+static xf_ble_evt_res_t sample_ble_gap_event_cb(
+    xf_ble_gap_evt_t event,
     xf_ble_gap_evt_cb_param_t *param)
 {
     UNUSED(s_app_id);
@@ -384,10 +388,11 @@ static xf_err_t sample_ble_gap_event_cb(
         XF_LOGI(TAG, "EV:peer connect:s_app_id:%d,conn_id:%d,"
                 "addr_type:%d,addr:"XF_BLE_ADDR_PRINT_FMT,
                 s_app_id, param->connect.conn_id,
-                param->connect.peer_addr.type,
-                XF_BLE_ADDR_EXPAND_TO_ARG(param->connect.peer_addr.addr));
+                param->connect.addr->type,
+                XF_BLE_ADDR_EXPAND_TO_ARG(param->connect.addr->addr));
 
         s_conn_id = param->connect.conn_id;
+        xf_hal_gpio_set_intr_enable(DEFAULT_INPUT_IO);
     } break;
     /* 事件: 断连  */
     case XF_BLE_GAP_EVT_DISCONNECT: {
@@ -395,14 +400,107 @@ static xf_err_t sample_ble_gap_event_cb(
                 "addr_type:%d,addr:"XF_BLE_ADDR_PRINT_FMT,
                 s_app_id, param->disconnect.conn_id,
                 param->disconnect.reason,
-                param->disconnect.peer_addr.type,
-                XF_BLE_ADDR_EXPAND_TO_ARG(param->disconnect.peer_addr.addr));
+                param->disconnect.addr->type,
+                XF_BLE_ADDR_EXPAND_TO_ARG(param->disconnect.addr->addr));
         XF_LOGI(TAG, "It will restart ADV");
-        xf_ble_gap_start_adv(&s_adv_id, &s_adv_param, &s_adv_data);
+        xf_ble_gap_start_adv(s_adv_id, DEFAULT_BLE_GAP_ADV_DURATION_FOREVER);
     } break;
     default:
-        break;
+        return XF_BLE_EVT_RES_NOT_HANDLED;
     }
 
-    return XF_OK;
+    return XF_BLE_EVT_RES_HANDLED;
+}
+
+static xf_ble_evt_res_t sample_ble_gatts_event_cb(
+    xf_ble_gatts_evt_t event,
+    xf_ble_gatts_evt_cb_param_t *param)
+{
+    UNUSED(s_app_id);
+    UNUSED(param);
+    switch (event) {
+    /* 事件: 读请求  */
+    case XF_BLE_GATTS_EVT_READ_REQ: {
+        XF_LOGI(TAG, "EV:RECV READ_REQ:s_app_id:%d,conn_id:%d,need_rsp:%d,attr_handle:%d",
+                s_app_id, param->read_req.conn_id, param->read_req.need_rsp,
+                param->read_req.handle);
+
+        xf_ble_gatt_att_num_t chara_index = 0;
+        xf_ble_gatt_att_num_t offset = 0;
+
+        xf_ble_gatts_svc_att_get_pos_by_handle(
+            &s_svc_set, param->read_req.handle, 
+            &chara_index, &offset);
+
+        /* 特征声明 */
+        XF_ASSERT(likely(offset != XF_BLE_GATT_CHARA_ATT_OFFSET_DECL), XF_BLE_EVT_RES_ERR, 
+            TAG, "hdl(%d) is chara declaration:chara[%d] offset:%d",
+                param->read_req.handle, chara_index, offset);
+
+        xf_ble_gatts_response_t rsp = 
+        {
+            .handle = param->read_req.handle,
+            .trans_id = param->read_req.trans_id,
+            .err = XF_BLE_ATTR_ERR_SUCCESS,
+        };
+
+        /* 特征值 */
+        if(offset == XF_BLE_GATT_CHARA_ATT_OFFSET_VALUE)
+        {
+            rsp.value_len = s_chara_set[chara_index].value_len;
+            rsp.value = s_chara_set[chara_index].value;
+        }
+        /* 描述符 */
+        else
+        {
+            offset = XF_BLE_GATT_CHARA_GET_DESC_INDEX(offset);    // 减去特征声明及特征值声明的句柄占位
+            rsp.value_len = s_chara_set[chara_index].desc_set[offset].value_len;
+            rsp.value = s_chara_set[chara_index].desc_set[offset].value;
+        }
+        
+        xf_ble_gatts_send_read_rsp(s_app_id, param->read_req.conn_id, &rsp);
+    } break;
+    /* 事件: 写请求  */
+    case XF_BLE_GATTS_EVT_WRITE_REQ: {
+        XF_LOGI(TAG, "EV:RECV WRITE_REQ:s_app_id:%d,conn_id:%d,need_rsp:%d,attr_handle:%d",
+                s_app_id, param->write_req.conn_id, param->write_req.need_rsp,
+                param->write_req.handle);
+
+        if(s_chara_set[HID_CHARA_INDEX_INPUT_REPORT].desc_set[0].handle == param->write_req.handle)
+        {
+            if(param->write_req.value_len > s_chara_set[HID_CHARA_INDEX_INPUT_REPORT].desc_set[0].value_len)
+            {
+                XF_LOGE(TAG, "write_req value_len(%d) > desc_set value_len(%d)", 
+                    param->write_req.value_len,
+                    s_chara_set[HID_CHARA_INDEX_INPUT_REPORT].desc_set[0].value_len);
+            }
+            xf_memcpy(s_chara_set[HID_CHARA_INDEX_INPUT_REPORT].desc_set[0].value,
+                param->write_req.value, param->write_req.value_len);
+            
+            if (param->write_req.need_rsp == true)
+            {
+                xf_ble_gatts_response_t rsp = 
+                {
+                    .handle = param->write_req.handle,
+                    .trans_id = param->write_req.trans_id,
+                    .err = XF_BLE_ATTR_ERR_SUCCESS,
+                    .value = s_chara_set[HID_CHARA_INDEX_INPUT_REPORT].desc_set[0].value,
+                    .value_len = param->write_req.value_len,
+                };
+                xf_ble_gatts_send_write_rsp(s_app_id, param->write_req.conn_id, &rsp);
+            }
+        }
+        
+    } break;
+    /* 事件: MTU 协商  */
+    case XF_BLE_GATTS_EVT_EXCHANGE_MTU: {
+        XF_LOGI(TAG, "EV:mtu changed:s_app_id:%d,conn_id:%d,mtu_size:%d",
+                s_app_id, param->mtu.conn_id, param->mtu.mtu_size);
+    } break;
+    default:
+        XF_LOGW(TAG, "EV: OTHERS:%d", event);
+        return XF_BLE_EVT_RES_NOT_HANDLED;
+    }
+
+    return XF_BLE_EVT_RES_HANDLED;
 }

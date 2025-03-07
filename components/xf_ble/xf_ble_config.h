@@ -26,6 +26,14 @@ extern "C" {
 #define XF_BLE_ENABLE (0)
 #endif
 
+#if defined(CONFIG_XF_BLE_ADV_ID_INVALID) || (CONFIG_XF_BLE_ADV_ID_INVALID)
+#define XF_BLE_ADV_ID_INVALID   (CONFIG_XF_BLE_ADV_ID_INVALID)
+#endif
+
+#if defined(CONFIG_XF_BLE_CONN_ID_INVALID) || (CONFIG_XF_BLE_CONN_ID_INVALID)
+#define XF_BLE_CONN_ID_INVALID   (CONFIG_XF_BLE_CONN_ID_INVALID)
+#endif
+
 /* ==================== [Typedefs] ========================================== */
 
 /* ==================== [Global Prototypes] ================================= */
