@@ -53,9 +53,9 @@ class ws63():
             shutil.rmtree(SDK_OUTPUT_PATH)
 
     def flash(self, args):
-        framware_path = "./build/sdk/fwpkg/ws63-liteos-app/ws63-liteos-app_all.fwpkg"
-        if not os.path.exists(framware_path):
-            logging.error(f"firmware path {framware_path} not exists")
+        firmware_path = "./build/sdk/fwpkg/ws63-liteos-app/ws63-liteos-app_all.fwpkg"
+        if not os.path.exists(firmware_path):
+            logging.error(f"firmware path {firmware_path} not exists")
             return
         try:
             # 检查命令是否可用
@@ -76,7 +76,7 @@ class ws63():
             logging.error("no serial port found")
             return
         for port in ports:
-            os.system(f"burn {framware_path}  -p {port.device}")
+            os.system(f"burn {firmware_path}  -p {port.device}")
 
     def export(self, name, args):
         print(args)
