@@ -93,11 +93,12 @@ class ws63():
                 help : 显示 SDK 侧 menuconfig 可选目标
                 其他 : 用户指定 menuconfig 目标
             """
-            if len(args) == 2:
-                if args[1] == "help":
-                    target = ""
-                else:
-                    target = args[1]
+            str_menuconfig_sub = f"python build.py menuconfig"
+            if len(args) == 1:
+                str_menuconfig_sub += f" {target}"
+            elif len(args) == 2:
+                if args[1] != "help":
+                    str_menuconfig_sub += f" {args[1]}"
+
             os.chdir(SDK_PATH)
-            str_menuconfig_sub = f"python build.py menuconfig ${target}"
             os.system(str_menuconfig_sub)
