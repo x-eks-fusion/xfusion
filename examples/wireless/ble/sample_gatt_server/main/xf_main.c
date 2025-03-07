@@ -288,12 +288,16 @@ static xf_ble_evt_res_t sample_ble_gatts_event_cb(
             XF_ASSERT(likely(offset != XF_BLE_GATT_CHARA_ATT_OFFSET_DECL), XF_BLE_EVT_RES_ERR, 
                 TAG, "hdl(%d) is chara declaration:chara[%d] offset:%d",
                     param->read_req.handle, chara_index, offset);
-
+            uint8_t *value = NULL;
+            uint32_t value_len = 0;
             /* 特征值 */
             if(offset == XF_BLE_GATT_CHARA_ATT_OFFSET_VALUE)
             {
                 xf_memcpy(s_chara_set[chara_index].value,
                     param->write_req.value, param->write_req.value_len);
+                value = s_chara_set[chara_index].value;
+                value_len = param->write_req.value_len;
+
             }
             /* 描述符 */
             else
@@ -301,14 +305,9 @@ static xf_ble_evt_res_t sample_ble_gatts_event_cb(
                 offset = XF_BLE_GATT_CHARA_GET_DESC_INDEX(offset);    // 减去特征声明及特征值声明的句柄占位
                 xf_memcpy(s_chara_set[chara_index].desc_set[offset].value,
                     param->write_req.value, param->write_req.value_len);
+                value = s_chara_set[chara_index].desc_set[offset].value;
+                value_len = param->write_req.value_len;
             }
-
-            xf_ble_gatts_response_t rsp = 
-            {
-                .handle = param->write_req.handle,
-                .trans_id = param->write_req.trans_id,
-            };
-            xf_ble_gatts_send_write_rsp(s_app_id, param->write_req.conn_id, &rsp);
 
             if (param->write_req.need_rsp == true)
             {
@@ -317,12 +316,10 @@ static xf_ble_evt_res_t sample_ble_gatts_event_cb(
                     .handle = param->write_req.handle,
                     .trans_id = param->write_req.trans_id,
                     .err = XF_BLE_ATTR_ERR_SUCCESS,
-                    .value = s_chara_set[HID_CHARA_INDEX_INPUT_REPORT].desc_set[0].value,
-                    .value_len = param->write_req.value_len,
+                    .value = value,
+                    .value_len = value_len,
                 };
-                XF_LOGI(TAG, ">>>:write rsp start");
                 xf_ble_gatts_send_write_rsp(s_app_id, param->write_req.conn_id, &rsp);
-                XF_LOGI(TAG, ">>>:write rsp end");
             }
         }
     } break;
