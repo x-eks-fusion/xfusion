@@ -1,16 +1,41 @@
 menu "Platform Config"
-    visible if XFKCONFIG_DEBUG_MODE
+    choice PLATFORM_SDK_VERSION_CHOICE
+        bool "sdk version"
+        default BS2X_SDK
+        config BS2X_SDK
+            bool "bs2x sdk public version"
+        config BS2X_1_0_11_INTERNAL
+            bool "bs2x sdk internal version, 1.0.11"
+         config BS2X_1_0_13_INTERNAL
+            bool "bs2x sdk internal version, 1.0.13"
+    endchoice
+    
+    config PLATFORM_SDK_RELATIVE_PATH
+        string
+        default "sdks/bs2x_sdk" if BS2X_SDK
+        default "sdks/bs2x_1.0.11_internal" if BS2X_1_0_11_INTERNAL
+        default "sdks/bs2x_1.0.13_internal" if BS2X_1_0_13_INTERNAL
 
-    menu "BLE Config"
-        depends on XF_BLE_ENABLE="y"
+    config PLATFORM_SDK_DEFAULT_TARGET
+        string
+        default "bs21e-sle-ble-slp-central-peripheral" if BS2X_SDK
+        default "bs21e-sle-ble-slp-central-peripheral" if BS2X_1_0_11_INTERNAL
+        default "standard-bs21e-1100e" if BS2X_1_0_13_INTERNAL
 
-        config XF_BLE_ADV_ID_INVALID
-            int "BLE invalid ADV ID value"
-            default 255
+    # 预配置均为默认情况下不会在菜单界面显示，仅在开启调试或者源码中可被查看、修改
+    menu "pre-config"   
+        visible if XFKCONFIG_DEBUG_MODE
+        menu "BLE Config"
+            depends on XF_BLE_ENABLE="y"
 
-        config XF_BLE_CONN_ID_INVALID
-            int "BLE invalid CONN ID value"
-            default 255
-    endmenu # "BLE Config"
+            config XF_BLE_ADV_ID_INVALID
+                int "BLE invalid ADV ID value"
+                default 255
+
+            config XF_BLE_CONN_ID_INVALID
+                int "BLE invalid CONN ID value"
+                default 255
+        endmenu # "BLE Config"
+    endmenu # "pre-config"
     
 endmenu # "Platform Config"

@@ -1,3 +1,4 @@
+import xf_build
 from xf_build import api
 import os
 import shutil
@@ -8,14 +9,16 @@ import logging
 import subprocess
 import serial.tools.list_ports
 
+sdk_rel_path = xf_build.get_define("PLATFORM_SDK_RELATIVE_PATH")
+sdk_default_target = xf_build.get_define("PLATFORM_SDK_DEFAULT_TARGET")
+
 # 默认目标
-DEFAULT_TARGET = "bs21e-sle-ble-slp-central-peripheral"
+DEFAULT_TARGET = sdk_default_target
 # SDK 路径
-SDK_PATH: Path = api.XF_ROOT / "sdks/bs2x_sdk/"
+SDK_PATH: Path = api.XF_ROOT / sdk_rel_path
 # SDK 编译输出的路径
 SDK_BUILD_OUTPUT_PATH: Path = SDK_PATH / "output"
 XF_PROJECT_BUILD_PATH: Path = api.PROJECT_BUILD_PATH
-
 
 class bs21():
 
