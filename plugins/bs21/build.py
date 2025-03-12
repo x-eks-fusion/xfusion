@@ -55,9 +55,13 @@ class bs21():
             shutil.rmtree(SDK_OUTPUT_PATH)
 
     def flash(self, args):
-        firmware_path = "build/sdk/fwpkg/bs21e-sle-ble-slp-central-peripheral/bs21e_all_in_one.fwpkg"
-        if not os.path.exists(firmware_path):
-            logging.error(f"firmware path {firmware_path} not exists")
+        target = self.get_sdk_default_target()
+        PROJECT_FW_PATH: Path = XF_PROJECT_BUILD_PATH / "sdk/fwpkg" / target
+        str_path_search = f"{PROJECT_FW_PATH}/*_all.fwpkg"
+        str_path_sdk_fw_list = glob.glob(str_path_search)
+
+        if len(str_path_sdk_fw_list) == 0:
+            logging.error(f"firmware path {str_path_search} not exists")
             return
         try:
             # 检查命令是否可用
@@ -78,7 +82,7 @@ class bs21():
             logging.error("no serial port found")
             return
         for port in ports:
-            os.system(f"burn {firmware_path}  -p {port.device}")
+            os.system(f"burn {str_path_sdk_fw_list[0]}  -p {port.device}")
 
     def export(self, name, args):
         pass

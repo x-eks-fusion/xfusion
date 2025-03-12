@@ -17,11 +17,16 @@ menu "Platform Config"
         default "sdks/ws63_1.10.101_internal/" if WS63_1_10_101_INTERNAL
         default "sdks/ws63_1.10.102_internal/" if WS63_1_10_102_INTERNAL
 
+    choice PLATFORM_SDK_DEFAULT_TARGET_CHOICE
+        bool "sdk default target"
+        default WS63_LITEOS_APP
+        config WS63_LITEOS_APP
+            bool "ws63-liteos-app"
+    endchoice
+
     config PLATFORM_SDK_DEFAULT_TARGET
         string
-        default "ws63-liteos-app" if FBB_WS63
-        default "ws63-liteos-app" if WS63_1_10_101_INTERNAL
-        default "ws63-liteos-app" if WS63_1_10_102_INTERNAL
+        default "ws63-liteos-app" if WS63_LITEOS_APP
 
 
     # 预配置均为默认情况下不会在菜单界面显示，仅在开启调试或者源码中可被查看、修改
