@@ -34,3 +34,6 @@
 [submodule "components/xf_ble/xf_ble"]
 	path = components/xf_ble/xf_ble
 	url = https://github.com/x-eks-fusion/xf_ble.git
+[submodule "components/xf_sle/xf_sle"]
+	path = components/xf_sle/xf_sle
+	url = https://github.com/x-eks-fusion/xf_sle.git
