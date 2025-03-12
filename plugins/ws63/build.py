@@ -1,4 +1,3 @@
-import xf_build
 from xf_build import api
 import logging
 import os
@@ -9,25 +8,25 @@ from pathlib import Path
 import subprocess
 import serial.tools.list_ports
 
-sdk_rel_path = xf_build.get_define("PLATFORM_SDK_RELATIVE_PATH")
-sdk_default_target = xf_build.get_define("PLATFORM_SDK_DEFAULT_TARGET")
-
-# 默认目标
-DEFAULT_TARGET = sdk_default_target
-# SDK 路径
-SDK_PATH: Path = api.XF_ROOT / sdk_rel_path
-# SDK 编译输出的路径
-SDK_OUTPUT_PATH: Path = SDK_PATH / "output"
 XF_PROJECT_BUILD_PATH: Path = api.PROJECT_BUILD_PATH
 
 class ws63():
 
+    def get_sdk_default_target(self):
+        sdk_default_target = api.get_define("PLATFORM_SDK_DEFAULT_TARGET")
+        return sdk_default_target
+
+    def get_sdk_path(self):
+        sdk_rel_path = api.get_define("PLATFORM_SDK_RELATIVE_PATH")
+        SDK_PATH: Path = api.XF_ROOT / sdk_rel_path
+        return SDK_PATH.resolve()
+
     def build(self, args):
         project_cmake_file: Path = XF_PROJECT_BUILD_PATH / "build_environ.cmake"
         api.apply_template("cmake_project.j2", project_cmake_file)
-        os.chdir(SDK_PATH.resolve())
+        os.chdir(self.get_sdk_path())
 
-        target = DEFAULT_TARGET
+        target = self.get_sdk_default_target()
         # 第一个拓展参数为 help 时 显示 SDK 侧 编译时的可选目标
         """
         第一个拓展参数为（如果存在）：
@@ -42,6 +41,7 @@ class ws63():
         api.exec_cmd(["python", "build.py", "-c -nhso -release", target])
 
         # 尝试将 output 下 fwpkg 目录复制到工程目录下的 build 目录下的 sdk 目录（如无则创建）
+        SDK_OUTPUT_PATH: Path = self.get_sdk_path() / "output"
         str_path_sdk_fw_list = glob.glob(f"{SDK_OUTPUT_PATH}/*/fwpkg")
         for str_path_fw in str_path_sdk_fw_list:
             try:
@@ -51,6 +51,7 @@ class ws63():
                 print(f"copy sdk firmware failed!", sys.exc_info())
 
     def clean(self, args):
+        SDK_OUTPUT_PATH: Path = self.get_sdk_path() / "output"
         if SDK_OUTPUT_PATH.exists() == True:
             shutil.rmtree(SDK_OUTPUT_PATH)
 
@@ -89,7 +90,7 @@ class ws63():
     def menuconfig(self, args):
         # 第一个拓展参数为 sub 时 打开SDK 侧 menuconfig
         if args[0] == "sub":
-            target = DEFAULT_TARGET
+            target = self.get_sdk_default_target()
             """
             第二个拓展参数为（如果存在）：
                 help : 显示 SDK 侧 menuconfig 可选目标
@@ -102,5 +103,5 @@ class ws63():
                 if args[1] != "help":
                     str_menuconfig_sub += f" {args[1]}"
 
-            os.chdir(SDK_PATH)
+            os.chdir(self.get_sdk_path())
             os.system(str_menuconfig_sub)
