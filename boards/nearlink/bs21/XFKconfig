@@ -1,0 +1,65 @@
+menu "Platform Config"
+    choice PLATFORM_SDK_VERSION_CHOICE
+        bool "sdk version"
+        default BS2X_SDK
+        config BS2X_SDK
+            bool "bs2x sdk public version"
+         config BS2X_1_0_13_INTERNAL
+            bool "bs2x sdk internal version, 1.0.13"
+    endchoice
+    
+    config PLATFORM_SDK_RELATIVE_PATH
+        string
+        default "sdks/bs2x_sdk" if BS2X_SDK
+        default "sdks/bs2x_1.0.13_internal" if BS2X_1_0_13_INTERNAL
+
+    if BS2X_SDK
+
+        choice 
+            bool "sdk default target"
+            default BS21E_SLE_BLE_SLP_CENTRAL_PERIPHERAL
+            config BS21E_SLE_BLE_SLP_CENTRAL_PERIPHERAL
+                bool "bs21e-sle-ble-slp-central-peripheral"
+        endchoice 
+
+        config PLATFORM_SDK_DEFAULT_TARGET
+            string
+            default "bs21e-sle-ble-slp-central-peripheral" if BS21E_SLE_BLE_SLP_CENTRAL_PERIPHERAL
+
+    endif
+
+    if BS2X_1_0_13_INTERNAL
+    
+        choice
+            bool "sdk default target"
+            default STANDARD_BS21E_1100E
+            config STANDARD_BS21_N1100
+                bool "standard-bs21-n1100"
+            config STANDARD_BS21E_1100E
+                bool "standard-bs21e-1100e"
+        endchoice 
+
+        config PLATFORM_SDK_DEFAULT_TARGET
+            string
+            default "standard-bs21-n1100" if STANDARD_BS21_N1100
+            default "standard-bs21e-1100e" if STANDARD_BS21E_1100E
+
+    endif
+
+    # 预配置均为默认情况下不会在菜单界面显示，仅在开启调试或者源码中可被查看、修改
+    menu "pre-config"   
+        visible if XFKCONFIG_DEBUG_MODE
+        menu "BLE Config"
+            depends on XF_BLE_ENABLE="y"
+
+            config XF_BLE_ADV_ID_INVALID
+                int "BLE invalid ADV ID value"
+                default 255
+
+            config XF_BLE_CONN_ID_INVALID
+                int "BLE invalid CONN ID value"
+                default 255
+        endmenu # "BLE Config"
+    endmenu # "pre-config"
+    
+endmenu # "Platform Config"

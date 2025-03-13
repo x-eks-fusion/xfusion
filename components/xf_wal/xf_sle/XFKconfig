@@ -1,8 +1,0 @@
-menu "SLE Config"
-
-config XF_SLE_DEBUG_ENABLE
-    bool "Enable xf debug mode"
-    default n
-
-endmenu
-
