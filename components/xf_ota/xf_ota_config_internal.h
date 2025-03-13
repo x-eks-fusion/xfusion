@@ -23,12 +23,10 @@ extern "C" {
 
 /* ==================== [Defines] =========================================== */
 
-#ifndef XF_OTA_BIG_ENDIAN_IS_ENABLE
-#   if  !defined(CONFIG_XF_OTA_BIG_ENDIAN_ENABLE) || (CONFIG_XF_OTA_BIG_ENDIAN_ENABLE == 0)
-#       define XF_OTA_BIG_ENDIAN_IS_ENABLE      0
-#   else
-#       define XF_OTA_BIG_ENDIAN_IS_ENABLE      1
-#   endif
+#if (!defined(XF_OTA_ENABLE) || (XF_OTA_ENABLE) || defined(__DOXYGEN__))
+#   define XF_OTA_IS_ENABLE                     1
+#else
+#   define XF_OTA_IS_ENABLE                     0
 #endif
 
 /* ==================== [Typedefs] ========================================== */
