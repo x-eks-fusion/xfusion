@@ -23,7 +23,7 @@ extern "C" {
 
 /**
  * @cond (XFAPI_USER || XFAPI_PORT)
- * @addtogroup group_xf_iperf
+ * @addtogroup group_xf_ota
  * @endcond
  * @{
  */
@@ -108,7 +108,7 @@ typedef struct _xf_ota_partition_info_t {
 /* ==================== [Macros] ============================================ */
 
 /**
- * End of addtogroup group_xf_iperf
+ * End of addtogroup group_xf_ota
  * @}
  */
 

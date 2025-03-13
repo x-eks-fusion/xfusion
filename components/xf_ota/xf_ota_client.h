@@ -16,16 +16,11 @@
 
 #include "xf_ota_types.h"
 
+#if XF_OTA_IS_ENABLE
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/**
- * @cond (XFAPI_USER || XFAPI_PORT)
- * @addtogroup group_xf_iperf
- * @endcond
- * @{
- */
 
 /* ==================== [Defines] =========================================== */
 
@@ -281,13 +276,10 @@ xf_err_t xf_ota_write_to(
 
 /* ==================== [Macros] ============================================ */
 
-/**
- * End of addtogroup group_xf_iperf
- * @}
- */
-
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
+
+#endif /* XF_OTA_IS_ENABLE */
 
 #endif /* __XF_OTA_CLIENT_H__ */
