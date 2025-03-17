@@ -22,6 +22,11 @@ set(XF_INCS_STR
     {{inc_dir}}
         {%- endfor %}
     {%- endfor %}
+    {%- for key, port in public_port.items() %}  {# public_port #}
+        {%- for inc_dir in port.inc_dirs %}
+    {{inc_dir}}
+        {%- endfor %}
+    {%- endfor %}
 )
 
 set(XF_SRCS_STR
@@ -40,6 +45,11 @@ set(XF_SRCS_STR
     {%- endfor %}
     {%- for key, cmpnt in user_dirs.items() %}    {# user_dirs #}
         {%- for src in cmpnt.srcs %}
+    {{src}}
+        {%- endfor %}
+    {%- endfor %}
+    {%- for key, port in public_port.items() %}    {# public_port #}
+        {%- for src in port.srcs %}
     {{src}}
         {%- endfor %}
     {%- endfor %}
