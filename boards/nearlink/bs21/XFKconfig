@@ -6,45 +6,34 @@ menu "Platform Config"
             bool "bs2x sdk public version"
          config BS2X_1_0_13_INTERNAL
             bool "bs2x sdk internal version, 1.0.13"
+         config BS2X_1_0_15_INTERNAL
+            bool "bs2x sdk internal version, 1.0.15"
     endchoice
     
     config PLATFORM_SDK_RELATIVE_PATH
         string
         default "sdks/bs2x_sdk" if BS2X_SDK
         default "sdks/bs2x_1.0.13_internal" if BS2X_1_0_13_INTERNAL
+        default "sdks/bs2x_1.0.15_internal" if BS2X_1_0_15_INTERNAL
 
-    if BS2X_SDK
+    choice 
+        bool "sdk default target"
+        help
+            Not every target is available in all SDKS.
+        default STANDARD_BS21E_1100E
+        config BS21E_SLE_BLE_SLP_CENTRAL_PERIPHERAL
+            bool "bs21e-sle-ble-slp-central-peripheral"
+        config STANDARD_BS21_N1100
+            bool "standard-bs21-n1100"
+        config STANDARD_BS21E_1100E
+            bool "standard-bs21e-1100e"
+    endchoice 
 
-        choice 
-            bool "sdk default target"
-            default BS21E_SLE_BLE_SLP_CENTRAL_PERIPHERAL
-            config BS21E_SLE_BLE_SLP_CENTRAL_PERIPHERAL
-                bool "bs21e-sle-ble-slp-central-peripheral"
-        endchoice 
-
-        config PLATFORM_SDK_DEFAULT_TARGET
-            string
-            default "bs21e-sle-ble-slp-central-peripheral" if BS21E_SLE_BLE_SLP_CENTRAL_PERIPHERAL
-
-    endif
-
-    if BS2X_1_0_13_INTERNAL
-    
-        choice
-            bool "sdk default target"
-            default STANDARD_BS21E_1100E
-            config STANDARD_BS21_N1100
-                bool "standard-bs21-n1100"
-            config STANDARD_BS21E_1100E
-                bool "standard-bs21e-1100e"
-        endchoice 
-
-        config PLATFORM_SDK_DEFAULT_TARGET
-            string
-            default "standard-bs21-n1100" if STANDARD_BS21_N1100
-            default "standard-bs21e-1100e" if STANDARD_BS21E_1100E
-
-    endif
+    config PLATFORM_SDK_DEFAULT_TARGET
+        string
+        default "bs21e-sle-ble-slp-central-peripheral" if BS21E_SLE_BLE_SLP_CENTRAL_PERIPHERAL
+        default "standard-bs21-n1100" if STANDARD_BS21_N1100
+        default "standard-bs21e-1100e" if STANDARD_BS21E_1100E
 
     # 预配置均为默认情况下不会在菜单界面显示，仅在开启调试或者源码中可被查看、修改
     menu "pre-config"   
