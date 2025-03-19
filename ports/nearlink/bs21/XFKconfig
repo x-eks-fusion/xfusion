@@ -1,0 +1,5 @@
+menu "Ports Config"
+
+    orsource "../port_xf_for_nearlink/bs21/XFKconfig"
+
+endmenu # "Ports Config"

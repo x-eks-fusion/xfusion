@@ -37,3 +37,6 @@
 [submodule "components/xf_sle/xf_sle"]
 	path = components/xf_sle/xf_sle
 	url = https://github.com/x-eks-fusion/xf_sle.git
+[submodule "ports/nearlink/port_xf_for_nearlink"]
+	path = ports/nearlink/port_xf_for_nearlink
+	url = https://github.com/x-eks-fusion/port_xf_for_nearlink.git
