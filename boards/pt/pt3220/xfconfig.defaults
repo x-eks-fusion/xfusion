@@ -1,0 +1,6 @@
+# Welcome to xfusion
+# CONFIG_XF_NET_APPS_ENABLE is not set
+# CONFIG_XF_OSAL_ENABLE is not set
+# CONFIG_PORT_OTA_ENABLE is not set
+CONFIG_XF_LOG_COLORS_ENABLE=n
+

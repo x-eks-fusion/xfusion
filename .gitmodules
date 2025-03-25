@@ -40,3 +40,9 @@
 [submodule "ports/nearlink/port_xf_for_nearlink"]
 	path = ports/nearlink/port_xf_for_nearlink
 	url = https://github.com/x-eks-fusion/port_xf_for_nearlink.git
+[submodule "ports/pt"]
+	path = ports/pt
+	url = https://gitee.com/ptwsmart/pt.git
+[submodule "components/xf_lp/xf_lp"]
+	path = components/xf_lp/xf_lp
+	url = https://github.com/x-eks-fusion/xf_lp.git

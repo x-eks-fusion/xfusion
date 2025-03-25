@@ -1,0 +1,111 @@
+#! armcc -E -I ..\build\header_config\ -I ..\core\ble\api
+#include "xfconfig.h"
+
+#if defined(CONFIG_XF_BLE_ENABLE)
+#include "blelib.h"
+#endif
+
+; xfconfig.h 内默认定义了 CONFIG_FLASH_BANK_xxx 宏
+; 默认 SEL_BANK_A , SEL_BANK_B 由链接脚本生成
+#if defined(SEL_BANK_B)
+#define PROGRAM_START           CONFIG_FLASH_BANK_B_START
+#define PROGRAM_END             CONFIG_FLASH_BANK_B_END
+#else
+#define PROGRAM_START           CONFIG_FLASH_BANK_A_START
+#define PROGRAM_END             CONFIG_FLASH_BANK_A_END
+#endif
+
+#ifndef FLASH_BASE
+#define FLASH_BASE              (0x18000000)
+#endif
+
+#define SCT_FLASH_BASE          (FLASH_BASE + PROGRAM_START)
+#define SCT_FLASH_END           (FLASH_BASE + PROGRAM_END)
+#define SCT_FLASH_LEN           (SCT_FLASH_END - SCT_FLASH_BASE)
+
+#if !defined(CONFIG_XF_BLE_ENABLE)
+
+; without ble
+LR_IROM1 SCT_FLASH_BASE SCT_FLASH_LEN
+{
+    ER_IROM1 SCT_FLASH_BASE SCT_FLASH_LEN
+    {
+        *.o (RESET, +First)
+        *(InRoot$$Sections)
+        startup*.o (+RO)
+        .ANY (+RO)
+    }
+
+    RW_IRAM_VECT 0x20003000 EMPTY 152
+    {
+        ; sram vector
+    }
+
+    RW_IRAM_USER +0
+    {
+        *.o(ram_func*)
+        .ANY (+RW +ZI)
+    }
+
+    RW_IRAM_STACK 0x20008000-0x600 UNINIT 0x600
+    {
+        .ANY (STACK)
+    }
+
+    RW_IRAM_RETN 0x20008000 UNINIT 0x2000
+    {
+        ; retention memory 8KB
+        ; user manual init
+        *.o(user_retention)
+    }
+}
+
+#else
+
+; ble.lib, 3/1 connections, master or slave
+LR_IROM1 SCT_FLASH_BASE SCT_FLASH_LEN
+{
+    ER_IROM1 SCT_FLASH_BASE SCT_FLASH_LEN
+    {
+        *.o (RESET, +First)
+        *(InRoot$$Sections)
+        startup*.o (+RO)
+        .ANY (+RO)
+    }
+
+    RW_IRAM_VECT 0x20003000 EMPTY 152
+    {
+        ; sram vector
+    }
+
+    RW_IRAM_USER +0
+    {
+        *.o(ram_func*)
+        .ANY (+RW +ZI)
+    }
+
+    RW_IRAM_STACK 0x20008000-0x600 UNINIT 0x600
+    {
+        .ANY (STACK)
+    }
+
+    RW_IRAM_EXCH BLE_EXCH_BASE EMPTY BLE_EXCH_SIZE
+    {
+        ; configured with BLE HW
+    }
+
+    RW_IRAM_HEAP BLE_HEAP_BASE EMPTY BLE_HEAP_SIZE
+    {
+        ; configured with ble_heap()
+    }
+
+    RW_IRAM_RWZI BLE_RWZI_BASE UNINIT BLE_RWZI_SIZE
+    {
+        ; ZI data, manual inited in lib
+        *ble6*.lib (+RW +ZI)
+        ; user manual init
+        *.o(user_retention)
+    }
+}
+
+#endif

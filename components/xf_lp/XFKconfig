@@ -1,0 +1,26 @@
+
+config XF_LP_ENABLE
+    bool
+    prompt "lowpower enable or disable"
+    default "n"
+    help
+        enable or disable lowpoer mode
+
+config XF_LP_PRIORITY_MAX
+    int "low power prority"
+    default 4
+    help
+        low power device can set max priority
+
+choice XF_LP_CPU_MODE
+    prompt "selete cpu mode"
+    help
+        Select the cpu mode for xf_lp_run()
+    default XF_LP_CPU_MODE_NONE
+    config XF_LP_CPU_MODE_NONE
+        bool "not do anything"
+    config XF_LP_CPU_MODE_SWITCH_CPU
+        bool "turn on or off cpu"
+    config XF_LP_CPU_MODE_REDUCE_FREQ
+        bool "make cpu frequency lower when you in low power"
+endchoice
