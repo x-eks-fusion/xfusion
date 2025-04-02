@@ -222,7 +222,6 @@ static xf_err_t sample_ssaps_event_cb(
         XF_LOGI(TAG, ">>> [1].HDL:%d", service_struct.prop_set[1].prop_handle);
         xf_sle_ssaps_ntf_ind_t param_ntf = 
         {
-            // .handle = param->read_req.handle,
             .handle = service_struct.prop_set[1].prop_handle,
             .type = XF_SLE_SSAP_PROPERTY_TYPE_VALUE,
             .value = s_ntf1_value,
@@ -231,26 +230,6 @@ static xf_err_t sample_ssaps_event_cb(
         xf_err_t ret = xf_sle_ssaps_send_notify_indicate(s_aap_id, param->read_req.conn_id, &param_ntf);
         XF_CHECK(ret != XF_OK, ret, TAG,
                  "xf_sle_ssaps_send_notify_indicate error:%#X", ret);
-
-        // xf_sle_ssaps_ntf_ind_t param_ntf = 
-        // {
-        //     .handle = param->read_req.handle,
-        //     .type = XF_SLE_SSAP_PROPERTY_TYPE_VALUE,
-        //     .value = s_rsp_value,
-        //     .value_len = sizeof(s_rsp_value),
-        // };
-        // xf_err_t ret = xf_sle_ssaps_send_notify_indicate(s_aap_id, param->read_req.conn_id, &param_ntf);
-
-        // xf_sle_ssaps_response_value_t rsp = {
-        //     .value = s_rsp_value,
-        //     .value_len = sizeof(s_rsp_value),
-        // };
-        // xf_err_t ret = xf_sle_ssaps_send_response(s_aap_id,
-        //                param->read_req.conn_id, param->read_req.trans_id,
-        //                XF_OK, &rsp
-        //                                          );
-        // XF_CHECK(ret != XF_OK, ret, TAG,
-        //          "xf_sle_ssaps_send_response error:%#X", ret);
     } break;
     default:
         break;
