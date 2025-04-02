@@ -48,33 +48,83 @@ static void sample_sle_set_adv_param(void);
 static uint8_t s_local_name[] = "XF_SSAPS";
 static xf_sle_uuid_info_t s_app_uuid = {0};
 static uint8_t s_aap_id = 0;
-static uint8_t s_prop_value[8] = {0xCC};
-static uint8_t s_ntf_value[] = {0x01, 0x0};
+static uint8_t s_rw_prop_value[8] = {0xCC};
+static uint8_t s_rw_desc_value[] = {0xC1, 0x0};
+
+static uint8_t s_ntf_prop_value[8] = {0xDD};
+static uint8_t s_ntf_desc_value[] = {0xD1, 0x0};
+
 static uint8_t s_rsp_value[] = "I M SSAPS RSP";
+static uint8_t s_ntf0_value[] = "I M SSAPS NTF 0";
+static uint8_t s_ntf1_value[] = "I M SSAPS NTF 1";
+
+static uint8_t s_prop_ntf_value[8] = {0xBB};
+static uint8_t s_desc_ntf_value[] = {0xB1, 0x0};
 
 static uint8_t s_sle_mac_addr[XF_SLE_ADDR_LEN] = {0x33, 0x22, 0x22, 0x66, 0x11, 0x22};
 static bool is_connected = false;
 
 static xf_sle_ssaps_service_t service_struct = {
-    .service_uuid = XF_SLE_DECLARE_UUID16(0xABCD),
+    .service_uuid = XF_SLE_DECLARE_UUID16(0x2222),
     .service_type = XF_SLE_SSAP_SERVICE_TYPE_PRIMARY,
     .prop_set = (xf_sle_ssaps_property_t [])
     {
         {
-            .prop_uuid = XF_SLE_DECLARE_UUID16(0x1122),
+            .prop_uuid = XF_SLE_DECLARE_UUID16(0x2323),
             .permissions = (XF_SLE_SSAP_PERMISSION_READ | XF_SLE_SSAP_PERMISSION_WRITE),
-            .value = s_prop_value,
-            .value_len = sizeof(s_prop_value),
+            .operate_indication = (
+                    XF_SLE_SSAP_OPERATE_INDICATION_BIT_READ 
+                |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_WRITE 
+                |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_WRITE_NO_RSP
+                |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_NOTIFY
+                |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_INDICATE),
+            .value = s_rw_prop_value,
+            .value_len = sizeof(s_rw_prop_value),
             .desc_set = (xf_sle_ssaps_desc_t []) {
                 {
                     .permissions = (XF_SLE_SSAP_PERMISSION_READ | XF_SLE_SSAP_PERMISSION_WRITE),
-                    .value = s_ntf_value,
-                    .value_len = sizeof(s_ntf_value),
+                    .desc_type = XF_SLE_SSAP_DESC_TYPE_CLIENT_CONFIGURATION,
+                    .operate_indication = (
+                            XF_SLE_SSAP_OPERATE_INDICATION_BIT_READ 
+                        |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_WRITE 
+                        |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_WRITE_NO_RSP
+                        |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_NOTIFY
+                        |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_INDICATE),
+                    .value = s_rw_desc_value,
+                    .value_len = sizeof(s_rw_desc_value),
+                },
+                {0}
+            },
+        },
+        {
+            .prop_uuid = XF_SLE_DECLARE_UUID16(0x2324),
+            .permissions = (XF_SLE_SSAP_PERMISSION_READ | XF_SLE_SSAP_PERMISSION_WRITE),
+            .operate_indication = (
+                    XF_SLE_SSAP_OPERATE_INDICATION_BIT_READ 
+                |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_WRITE 
+                |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_WRITE_NO_RSP
+                |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_NOTIFY
+                |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_INDICATE),
+            .value = s_ntf_prop_value,
+            .value_len = sizeof(s_ntf_prop_value),
+            .desc_set = (xf_sle_ssaps_desc_t []) {
+                {
+                    .permissions = (XF_SLE_SSAP_PERMISSION_READ | XF_SLE_SSAP_PERMISSION_WRITE),
+                    .desc_type = XF_SLE_SSAP_DESC_TYPE_CLIENT_CONFIGURATION,
+                    .operate_indication = (
+                            XF_SLE_SSAP_OPERATE_INDICATION_BIT_READ 
+                        |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_WRITE 
+                        |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_WRITE_NO_RSP
+                        |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_NOTIFY
+                        |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_INDICATE),
+                    .value = s_ntf_desc_value,
+                    .value_len = sizeof(s_ntf_desc_value),
                 },
                 {0}
             },
         },
         {0}
+        
     }
 };
 
@@ -92,7 +142,7 @@ void xf_main(void)
              "xf_sle_enable error!:%#X", ret);
 
     // 注册 ssaps 事件回调
-    xf_sle_ssaps_event_cb_register(sample_ssaps_event_cb, XF_SLE_COMMON_EVT_ALL);
+    xf_sle_ssaps_event_cb_register(sample_ssaps_event_cb, XF_SLE_EVT_ALL);
 
     // 设置本地设备名
     ret = xf_sle_set_local_name(s_local_name, sizeof(s_local_name));
@@ -144,6 +194,7 @@ static xf_err_t sample_ssaps_event_cb(
                  "xf_sle_start_announce error:%#X", ret);
     } break;
     case XF_SLE_COMMON_EVT_CONNECT: {
+        XF_LOGI(TAG, "EV:connect!");
         is_connected = true;
     } break;
     case XF_SLE_SSAPS_EVT_WRITE_REQ: {
@@ -151,23 +202,55 @@ static xf_err_t sample_ssaps_event_cb(
                 param->write_req.need_rsp, param->write_req.handle,
                 param->write_req.conn_id, param->write_req.trans_id);
         XF_LOG_BUFFER_HEXDUMP_ESCAPE(param->write_req.value, param->write_req.value_len);
-
+        XF_LOGI(TAG, ">>> [0].HDL:%d", service_struct.prop_set[0].prop_handle);
+        xf_sle_ssaps_ntf_ind_t param_ntf = 
+        {
+            .handle = param->write_req.handle,
+            .type = XF_SLE_SSAP_PROPERTY_TYPE_VALUE,
+            .value = s_ntf0_value,
+            .value_len = sizeof(s_ntf0_value),
+        };
+        xf_err_t ret = xf_sle_ssaps_send_notify_indicate(s_aap_id, param->write_req.conn_id, &param_ntf);
+        XF_CHECK(ret != XF_OK, ret, TAG,
+                 "xf_sle_ssaps_send_notify_indicate error:%#X", ret);
     } break;
     case XF_SLE_SSAPS_EVT_READ_REQ: {
         XF_LOGI(TAG, "EV:REQ READ:need_rsp:%d,hdl:%d,conn_id:%d,trans_id:%d",
                 param->read_req.need_rsp, param->read_req.handle,
                 param->read_req.conn_id, param->read_req.trans_id);
 
-        xf_sle_ssaps_response_value_t rsp = {
-            .value = s_rsp_value,
-            .value_len = sizeof(s_rsp_value),
+        XF_LOGI(TAG, ">>> [1].HDL:%d", service_struct.prop_set[1].prop_handle);
+        xf_sle_ssaps_ntf_ind_t param_ntf = 
+        {
+            // .handle = param->read_req.handle,
+            .handle = service_struct.prop_set[1].prop_handle,
+            .type = XF_SLE_SSAP_PROPERTY_TYPE_VALUE,
+            .value = s_ntf1_value,
+            .value_len = sizeof(s_ntf1_value),
         };
-        xf_err_t ret = xf_sle_ssaps_send_response(s_aap_id,
-                       param->read_req.conn_id, param->read_req.trans_id,
-                       XF_OK, &rsp
-                                                 );
+        xf_err_t ret = xf_sle_ssaps_send_notify_indicate(s_aap_id, param->read_req.conn_id, &param_ntf);
         XF_CHECK(ret != XF_OK, ret, TAG,
-                 "xf_sle_start_announce error:%#X", ret);
+                 "xf_sle_ssaps_send_notify_indicate error:%#X", ret);
+
+        // xf_sle_ssaps_ntf_ind_t param_ntf = 
+        // {
+        //     .handle = param->read_req.handle,
+        //     .type = XF_SLE_SSAP_PROPERTY_TYPE_VALUE,
+        //     .value = s_rsp_value,
+        //     .value_len = sizeof(s_rsp_value),
+        // };
+        // xf_err_t ret = xf_sle_ssaps_send_notify_indicate(s_aap_id, param->read_req.conn_id, &param_ntf);
+
+        // xf_sle_ssaps_response_value_t rsp = {
+        //     .value = s_rsp_value,
+        //     .value_len = sizeof(s_rsp_value),
+        // };
+        // xf_err_t ret = xf_sle_ssaps_send_response(s_aap_id,
+        //                param->read_req.conn_id, param->read_req.trans_id,
+        //                XF_OK, &rsp
+        //                                          );
+        // XF_CHECK(ret != XF_OK, ret, TAG,
+        //          "xf_sle_ssaps_send_response error:%#X", ret);
     } break;
     default:
         break;
