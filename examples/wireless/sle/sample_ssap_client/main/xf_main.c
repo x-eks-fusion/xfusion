@@ -72,7 +72,7 @@ void xf_main(void)
     XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
              "xf_sle_enable error!:%#X", ret);
 
-    xf_sle_ssapc_event_cb_register(sample_ssapc_event_cb, XF_SLE_COMMON_EVT_ALL);
+    xf_sle_ssapc_event_cb_register(sample_ssapc_event_cb, XF_SLE_EVT_ALL);
 
     // 注册 ssaps 客户端 app
     ret = xf_sle_ssapc_app_register(&s_app_uuid, &s_app_id);
