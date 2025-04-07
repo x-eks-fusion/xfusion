@@ -12,9 +12,11 @@
 #if defined(CONFIG_XF_BLE_ENABLE)
 #include "bledef.h"
 #endif
+#include "port_common.h"
 
 int main(void)
 {
+    sys_pre_init();
     xfusion_init();
 
     while (1)
