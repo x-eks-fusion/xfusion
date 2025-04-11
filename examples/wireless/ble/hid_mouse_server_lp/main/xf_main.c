@@ -33,9 +33,8 @@
 #define HID_PROTOCOL_MODE_BOOT          0x00      // Boot Protocol Mode
 #define HID_PROTOCOL_MODE_REPORT        0x01      // Report Protocol Mode
 
-#define TASK_PRIORITY   5
-#define TASK_DELAY_MS   100
-#define IDLE_TO_SLEEP_MS    2000
+#define TASK_PRIORITY                   1
+#define ENABLE_SLEEP_CHECK_DELAY_MS     2000
 
 /* ==================== [Typedefs] ========================================== */
 
@@ -56,7 +55,8 @@ static xf_ble_evt_res_t sample_ble_gatts_event_cb(
     xf_ble_gatts_evt_t event,
     xf_ble_gatts_evt_cb_param_t *param);
 static void sample_gpio_irq(xf_gpio_num_t gpio_num, bool level, void *user_data);
-static void ble_light_sleep_task(xf_task_t task);
+static void task_enable_sleep_check(xf_task_t task);
+static void task_try_to_sleep(xf_task_t task);
 
 /* ==================== [Static Variables] ================================== */
 
@@ -304,18 +304,27 @@ void xf_main(void)
 {
     XF_LOGI(TAG, "xf ble gatt server HID Mouse lp");
     xf_err_t ret = XF_OK;
+    
     // 使能 ble
     xf_ble_enable();
 
-    xf_lp_sleep_enable_wakeup_source(XF_LP_SLEEP_WAKEUP_BLE);
-
+    // [lp] 初始化 ble lp
     xf_ble_lp_init();
+    
+    // [lp] 设置低功耗唤醒源：ble 以及 IO
+    xf_lp_sleep_enable_wakeup_source(XF_LP_SLEEP_WAKEUP_BLE|XF_LP_SLEEP_WAKEUP_GPIO);
+    
+    // [lp] 开启 ble lp 功能
+    xf_ble_lp_enable();
 
     /* 设置触发的 GPIO，设置中断任务回调位 HID 上报函数 */
     xf_hal_gpio_init(DEFAULT_INPUT_IO, XF_HAL_GPIO_DIR_IN);
     xf_hal_gpio_set_pull(DEFAULT_INPUT_IO, DEFAULT_INPUT_IO_MODE);
     xf_hal_gpio_set_intr_type(DEFAULT_INPUT_IO, DEFAULT_INPUT_IO_TRIGGER_TYPE);
-    xf_hal_gpio_set_intr_cb(DEFAULT_INPUT_IO, sample_gpio_irq, NULL);
+    xf_hal_gpio_set_intr_isr(DEFAULT_INPUT_IO, sample_gpio_irq, NULL);
+
+    /* [lp] 设置低功耗唤醒的 IO 及触发的状态 (低电平触发) */
+    xf_lp_sleep_gpio_wakeup(DEFAULT_INPUT_IO, 0);
 
     // 注册 GAP 事件回调
     ret = xf_ble_gap_event_cb_register(sample_ble_gap_event_cb, XF_BLE_EVT_ALL);
@@ -339,7 +348,6 @@ void xf_main(void)
 
     /* 获取 服务属性的映射表 */
     xf_ble_gatts_svc_get_att_local_map(&s_svc_set);
-
 
     /* 设置本地名称、外观 */
     xf_ble_gap_set_local_name(s_gatts_device_name, sizeof(s_gatts_device_name));
@@ -370,24 +378,24 @@ void xf_main(void)
              "START ADV failed:%#X", ret);
     XF_LOGI(TAG, "START ADV CMPL");
 
-    xf_ttask_create_loop(ble_light_sleep_task, NULL, TASK_PRIORITY, TASK_DELAY_MS);
+    // [lp] 创建定期尝试休眠的任务
+    xf_ttask_create_loop(task_try_to_sleep, NULL, TASK_PRIORITY, 1);
 }
 
 /* ==================== [Static Functions] ================================== */
 
-static bool is_connected = false;
-
 static void sample_gpio_irq(xf_gpio_num_t gpio_num, bool level, void *user_data)
 {
     
-
     static uint8_t cnt = 0;
     uint8_t base = 1;
     if (cnt++%6 == 0)
     {
         base *= -1;
     }
-    XF_LOGI(TAG, "HID report");
+    XF_LOGD(TAG, "HID report");
+
+    xf_ble_lp_disable();    // [lp] 按键触发时，暂时关闭 ble lp 功能，以让报告能及时发出
 
     s_hid_report_mouse.ac_pan = 0;
     s_hid_report_mouse.button_mask = 0;
@@ -404,25 +412,19 @@ static void sample_gpio_irq(xf_gpio_num_t gpio_num, bool level, void *user_data)
                        s_app_id, s_conn_id, &ntf_param);
     XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
              "send_notify_indicate failed:%#X", ret);
+
+    xf_ble_lp_enable();     // [lp] 报告发送完毕，恢复开启 ble lp 功能
 }
 
-static uint32_t cnt = 0;
-static void ble_light_sleep_task(xf_task_t task)
+static void task_try_to_sleep(xf_task_t task)
 {
-    if(is_connected == false)
-    {
-        cnt = 0;
-        return;
-    }
-    /* 连接或其后的期间不进行休眠 */
-    ++cnt;
-    if((cnt*TASK_DELAY_MS) < IDLE_TO_SLEEP_MS)
-    {
-        return;
-    }
+    xf_ble_lp_sleep(XF_BLE_LP_MODE_SLEEP_CONTEXT);
+}
 
-    xf_ble_lp_state_t state = xf_ble_lp_sleep(XF_BLE_LP_MODE_SLEEP_CONTEXT);
-    XF_LOGD(TAG, "lp sleep state:%d", state);
+static void task_enable_sleep_check(xf_task_t task)
+{
+    // [lp] 开启 ble lp 功能
+    xf_ble_lp_enable();
 }
 
 static xf_ble_evt_res_t sample_ble_gap_event_cb(
@@ -433,15 +435,26 @@ static xf_ble_evt_res_t sample_ble_gap_event_cb(
     UNUSED(param);
     switch (event) {
     /* 事件: 连接  */
+    case XF_BLE_GAP_EVT_CONNECT_REQ: {
+        // [lp] 关闭 ble lp 功能，避免影响连接
+        xf_ble_lp_disable();
+    } break;
     case XF_BLE_GAP_EVT_CONNECT: {
         XF_LOGI(TAG, "EV:peer connect:s_app_id:%d,conn_id:%d,"
                 "addr_type:%d,addr:"XF_BLE_ADDR_PRINT_FMT,
                 s_app_id, param->connect.conn_id,
                 param->connect.addr->type,
                 XF_BLE_ADDR_EXPAND_TO_ARG(param->connect.addr->addr));
-
         s_conn_id = param->connect.conn_id;
-        xf_hal_gpio_set_intr_enable(DEFAULT_INPUT_IO);
+
+        /* [lp] 更新连接参数，设置 latency */
+        xf_ble_gap_conn_param_update_t param = {
+            .min_interval = 16, // 20 ms
+            .max_interval = 16, // 20 ms
+            .latency = 49,      // 49*20ms = 980 ms
+            .timeout = 600,
+        };
+        xf_ble_gap_update_conn_param(s_conn_id, &param);
     } break;
     case XF_BLE_GAP_EVT_PAIR_REQ: {
         XF_LOGI(TAG, "EV:pair req:conn_id:%d", param->pair_req.conn_id);
@@ -465,7 +478,6 @@ static xf_ble_evt_res_t sample_ble_gap_event_cb(
                 param->disconnect.reason,
                 param->disconnect.addr->type,
                 XF_BLE_ADDR_EXPAND_TO_ARG(param->disconnect.addr->addr));
-        is_connected = false;
         XF_LOGI(TAG, "It will restart ADV");
         xf_ble_gap_start_adv(s_adv_id, DEFAULT_BLE_GAP_ADV_DURATION_FOREVER);
     } break;
@@ -485,10 +497,10 @@ static xf_ble_evt_res_t sample_ble_gatts_event_cb(
     switch (event) {
     /* 事件: 读请求  */
     case XF_BLE_GATTS_EVT_READ_REQ: {
-        XF_LOGI(TAG, "EV:RECV READ_REQ:s_app_id:%d,conn_id:%d,need_rsp:%d,attr_handle:%d",
+        XF_LOGD(TAG, "EV:RECV READ_REQ:s_app_id:%d,conn_id:%d,need_rsp:%d,attr_handle:%d",
                 s_app_id, param->read_req.conn_id, param->read_req.need_rsp,
                 param->read_req.handle);
-        XF_LOGI(TAG, ">>>> HDL:%d,%d,%d,%d,%d", 
+        XF_LOGD(TAG, ">>>> HDL:%d,%d,%d,%d,%d", 
             s_chara_set[HID_CHARA_INDEX_INFO].value_handle,
             s_chara_set[HID_CHARA_INDEX_REPORT_MAP].value_handle,
             s_chara_set[HID_CHARA_INDEX_PROTOCOL_MODE].value_handle,
@@ -530,9 +542,14 @@ static xf_ble_evt_res_t sample_ble_gatts_event_cb(
         
         xf_ble_gatts_send_read_rsp(s_app_id, param->read_req.conn_id, &rsp);
 
-        if(s_chara_set[HID_CHARA_INDEX_INPUT_REPORT].value_handle == param->read_req.handle)
+        /* [lp] 当对端的 HID 主机读取 本端 HID 信息时（输入报告），将在 ENABLE_SLEEP_CHECK_DELAY_MS 后调用启动休眠检测的任务 */
+        if(
+            (s_chara_set[HID_CHARA_INDEX_INPUT_REPORT].value_handle == param->read_req.handle)
+        ||  (s_chara_set[HID_CHARA_INDEX_INPUT_REPORT].handle == param->read_req.handle)
+        )
         {
-            is_connected = true;
+            xf_hal_gpio_set_intr_enable(DEFAULT_INPUT_IO);
+            xf_ttask_create(task_enable_sleep_check, NULL, TASK_PRIORITY, ENABLE_SLEEP_CHECK_DELAY_MS, 1);
         }
     } break;
     /* 事件: 写请求  */
