@@ -75,7 +75,7 @@ Reset_Handler   PROC
                 IMPORT  __main
                 IMPORT  core_vector
                 IMPORT  trim_load
-                IMPORT  sys_pre_init
+                ; IMPORT  sys_pre_init
                     
                 ;#ifndef CACHE_USE_SRAM
                 IF      :LNOT::DEF:CACHE_USE_SRAM
@@ -116,8 +116,8 @@ Reset_Handler   PROC
                 LDR     R1, =trim_load
                 BLX     R1
 
-                LDR     R1, =sys_pre_init
-                BLX     R1
+                ; LDR     R1, =sys_pre_init
+                ; BLX     R1
 
                 LDR     R0, =__main
                 BX      R0
