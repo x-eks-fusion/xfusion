@@ -1,7 +1,7 @@
 {
     "sdks":{
         "url": "https://gitee.com/ptwsmart/pt3220_sdk",
-        "commit": "c656a9a20ff4b1a780107de782cdc5e72c774315",
+        "commit": "76d30e66a59fd1ed749b4e28ed8d53ab4dc14d9a",
         "dir": "pt3220_sdk",
         "branch": "main"
     }
