@@ -42,7 +42,7 @@ class ws63():
 
         # 尝试将 output 下 fwpkg 目录复制到工程目录下的 build 目录下的 sdk 目录（如无则创建）
         SDK_OUTPUT_PATH: Path = self.get_sdk_path() / "output"
-        str_path_sdk_fw_list = glob.glob(f"{SDK_OUTPUT_PATH}/*/fwpkg")
+        str_path_sdk_fw_list = glob.glob(f"{SDK_OUTPUT_PATH}/*/fwpkg/{target}")
         for str_path_fw in str_path_sdk_fw_list:
             try:
                 shutil.copytree(
