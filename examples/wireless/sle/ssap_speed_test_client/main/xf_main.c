@@ -17,8 +17,8 @@
 
 #define TAG "sample_ssapc"
 
-#define SAMPLE_SLE_SEEK_INTERVAL    100
-#define SAMPLE_SLE_SEEK_WINDOW      100
+#define SAMPLE_SLE_SEEK_INTERVAL    0x30
+#define SAMPLE_SLE_SEEK_WINDOW      0x30
 
 #define TASK_PRIORITY   5
 #define TASK_DELAY_MS   500
@@ -29,6 +29,69 @@
 #define DEC_TO_INT_KEEP_PLACES_NUM      2
 #define DEC_TO_INT_KEEP_PLACES_BASE     100
 #define DEC_TO_INT_PRINT_FMT            "%u.%02u"
+
+#define SLE_SPEED_HUNDRED   100        /* 100  */
+
+#define SLE_TEST_CFG_WS63_MAX_SPEED         0
+#define SLE_TEST_CFG_WS63_MAX_DISTANCE      1
+#define SLE_TEST_CFG_WS63_MAX_DISTANCE_MAX_SENSITIVITY      2
+#define SLE_TEST_CFG_BS2X_MAX_SPEED         3
+#define SLE_TEST_CFG_BS2X_MAX_DISTANCE      4
+
+#define SLE_TEST_CFG_TYPE   SLE_TEST_CFG_WS63_MAX_DISTANCE_MAX_SENSITIVITY
+
+#if (SLE_TEST_CFG_TYPE == SLE_TEST_CFG_WS63_MAX_SPEED)
+
+#define DEFAULT_SLE_TX_PWR_LEVEL        20
+#define DEFAULT_SLE_CUSTOMIZE_PWR       20
+
+#define DEFAULT_SLE_TEST_SUB_PKT_SIZE       1200    //(236)
+#define DEFAULT_SLE_TEST_SUB_PKT_NUMS       (1000)
+#define DEFAULT_SLE_TEST_SUB_REPEAT_TIME    (1)
+#define DEFAULT_SLE_TEST_RECV_PKT_CNT       1000
+
+#elif (SLE_TEST_CFG_TYPE == SLE_TEST_CFG_WS63_MAX_DISTANCE)
+
+#define DEFAULT_SLE_TX_PWR_LEVEL        20
+#define DEFAULT_SLE_CUSTOMIZE_PWR       20
+
+#define DEFAULT_SLE_TEST_SUB_PKT_SIZE       236    //(236)
+#define DEFAULT_SLE_TEST_SUB_PKT_NUMS       (10)
+#define DEFAULT_SLE_TEST_SUB_REPEAT_TIME    (1)
+#define DEFAULT_SLE_TEST_RECV_PKT_CNT       10
+
+#elif (SLE_TEST_CFG_TYPE == SLE_TEST_CFG_WS63_MAX_DISTANCE_MAX_SENSITIVITY)
+
+#define DEFAULT_SLE_TX_PWR_LEVEL        20
+#define DEFAULT_SLE_CUSTOMIZE_PWR       20
+
+#define DEFAULT_SLE_TEST_SUB_PKT_SIZE       2    //(236)
+#define DEFAULT_SLE_TEST_SUB_PKT_NUMS       (1)
+#define DEFAULT_SLE_TEST_SUB_REPEAT_TIME    (1)
+#define DEFAULT_SLE_TEST_RECV_PKT_CNT       1
+
+
+#elif (SLE_TEST_CFG_TYPE == SLE_TEST_CFG_BS2X_MAX_SPEED)
+
+#define DEFAULT_SLE_TX_PWR_LEVEL        8
+#define DEFAULT_SLE_CUSTOMIZE_PWR       8
+
+#define DEFAULT_SLE_TEST_SUB_PKT_SIZE       1200    //(236)
+#define DEFAULT_SLE_TEST_SUB_PKT_NUMS       (1000)
+#define DEFAULT_SLE_TEST_SUB_REPEAT_TIME    (1)
+#define DEFAULT_SLE_TEST_RECV_PKT_CNT       100
+
+#elif (SLE_TEST_CFG_TYPE == SLE_TEST_CFG_BS2X_MAX_DISTANCE)
+
+#define DEFAULT_SLE_TX_PWR_LEVEL        8
+#define DEFAULT_SLE_CUSTOMIZE_PWR       8
+
+#define DEFAULT_SLE_TEST_SUB_PKT_SIZE       1200    //(236)
+#define DEFAULT_SLE_TEST_SUB_PKT_NUMS       (1000)
+#define DEFAULT_SLE_TEST_SUB_REPEAT_TIME    (1)
+#define DEFAULT_SLE_TEST_RECV_PKT_CNT       100
+
+#endif
 
 /* ==================== [Typedefs] ========================================== */
 
@@ -53,7 +116,6 @@ static xf_sle_uuid_info_t s_app_uuid = {0};
 static uint8_t s_app_id = 0;
 static uint8_t s_conn_id = 0;
 
-static int g_recv_pkt_num = 0;
 static uint64_t s_test_start_us;
 static uint64_t s_test_end_us;
 
@@ -78,14 +140,6 @@ typedef enum _sle_test_sync_type_t
     SLE_TEST_SYNC_TYPE_TEST_CFG_END
 } sle_test_sync_type_t;
 
-#define CHECK_INTERVAL_MS                   (10)
-#define DEFAULT_CHECK_TIMEOUT_MS            (5000)
-#define DEFAULT_SLE_TEST_SUB_DELAY_MS       (0)
-#define DEFAULT_SLE_TEST_SUB_PKT_SIZE       1200    //(236)
-#define DEFAULT_SLE_TEST_SUB_PKT_NUMS       (1000)
-#define DEFAULT_SLE_TEST_SUB_REPEAT_TIME    (1)
-#define DEFAULT_SLE_MTU             1500    // 512     //(1500)
-
 static uint16_t s_prop_hdl[2] = {0};
 
 static bool is_need_discovery = false;
@@ -105,8 +159,6 @@ static volatile uint32_t s_recv_pkt_times = 0;
 
 static uint32_t s_count_recv_byte = 0;
 
-#define SLE_SPEED_HUNDRED   100        /* 100  */
-#define RECV_PKT_CNT 1000
 static int g_rssi_sum = 0;
 static int g_rssi_number = 0;
 
@@ -140,7 +192,14 @@ static sle_test_sub_info_t s_sle_test_sub_info =
 
 void xf_main(void)
 {
-    XF_LOGI(TAG, "XF SLE SSAP CLient");
+    XF_LOGI(TAG, "XF SLE SPEED TEST CLIENT:%d", SLE_TEST_CFG_TYPE);
+
+    xf_sys_watchdog_disable();
+
+    // [speed]: 给定预期功率值设置最大功率档位
+    xf_sle_set_max_pwr_level_by_pwr(DEFAULT_SLE_TX_PWR_LEVEL);
+    
+    xf_sle_set_max_pwr(DEFAULT_SLE_CUSTOMIZE_PWR, DEFAULT_SLE_CUSTOMIZE_PWR);
 
     xf_err_t ret = XF_OK;
     ret = xf_sle_enable();
@@ -248,19 +307,16 @@ static xf_err_t sample_ssapc_event_cb(
     xf_sle_ssapc_evt_cb_param_t *param)
 {
     switch (event) {
+    case XF_SLE_COMMON_EVT_CONN_PARAMS_UPDATE:{
+        XF_LOGI(TAG, "EV:UPD CONN PARAM:intv:%d,latency:%d",
+            param->conn_param_update.interval, param->conn_param_update.latency);
+    }break;
     case XF_SLE_COMMON_EVT_CONNECT: {
         is_need_discovery = true;
         s_conn_id = param->connect.conn_id;
         XF_LOGI(TAG, "EV:connect:conn_id:%u," XF_SLE_ADDR_PRINT_FMT,
                 s_conn_id, XF_SLE_ADDR_EXPAND_TO_ARG(param->connect.peer_addr.addr));
 
-        xf_sle_ssap_exchange_info_t info = {
-            .mtu_size = DEFAULT_SLE_MTU,
-            .version = 1,
-        };
-        xf_err_t ret = xf_sle_ssaps_set_info(s_app_id, &info);
-        XF_CHECK(ret != XF_OK, ret, TAG,
-                "xf_sle_ssaps_set_info error:%#X", ret);
     } break;
     case XF_SLE_COMMON_EVT_SEEK_RESULT: {
         ssapc_event_seek_result_cb(&param->seek_result);
@@ -271,31 +327,31 @@ static xf_err_t sample_ssapc_event_cb(
     } break;
     case XF_SLE_SSAPC_EVT_NOTIFICATION:
     {
-        if (g_recv_pkt_num == 0) {
+        if (s_recv_pkt_nums == 0) {
             s_test_start_us = xf_sys_time_get_us();
             s_count_recv_byte = 0;
         } 
-        ++g_recv_pkt_num;
+        ++s_recv_pkt_nums;
         s_count_recv_byte += param->ntf.data_len;
-        if (g_recv_pkt_num == RECV_PKT_CNT) {
+        if (s_recv_pkt_nums == DEFAULT_SLE_TEST_RECV_PKT_CNT) {
             s_test_end_us = xf_sys_time_get_us();
            
             xf_us_t s_test_time_diff_us = s_test_end_us - s_test_start_us;
             float diff_s = (float)(s_test_time_diff_us) / 1000000.0;  /* 1s = 1000000.0us */
 
-            // uint32_t size_byte = s_sle_test_sub_info.pkt_size * s_sle_test_sub_info.pkt_nums;
-            uint32_t size_byte = DEFAULT_SLE_TEST_SUB_PKT_SIZE*RECV_PKT_CNT;
+            // uint32_t size_byte = DEFAULT_SLE_TEST_SUB_PKT_SIZE*DEFAULT_SLE_TEST_RECV_PKT_CNT;
+            uint32_t size_byte = s_count_recv_byte;
             uint32_t size_bit = size_byte * 8;
 
             float speed_byte_per_s = size_byte / diff_s;
             float speed_bit_per_s = size_bit / diff_s;  /* 1B = 8bits */
 
             printf(
-                    "SPEED TEST ONCE(1000 pkt):recv_byte:%d,times:%d,pkt:%d,nums:%d Time:%llu us, [%llu, %llu] us\r\n"
+                    "SPEED TEST ONCE:recv_byte:%d,times:%d,pkt:%d,nums:%d Time:%llu us, [%llu, %llu] us\r\n"
                     "\t" DEC_TO_INT_PRINT_FMT " bps\t" DEC_TO_INT_PRINT_FMT " Kibps\t" DEC_TO_INT_PRINT_FMT " Mibps\r\n"
                     "\t" DEC_TO_INT_PRINT_FMT " Bps\t" DEC_TO_INT_PRINT_FMT " KiBps\t" DEC_TO_INT_PRINT_FMT " MiBps \r\n",
                     // s_sle_test_sub_info.repeat, s_sle_test_sub_info.pkt_size, s_sle_test_sub_info.pkt_nums, s_test_time_diff_us,
-                    s_count_recv_byte, 1, DEFAULT_SLE_TEST_SUB_PKT_SIZE, RECV_PKT_CNT, s_test_time_diff_us, s_test_start_us, s_test_end_us,
+                    s_count_recv_byte, 1, DEFAULT_SLE_TEST_SUB_PKT_SIZE, DEFAULT_SLE_TEST_RECV_PKT_CNT, s_test_time_diff_us, s_test_start_us, s_test_end_us,
                     GetFloatInt(speed_bit_per_s), GetFloatDec(speed_bit_per_s),
                     GetFloatInt(speed_bit_per_s / 1024), GetFloatDec(speed_bit_per_s / 1024),
                     GetFloatInt(speed_bit_per_s / (1024 * 1024)), GetFloatDec(speed_bit_per_s / (1024 * 1024)),
@@ -305,7 +361,7 @@ static xf_err_t sample_ssapc_event_cb(
                     GetFloatInt(speed_byte_per_s / (1024 * 1024)), GetFloatDec(speed_byte_per_s / (1024 * 1024))
                     );
 
-            g_recv_pkt_num = 0;
+            s_recv_pkt_nums = 0;
             s_test_start_us = s_test_end_us;
         }
     } break;

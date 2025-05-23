@@ -20,42 +20,170 @@
 #define PROP_INDEX_M2S      1
 
 #define TASK_PRIORITY                   1
-#define SPEED_TEST_PREINIT_DELAY_MS     3000
+#define SPEED_TEST_PREINIT_DELAY_MS     1000
 
 #define SAMPLE_ADV_ID       1
 #define SAMPLE_ADV_HANDLE   1
 
+#define SLE_TEST_CFG_WS63_MAX_SPEED         0
+#define SLE_TEST_CFG_WS63_MAX_DISTANCE      1
+#define SLE_TEST_CFG_WS63_MAX_DISTANCE_MAX_SENSITIVITY 2
+#define SLE_TEST_CFG_BS2X_MAX_SPEED         3
+#define SLE_TEST_CFG_BS2X_MAX_DISTANCE      4
+
+#define SLE_TEST_CFG_WS63E_MAX_SPEED        4
+
+#define SLE_TEST_CFG_TYPE   SLE_TEST_CFG_WS63_MAX_DISTANCE_MAX_SENSITIVITY
+
 /* 连接调度间隔12.5ms，单位125us */
-#define SAMPLE_SLE_CONN_INTV_MIN                0x64
+#define SAMPLE_SLE_CONN_INTV_MIN                0x64    //0x14 //0x14   // 0x64
 /* 连接调度间隔12.5ms，单位125us */
-#define SAMPLE_SLE_CONN_INTV_MAX                0x64
+#define SAMPLE_SLE_CONN_INTV_MAX                0x64    // 0x14 // 0x14   // 0x64
 /* 连接调度间隔25ms，单位125us */
-#define SAMPLE_SLE_ADV_INTERVAL_MIN             0xC8
+#define SAMPLE_SLE_ADV_INTERVAL_MIN             0x20    // 0xC8 // 0x14   // 0xC8
 /* 连接调度间隔25ms，单位125us */
-#define SAMPLE_SLE_ADV_INTERVAL_MAX             0xC8
+#define SAMPLE_SLE_ADV_INTERVAL_MAX             0x20    // 0xC8 // 0x14   // 0xC8
 /* 超时时间5000ms，单位10ms */
 #define SAMPLE_SLE_CONN_SUPERVISION_TIMEOUT     0x1F4
 /* 超时时间4990ms，单位10ms */
-#define SAMPLE_SLE_CONN_MAX_LATENCY             0
-/* 广播发送功率 */
-#define SAMPLE_SLE_ADV_TX_POWER  10
+#define SAMPLE_SLE_CONN_MAX_LATENCY             200
+
+#define DEFAULT_SLE_ADV_PARAM_SCAN_INTERVAL     400
+#define DEFAULT_SLE_ADV_PARAM_SCAN_WINDOW       60
+
+#if (SLE_TEST_CFG_TYPE == SLE_TEST_CFG_WS63_MAX_SPEED)
 
 #define DEFAULT_SLE_CONN_INTV_MIN   0x14    // 0x20    // 0x14
 #define DEFAULT_SLE_CONN_INTV_MAX   0x14    // 0x20    // 0x14
 #define DEFAULT_SLE_CONN_LATENCY    0
 #define DEFAULT_SLE_CONN_TIMEOUT    SAMPLE_SLE_CONN_SUPERVISION_TIMEOUT
 
-#define DEFAULT_SLE_TX_RADIO_FRAME      XF_SLE_RADIO_FRAME_2 // XF_SLE_RADIO_FRAME_1 //(XF_SLE_RADIO_FRAME_2)
-#define DEFAULT_SLE_RX_RADIO_FRAME      XF_SLE_RADIO_FRAME_2 // XF_SLE_RADIO_FRAME_1 //(XF_SLE_RADIO_FRAME_2)
+#define DEFAULT_SLE_TX_RADIO_FRAME      XF_SLE_RADIO_FRAME_2
+#define DEFAULT_SLE_RX_RADIO_FRAME      XF_SLE_RADIO_FRAME_2
+#define DEFAULT_SLE_TX_PHY              (XF_SLE_PHY_4M)
+#define DEFAULT_SLE_RX_PHY              (XF_SLE_PHY_4M)
+#define DEFAULT_SLE_TX_PILOT_DENSITY    XF_SLE_PHY_PILOT_DENSITY_16_TO_1
+#define DEFAULT_SLE_RX_PILOT_DENSITY    XF_SLE_PHY_PILOT_DENSITY_16_TO_1
+#define DEFAULT_SLE_MCS                 (10)
+#define DEFAULT_SLE_MTU                 1500    // 512     //(1500)
+#define DEFAULT_SLE_SPEED_DATA_LEN      1500    // 512     //(1500)
+#define PKT_DATA_LEN                    1200    // 236     //(1200)
+
+#define DEFAULT_SLE_TX_PWR_LEVEL        20
+#define SAMPLE_SLE_ADV_TX_POWER         20
+#define DEFAULT_SLE_CUSTOMIZE_PWR       20
+
+#elif (SLE_TEST_CFG_TYPE == SLE_TEST_CFG_WS63E_MAX_SPEED)
+
+#define DEFAULT_SLE_CONN_INTV_MIN   0x14    // 0x20    // 0x14
+#define DEFAULT_SLE_CONN_INTV_MAX   0x14    // 0x20    // 0x14
+#define DEFAULT_SLE_CONN_LATENCY    0
+#define DEFAULT_SLE_CONN_TIMEOUT    SAMPLE_SLE_CONN_SUPERVISION_TIMEOUT
+
+#define DEFAULT_SLE_TX_RADIO_FRAME      XF_SLE_RADIO_FRAME_2
+#define DEFAULT_SLE_RX_RADIO_FRAME      XF_SLE_RADIO_FRAME_2
+#define DEFAULT_SLE_TX_PHY              (XF_SLE_PHY_4M)
+#define DEFAULT_SLE_RX_PHY              (XF_SLE_PHY_4M)
+#define DEFAULT_SLE_TX_PILOT_DENSITY    XF_SLE_PHY_PILOT_DENSITY_16_TO_1
+#define DEFAULT_SLE_RX_PILOT_DENSITY    XF_SLE_PHY_PILOT_DENSITY_16_TO_1
+#define DEFAULT_SLE_MCS                 (10)
+#define DEFAULT_SLE_MTU                 1500    // 512     //(1500)
+#define DEFAULT_SLE_SPEED_DATA_LEN      1500    // 512     //(1500)
+#define PKT_DATA_LEN                    1200    // 236     //(1200)
+
+#define DEFAULT_SLE_TX_PWR_LEVEL        20
+#define SAMPLE_SLE_ADV_TX_POWER         20
+#define DEFAULT_SLE_CUSTOMIZE_PWR       20
+
+#elif (SLE_TEST_CFG_TYPE == SLE_TEST_CFG_WS63_MAX_DISTANCE)
+
+#define DEFAULT_SLE_CONN_INTV_MIN       0x14    // 0x20    // 0x14
+#define DEFAULT_SLE_CONN_INTV_MAX       0x14    // 0x20    // 0x14
+#define DEFAULT_SLE_CONN_LATENCY        0
+#define DEFAULT_SLE_CONN_TIMEOUT        SAMPLE_SLE_CONN_SUPERVISION_TIMEOUT
+
+#define DEFAULT_SLE_TX_RADIO_FRAME      XF_SLE_RADIO_FRAME_1
+#define DEFAULT_SLE_RX_RADIO_FRAME      XF_SLE_RADIO_FRAME_1
+#define DEFAULT_SLE_TX_PHY              (XF_SLE_PHY_1M)
+#define DEFAULT_SLE_RX_PHY              (XF_SLE_PHY_1M)
+#define DEFAULT_SLE_TX_PILOT_DENSITY    XF_SLE_PHY_PILOT_DENSITY_NO  // (XF_SLE_PHY_PILOT_DENSITY_16_TO_1)
+#define DEFAULT_SLE_RX_PILOT_DENSITY    XF_SLE_PHY_PILOT_DENSITY_NO  // (XF_SLE_PHY_PILOT_DENSITY_16_TO_1)
+#define DEFAULT_SLE_MCS                 (0)
+#define DEFAULT_SLE_MTU                 512    // 512     //(1500)
+#define DEFAULT_SLE_SPEED_DATA_LEN      512    // 512     //(1500)
+#define PKT_DATA_LEN                    236    // 236     //(1200)
+
+#define DEFAULT_SLE_TX_PWR_LEVEL        20
+#define SAMPLE_SLE_ADV_TX_POWER         20
+#define DEFAULT_SLE_CUSTOMIZE_PWR       20
+
+#elif (SLE_TEST_CFG_TYPE == SLE_TEST_CFG_WS63_MAX_DISTANCE_MAX_SENSITIVITY)
+
+#define DEFAULT_SLE_CONN_INTV_MIN       0x14    // 0x20    // 0x14
+#define DEFAULT_SLE_CONN_INTV_MAX       0x14    // 0x20    // 0x14
+#define DEFAULT_SLE_CONN_LATENCY        0
+#define DEFAULT_SLE_CONN_TIMEOUT        10000
+
+#define DEFAULT_SLE_TX_RADIO_FRAME      XF_SLE_RADIO_FRAME_1
+#define DEFAULT_SLE_RX_RADIO_FRAME      XF_SLE_RADIO_FRAME_1
+#define DEFAULT_SLE_TX_PHY              (XF_SLE_PHY_1M)
+#define DEFAULT_SLE_RX_PHY              (XF_SLE_PHY_1M)
+#define DEFAULT_SLE_TX_PILOT_DENSITY    XF_SLE_PHY_PILOT_DENSITY_NO  // (XF_SLE_PHY_PILOT_DENSITY_16_TO_1)
+#define DEFAULT_SLE_RX_PILOT_DENSITY    XF_SLE_PHY_PILOT_DENSITY_NO  // (XF_SLE_PHY_PILOT_DENSITY_16_TO_1)
+#define DEFAULT_SLE_MCS                 (0)
+#define DEFAULT_SLE_MTU                 23    // 512     //(1500)
+#define DEFAULT_SLE_SPEED_DATA_LEN      2    // 512     //(1500)
+#define PKT_DATA_LEN                    2    // 236     //(1200)
+
+#define DEFAULT_SLE_TX_PWR_LEVEL        20
+#define SAMPLE_SLE_ADV_TX_POWER         20
+#define DEFAULT_SLE_CUSTOMIZE_PWR       20
+
+#elif (SLE_TEST_CFG_TYPE == SLE_TEST_CFG_BS2X_MAX_SPEED)
+
+#define DEFAULT_SLE_CONN_INTV_MIN       0x0F    // 0x20    // 0x14
+#define DEFAULT_SLE_CONN_INTV_MAX       0x0F    // 0x20    // 0x14
+#define DEFAULT_SLE_CONN_LATENCY        2000
+#define DEFAULT_SLE_CONN_TIMEOUT        SAMPLE_SLE_CONN_SUPERVISION_TIMEOUT
+
+#define DEFAULT_SLE_TX_RADIO_FRAME      XF_SLE_RADIO_FRAME_1 // XF_SLE_RADIO_FRAME_1 //(XF_SLE_RADIO_FRAME_2)
+#define DEFAULT_SLE_RX_RADIO_FRAME      XF_SLE_RADIO_FRAME_1 // XF_SLE_RADIO_FRAME_1 //(XF_SLE_RADIO_FRAME_2)
 #define DEFAULT_SLE_TX_PHY              (XF_SLE_PHY_4M)
 #define DEFAULT_SLE_RX_PHY              (XF_SLE_PHY_4M)
 #define DEFAULT_SLE_TX_PILOT_DENSITY    (XF_SLE_PHY_PILOT_DENSITY_16_TO_1)
 #define DEFAULT_SLE_RX_PILOT_DENSITY    (XF_SLE_PHY_PILOT_DENSITY_16_TO_1)
-#define DEFAULT_SLE_TX_PWR_LEVEL    (20)
-#define DEFAULT_SLE_MCS             (10)
-#define DEFAULT_SLE_MTU             1500    // 512     //(1500)
-#define DEFAULT_SLE_SPEED_DATA_LEN  1500    // 512     //(1500)
-#define PKT_DATA_LEN                1200    // 236     //(1200)
+#define DEFAULT_SLE_MCS                 (0)
+#define DEFAULT_SLE_MTU                 512    // 512     //(1500)
+#define DEFAULT_SLE_SPEED_DATA_LEN      512    // 512     //(1500)
+#define PKT_DATA_LEN                    236    // 236     //(1200)
+
+#define DEFAULT_SLE_TX_PWR_LEVEL        6
+#define SAMPLE_SLE_ADV_TX_POWER         6
+#define DEFAULT_SLE_CUSTOMIZE_PWR       6
+
+#elif (SLE_TEST_CFG_TYPE == SLE_TEST_CFG_BS2X_MAX_DISTANCE)
+
+#define DEFAULT_SLE_CONN_INTV_MIN       400 // 0x0F    // 0x20    // 0x14
+#define DEFAULT_SLE_CONN_INTV_MAX       400 // 0x0F    // 0x20    // 0x14
+#define DEFAULT_SLE_CONN_LATENCY        0
+#define DEFAULT_SLE_CONN_TIMEOUT        SAMPLE_SLE_CONN_SUPERVISION_TIMEOUT
+
+#define DEFAULT_SLE_TX_RADIO_FRAME      XF_SLE_RADIO_FRAME_1 // XF_SLE_RADIO_FRAME_1 //(XF_SLE_RADIO_FRAME_2)
+#define DEFAULT_SLE_RX_RADIO_FRAME      XF_SLE_RADIO_FRAME_1 // XF_SLE_RADIO_FRAME_1 //(XF_SLE_RADIO_FRAME_2)
+#define DEFAULT_SLE_TX_PHY              (XF_SLE_PHY_1M)
+#define DEFAULT_SLE_RX_PHY              (XF_SLE_PHY_1M)
+#define DEFAULT_SLE_TX_PILOT_DENSITY    (XF_SLE_PHY_PILOT_DENSITY_NO)
+#define DEFAULT_SLE_RX_PILOT_DENSITY    (XF_SLE_PHY_PILOT_DENSITY_NO)
+#define DEFAULT_SLE_MCS                 (0)
+#define DEFAULT_SLE_MTU                 512    // 512     //(1500)
+#define DEFAULT_SLE_SPEED_DATA_LEN      512    // 512     //(1500)
+#define PKT_DATA_LEN                    236    // 236     //(1200)
+
+#define DEFAULT_SLE_TX_PWR_LEVEL        8
+#define SAMPLE_SLE_ADV_TX_POWER         8
+#define DEFAULT_SLE_CUSTOMIZE_PWR       8
+
+#endif
 
 static unsigned char data[PKT_DATA_LEN];
 
@@ -142,7 +270,14 @@ static xf_sle_ssaps_service_t service_struct = {
 
 void xf_main(void)
 {
-    XF_LOGI(TAG, "XF SLE SSAP Server");
+    XF_LOGI(TAG, "XF SLE SPEED TEST SERVER:%d", SLE_TEST_CFG_TYPE);
+
+    xf_sys_watchdog_disable();
+
+    // [speed]: 给定预期功率值设置最大功率档位
+    xf_sle_set_max_pwr_level_by_pwr(DEFAULT_SLE_TX_PWR_LEVEL);
+    
+    xf_sle_set_max_pwr(DEFAULT_SLE_CUSTOMIZE_PWR, DEFAULT_SLE_CUSTOMIZE_PWR);
 
     xf_err_t ret = XF_OK;
     ret = xf_sle_enable();
@@ -179,17 +314,38 @@ void xf_main(void)
     sample_sle_set_adv_param();
     sample_sle_set_adv_data();
 
+    /* [speed]: mtu 协商 (注意需要在连接后) */
+    xf_sle_ssap_exchange_info_t info = {
+        .mtu_size = DEFAULT_SLE_MTU,
+        .version = 1,
+    };
+    ret = xf_sle_ssaps_set_info(s_app_id, &info);
+    XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
+            "xf_sle_ssaps_set_info error:%#X", ret);
+
     // 启动广播
     ret = xf_sle_start_announce(SAMPLE_ADV_ID);
     XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
              "xf_sle_start_announce error:%#X", ret);
     XF_LOGI(TAG, "ADV STAR CMPL");
 
+    xf_sle_conn_param_def_t _set_conn_param_def =
+    {
+        .en_filter          = false,
+        .en_gt_negotiate    = false,
+        .scan_interval      = DEFAULT_SLE_ADV_PARAM_SCAN_INTERVAL,
+        .scan_phy           = XF_SLE_SEEK_PHY_1M,
+        .scan_window        = DEFAULT_SLE_ADV_PARAM_SCAN_WINDOW,
+        .interval_max       = DEFAULT_SLE_CONN_INTV_MAX,
+        .interval_min       = DEFAULT_SLE_CONN_INTV_MIN,
+        .timeout            = DEFAULT_SLE_CONN_TIMEOUT,
+    };
+
+    ret = xf_sle_set_default_conn_params(&_set_conn_param_def);
+    XF_CHECK(ret != XF_OK, XF_RETURN_VOID,
+                TAG, "xf_sle_set_default_conn_params err:%d", ret);
     // [speed]: 关闭看门狗避免测速任务时触发看门狗
     xf_sys_watchdog_disable();
-
-    // [speed]: 给定预期功率值设置最大功率档位
-    xf_sle_set_max_pwr_level_by_pwr(DEFAULT_SLE_TX_PWR_LEVEL);
 
     // [speed]: 创建测速任务
     xf_ttask_create_loop(task_speed_test, NULL, TASK_PRIORITY, 1000);
@@ -223,12 +379,16 @@ static void task_speed_test_preinit(xf_task_t task)
         .t_feedback = 0,
     };
     ret = xf_sle_set_phy_params(s_conn_id, &phy_parm);
-    XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
-            "xf_sle_set_phy_params error:%#X", ret);
+    if(ret != XF_OK)
+    {
+        XF_LOGW(TAG, "xf_sle_set_phy_params error:%#X", ret);
+    }
     ret = xf_sle_set_mcs(s_conn_id, DEFAULT_SLE_MCS);
-    XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
-            "xf_sle_set_mcs error:%#X", ret);
-            
+    if(ret != XF_OK)
+    {
+        XF_LOGW(TAG, "xf_sle_set_mcs error:%#X", ret);
+    }
+
     is_connected = true;
 }
 
@@ -265,6 +425,10 @@ static void task_speed_test(xf_task_t task)
         {
             return;
         }
+        
+#if (SLE_TEST_CFG_TYPE == SLE_TEST_CFG_WS63_MAX_DISTANCE_MAX_SENSITIVITY)
+        xf_osal_delay_ms(500);
+#endif
     }
 }
 
@@ -274,7 +438,11 @@ static xf_err_t sample_ssaps_event_cb(
 {
     switch (event) {
     case XF_SLE_COMMON_EVT_CONN_PARAMS_UPDATE:{
-        XF_LOGI(TAG, "EV:UPD CONN PARAM");
+        XF_LOGI(TAG, "EV:UPD CONN PARAM:intv:%d,latency:%d",
+            param->conn_param_update.interval, param->conn_param_update.latency);
+
+        // [speed]: 在几秒延时后执行一次 测速预初始化 (因为需要确保)
+        xf_ttask_create(task_speed_test_preinit, NULL, TASK_PRIORITY, SPEED_TEST_PREINIT_DELAY_MS, 1);
     }break;
     case XF_SLE_COMMON_EVT_DISCONNECT: {
         is_connected = false;
@@ -289,14 +457,6 @@ static xf_err_t sample_ssaps_event_cb(
         s_conn_id = param->connect.conn_id;
         
         xf_err_t ret;
-        /* [speed]: mtu 协商 (注意需要在连接后) */
-        xf_sle_ssap_exchange_info_t info = {
-            .mtu_size = DEFAULT_SLE_MTU,
-            .version = 1,
-        };
-        ret = xf_sle_ssaps_set_info(s_app_id, &info);
-        XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
-                "xf_sle_ssaps_set_info error:%#X", ret);
                 
         /* [speed]: 更新连接参数 (注意需要在连接后) */
         xf_sle_conn_param_update_t _set_conn_param_upd =
@@ -310,9 +470,6 @@ static xf_err_t sample_ssaps_event_cb(
         ret = xf_sle_update_conn_params(&_set_conn_param_upd);
         XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
              "xf_sle_update_conn_params error:%#X", ret);
-
-        // [speed]: 在几秒延时后执行一次 测速预初始化 (因为需要确保)
-        xf_ttask_create(task_speed_test_preinit, NULL, TASK_PRIORITY, SPEED_TEST_PREINIT_DELAY_MS, 1);
     } break;
     case XF_SLE_SSAPS_EVT_WRITE_REQ: {
         XF_LOGI(TAG, "EV:REQ WRITE:need_rsp:%d,hdl:%d,conn_id:%d,trans_id:%d",
@@ -373,7 +530,7 @@ static void sample_sle_set_adv_param(void)
         announce_param.announce_handle = SAMPLE_ADV_HANDLE;
         announce_param.announce_gt_role = XF_SLE_ANNOUNCE_ROLE_T_CAN_NEGO;
         announce_param.announce_level = XF_SLE_ANNOUNCE_LEVEL_NORMAL;
-        announce_param.announce_channel_map = XF_SLE_ADV_CHANNEL_MAP_DEFAULT;
+        announce_param.announce_channel_map =  XF_SLE_ADV_CHANNEL_MAP_77;    // XF_SLE_ADV_CHANNEL_MAP_DEFAULT;
 
         announce_param.announce_interval_min = SAMPLE_SLE_ADV_INTERVAL_MIN;
         announce_param.announce_interval_max = SAMPLE_SLE_ADV_INTERVAL_MAX;
@@ -382,6 +539,7 @@ static void sample_sle_set_adv_param(void)
         announce_param.conn_interval_max = SAMPLE_SLE_CONN_INTV_MAX;
         announce_param.conn_max_latency = SAMPLE_SLE_CONN_MAX_LATENCY;
         announce_param.conn_supervision_timeout = SAMPLE_SLE_CONN_SUPERVISION_TIMEOUT;
+        announce_param.announce_tx_power = SAMPLE_SLE_ADV_TX_POWER;
     };
     xf_memcpy(announce_param.own_addr.addr, s_sle_mac_addr, XF_SLE_ADDR_LEN);
 
