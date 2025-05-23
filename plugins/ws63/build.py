@@ -26,19 +26,27 @@ class ws63():
         api.apply_template("cmake_project.j2", project_cmake_file)
         os.chdir(self.get_sdk_path())
 
-        target = self.get_sdk_default_target()
+        target = ""
+        param_more = []
+        
         # 第一个拓展参数为 help 时 显示 SDK 侧 编译时的可选目标
-        """
-        第一个拓展参数为（如果存在）：
-            help : 显示 SDK 侧 编译时的可选目标
-            其他 : 用户指定编译目标
-        """
-        if len(args) != 0:
+        if len(args) == 0:
+            target = self.get_sdk_default_target()
+            param_more.append(target)
+        else:
+            """
+            第一个拓展参数为（如果存在）：
+                help : 显示 SDK 侧 编译时的可选目标
+                其他 : 用户指定编译目标
+            """
             if args[0] == "help":
-                target = ""
+                target = "**"
+                param_more.append("")
             else:
                 target = args[0]
-        api.exec_cmd(["python", "build.py", "-c -nhso -release", target])
+                param_more.extend(args[:])
+   
+        api.exec_cmd(["python", "build.py", "-c -nhso -release", ' '.join(param_more)])
 
         # 尝试将 output 下 fwpkg 目录复制到工程目录下的 build 目录下的 sdk 目录（如无则创建）
         SDK_OUTPUT_PATH: Path = self.get_sdk_path() / "output"
