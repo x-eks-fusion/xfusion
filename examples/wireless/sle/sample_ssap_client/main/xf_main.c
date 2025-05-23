@@ -22,6 +22,9 @@
 #define TASK_PRIORITY   5
 #define TASK_DELAY_MS   500
 
+#define PROP_INDEX_S2M      0
+#define PROP_INDEX_M2S      1
+
 /* ==================== [Typedefs] ========================================== */
 
 /* ==================== [Static Prototypes] ================================= */
@@ -58,6 +61,8 @@ static xf_sle_ssapc_find_struct_param_t prop_struct = {
 static bool is_need_discovery = false;
 static bool is_discovery_cmpl = false;
 static bool is_write_cmpl = false;
+
+static uint16_t s_prop_hdl[2] = {0};
 
 /* ==================== [Macros] ============================================ */
 
@@ -106,7 +111,10 @@ static void sle_client_task(xf_task_t task)
             return;
         }
         XF_LOGI(TAG, "service:uuid:%#X,hdl[%d,%d]", service_struct.uuid.uuid16,
-                service_struct.start_hdl, service_struct.end_hdl);
+                service_struct.start_hdl+1, service_struct.end_hdl);
+
+        s_prop_hdl[PROP_INDEX_S2M] = service_struct.start_hdl;
+        s_prop_hdl[PROP_INDEX_M2S] = service_struct.start_hdl+2;
         is_discovery_cmpl = true;
     }
     if (is_discovery_cmpl == true) {
@@ -114,10 +122,10 @@ static void sle_client_task(xf_task_t task)
         /* 向对端服务端发送 写请求 */
         is_write_cmpl = false;
         XF_LOGI(TAG, ">> request write data,app_id:%d,conn_id:%d,hdl:%u",
-                s_app_id, s_conn_id, prop_struct.start_hdl);
+                s_app_id, s_conn_id, s_prop_hdl[PROP_INDEX_M2S]);
         uint8_t data_write[] = "I M SSAPC WRITE REQ!";
-        ret = xf_sle_ssapc_request_write_data(s_app_id, s_conn_id,
-                                              prop_struct.start_hdl, XF_SLE_SSAP_PROPERTY_TYPE_VALUE,
+        ret = xf_sle_ssapc_request_write_cmd(s_app_id, s_conn_id,
+                                              s_prop_hdl[PROP_INDEX_M2S], XF_SLE_SSAP_PROPERTY_TYPE_VALUE,
                                               data_write, sizeof(data_write));
         if (ret != XF_OK) {
             XF_LOGE(TAG, ">> request write cmd error: %#X", ret);
@@ -126,9 +134,9 @@ static void sle_client_task(xf_task_t task)
     } else if (is_write_cmpl == true) {
         /* 向对端服务端发送 读请求 */
         XF_LOGI(TAG, ">> request read,app_id:%d,conn_id:%d,hdl:%u",
-                s_app_id, s_conn_id, prop_struct.start_hdl);
+                s_app_id, s_conn_id, s_prop_hdl[PROP_INDEX_S2M]);
         ret = xf_sle_ssapc_request_read_by_handle(s_app_id, s_conn_id,
-              XF_SLE_SSAP_PROPERTY_TYPE_VALUE, prop_struct.start_hdl);
+              XF_SLE_SSAP_DESCRIPTOR_CLIENT_CONFIGURATION, s_prop_hdl[PROP_INDEX_S2M]);
         if (ret != XF_OK) {
             XF_LOGE(TAG, ">> request write cmd error: %#X", ret);
             return;
@@ -200,6 +208,12 @@ static xf_err_t ssapc_event_seek_result_cb(
 
     uint8_t *adv_data_all = result->data;
     uint16_t adv_size_all = result->data_len;
+
+    XF_LOGI(TAG, "EV:seek result:evt_type:%d,rssi:%d"
+        XF_SLE_ADDR_PRINT_FMT " data status:%d",
+        result->evt_type, result->rssi,
+        XF_SLE_ADDR_EXPAND_TO_ARG(result->peer_addr.addr),
+        result->data_status);
 
     uint8_t *adv_pos = adv_data_all;
     uint8_t *adv_end = adv_data_all + adv_size_all;

@@ -14,7 +14,7 @@ menu "Platform Config"
         string
         default "sdks/bs2x_sdk" if BS2X_SDK
         default "sdks/bs2x_1.0.13_internal" if BS2X_1_0_13_INTERNAL
-        default "sdks/bs2x_1.0.15_internal" if BS2X_1_0_15_INTERNAL
+        default "sdks/BS2X_1.0.15_internal" if BS2X_1_0_15_INTERNAL
 
     choice 
         bool "sdk default target"
@@ -23,6 +23,8 @@ menu "Platform Config"
         default STANDARD_BS21E_1100E
         config BS21E_SLE_BLE_SLP_CENTRAL_PERIPHERAL
             bool "bs21e-sle-ble-slp-central-peripheral"
+        config STANDARD_BS20_N1200
+            bool "standard-bs20-n1200"
         config STANDARD_BS21_N1100
             bool "standard-bs21-n1100"
         config STANDARD_BS21E_1100E
@@ -32,6 +34,7 @@ menu "Platform Config"
     config PLATFORM_SDK_DEFAULT_TARGET
         string
         default "bs21e-sle-ble-slp-central-peripheral" if BS21E_SLE_BLE_SLP_CENTRAL_PERIPHERAL
+        default "standard-bs20-n1200" if STANDARD_BS20_N1200
         default "standard-bs21-n1100" if STANDARD_BS21_N1100
         default "standard-bs21e-1100e" if STANDARD_BS21E_1100E
 

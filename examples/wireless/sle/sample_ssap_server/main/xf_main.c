@@ -33,6 +33,13 @@
 /* 广播发送功率 */
 #define SAMPLE_SLE_ADV_TX_POWER  10
 
+#define PROP_INDEX_S2M      0
+#define PROP_INDEX_M2S      1
+
+#define DEFAULT_INPUT_IO                16
+#define DEFAULT_INPUT_IO_MODE           XF_HAL_GPIO_PULL_UP
+#define DEFAULT_INPUT_IO_TRIGGER_TYPE   XF_HAL_GPIO_INTR_TYPE_FALLING
+
 /* ==================== [Typedefs] ========================================== */
 
 /* ==================== [Static Prototypes] ================================= */
@@ -42,24 +49,23 @@ static xf_err_t sample_ssaps_event_cb(
     xf_sle_ssaps_evt_cb_param_t *param);
 static void sample_sle_set_adv_data(void);
 static void sample_sle_set_adv_param(void);
+static void sample_gpio_irq(xf_gpio_num_t gpio_num, bool level, void *user_data);
 
 /* ==================== [Static Variables] ================================== */
 
 static uint8_t s_local_name[] = "XF_SSAPS";
 static xf_sle_uuid_info_t s_app_uuid = {0};
-static uint8_t s_aap_id = 0;
-static uint8_t s_rw_prop_value[8] = {0xCC};
-static uint8_t s_rw_desc_value[] = {0xC1, 0x0};
+static uint8_t s_app_id = 0;
+static uint16_t s_conn_id = 0;
+static uint8_t s_rw_prop_value[8] = "PROP R";
+static uint8_t s_rw_desc_value[] = {0x01, 0x00};
 
-static uint8_t s_ntf_prop_value[8] = {0xDD};
-static uint8_t s_ntf_desc_value[] = {0xD1, 0x0};
+static uint8_t s_ntf_prop_value[8] = "I M PROP";
+static uint8_t s_ntf_desc_value[] = {0x01, 0x00};
 
 static uint8_t s_rsp_value[] = "I M SSAPS RSP";
 static uint8_t s_ntf0_value[] = "I M SSAPS NTF 0";
 static uint8_t s_ntf1_value[] = "I M SSAPS NTF 1";
-
-static uint8_t s_prop_ntf_value[8] = {0xBB};
-static uint8_t s_desc_ntf_value[] = {0xB1, 0x0};
 
 static uint8_t s_sle_mac_addr[XF_SLE_ADDR_LEN] = {0x33, 0x22, 0x22, 0x66, 0x11, 0x22};
 static bool is_connected = false;
@@ -70,61 +76,41 @@ static xf_sle_ssaps_service_t service_struct = {
     .prop_set = (xf_sle_ssaps_property_t [])
     {
         {
-            .prop_uuid = XF_SLE_DECLARE_UUID16(0x2323),
-            .permissions = (XF_SLE_SSAP_PERMISSION_READ | XF_SLE_SSAP_PERMISSION_WRITE),
-            .operate_indication = (
-                    XF_SLE_SSAP_OPERATE_INDICATION_BIT_READ 
-                |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_WRITE 
-                |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_WRITE_NO_RSP
-                |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_NOTIFY
-                |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_INDICATE),
-            .value = s_rw_prop_value,
-            .value_len = sizeof(s_rw_prop_value),
-            .desc_set = (xf_sle_ssaps_desc_t []) {
-                {
-                    .permissions = (XF_SLE_SSAP_PERMISSION_READ | XF_SLE_SSAP_PERMISSION_WRITE),
-                    .desc_type = XF_SLE_SSAP_DESC_TYPE_CLIENT_CONFIGURATION,
-                    .operate_indication = (
-                            XF_SLE_SSAP_OPERATE_INDICATION_BIT_READ 
-                        |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_WRITE 
-                        |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_WRITE_NO_RSP
-                        |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_NOTIFY
-                        |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_INDICATE),
-                    .value = s_rw_desc_value,
-                    .value_len = sizeof(s_rw_desc_value),
-                },
-                {0}
-            },
-        },
-        {
             .prop_uuid = XF_SLE_DECLARE_UUID16(0x2324),
             .permissions = (XF_SLE_SSAP_PERMISSION_READ | XF_SLE_SSAP_PERMISSION_WRITE),
             .operate_indication = (
                     XF_SLE_SSAP_OPERATE_INDICATION_BIT_READ 
-                |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_WRITE 
-                |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_WRITE_NO_RSP
                 |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_NOTIFY
                 |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_INDICATE),
             .value = s_ntf_prop_value,
             .value_len = sizeof(s_ntf_prop_value),
             .desc_set = (xf_sle_ssaps_desc_t []) {
                 {
+                    .desc_uuid = XF_SLE_DECLARE_UUID16(0x23DD),
                     .permissions = (XF_SLE_SSAP_PERMISSION_READ | XF_SLE_SSAP_PERMISSION_WRITE),
                     .desc_type = XF_SLE_SSAP_DESC_TYPE_CLIENT_CONFIGURATION,
                     .operate_indication = (
                             XF_SLE_SSAP_OPERATE_INDICATION_BIT_READ 
                         |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_WRITE 
-                        |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_WRITE_NO_RSP
-                        |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_NOTIFY
-                        |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_INDICATE),
+                    ),
                     .value = s_ntf_desc_value,
                     .value_len = sizeof(s_ntf_desc_value),
                 },
                 {0}
             },
         },
+        {
+            .prop_uuid = XF_SLE_DECLARE_UUID16(0x2323),
+            .permissions = (XF_SLE_SSAP_PERMISSION_READ | XF_SLE_SSAP_PERMISSION_WRITE),
+            .operate_indication = (
+                    XF_SLE_SSAP_OPERATE_INDICATION_BIT_WRITE 
+                |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_WRITE_NO_RSP
+                |   XF_SLE_SSAP_OPERATE_INDICATION_BIT_READ
+            ),
+            .value = s_rw_prop_value,
+            .value_len = sizeof(s_rw_prop_value),
+        },
         {0}
-        
     }
 };
 
@@ -141,6 +127,12 @@ void xf_main(void)
     XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
              "xf_sle_enable error!:%#X", ret);
 
+    /* 设置触发的 GPIO，设置中断任务回调位 HID 上报函数 */
+    xf_hal_gpio_init(DEFAULT_INPUT_IO, XF_HAL_GPIO_DIR_IN);
+    xf_hal_gpio_set_pull(DEFAULT_INPUT_IO, DEFAULT_INPUT_IO_MODE);
+    xf_hal_gpio_set_intr_type(DEFAULT_INPUT_IO, DEFAULT_INPUT_IO_TRIGGER_TYPE);
+    xf_hal_gpio_set_intr_isr(DEFAULT_INPUT_IO, sample_gpio_irq, NULL);
+
     // 注册 ssaps 事件回调
     xf_sle_ssaps_event_cb_register(sample_ssaps_event_cb, XF_SLE_EVT_ALL);
 
@@ -150,12 +142,12 @@ void xf_main(void)
              "xf_sle_set_local_name error:%#X", ret);
 
     // 注册 ssaps 服务端 app
-    ret = xf_sle_ssaps_app_register(&s_app_uuid, &s_aap_id);
+    ret = xf_sle_ssaps_app_register(&s_app_uuid, &s_app_id);
     XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
              "xf_sle_set_local_name error:%#X", ret);
 
     // 添加 服务（结构）到 服务端 app
-    ret = xf_sle_ssaps_add_service_to_app(s_aap_id, &service_struct);
+    ret = xf_sle_ssaps_add_service_to_app(s_app_id, &service_struct);
     XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
              "xf_sle_ssaps_add_service_to_app error:%#X", ret);
     XF_LOGI(TAG, "property handle:[0]:%d,uuid:%#X",
@@ -163,7 +155,7 @@ void xf_main(void)
             service_struct.prop_set[0].prop_uuid->uuid16);
 
     // 启动服务
-    ret = xf_sle_ssaps_start_service(s_aap_id, service_struct.service_handle);
+    ret = xf_sle_ssaps_start_service(s_app_id, service_struct.service_handle);
     XF_CHECK(ret != XF_OK, XF_RETURN_VOID, TAG,
              "xf_sle_ssaps_start_service error:%#X", ret);
 
@@ -180,6 +172,23 @@ void xf_main(void)
 
 /* ==================== [Static Functions] ================================== */
 
+static void sample_gpio_irq(xf_gpio_num_t gpio_num, bool level, void *user_data)
+{
+    XF_LOGI(TAG, "HID report");
+
+    xf_sle_ssaps_ntf_ind_t param_ntf = 
+    {
+        // .handle = param->read_req.handle,
+        .handle = service_struct.prop_set[1].prop_handle,
+        .type = XF_SLE_SSAP_PROPERTY_TYPE_VALUE,
+        .value = s_ntf1_value,
+        .value_len = sizeof(s_ntf1_value),
+    };
+    xf_err_t ret = xf_sle_ssaps_send_notify_indicate(s_app_id, s_conn_id, &param_ntf);
+    XF_CHECK(ret != XF_OK, ret, TAG,
+             "xf_sle_ssaps_send_notify_indicate error:%#X", ret);
+}
+
 static xf_err_t sample_ssaps_event_cb(
     xf_sle_ssaps_event_t event,
     xf_sle_ssaps_evt_cb_param_t *param)
@@ -192,44 +201,70 @@ static xf_err_t sample_ssaps_event_cb(
         xf_err_t ret = xf_sle_start_announce(SAMPLE_ADV_ID);
         XF_CHECK(ret != XF_OK, ret, TAG,
                  "xf_sle_start_announce error:%#X", ret);
+        s_conn_id = 0;
+        xf_hal_gpio_set_intr_disable(DEFAULT_INPUT_IO);
     } break;
     case XF_SLE_COMMON_EVT_CONNECT: {
         XF_LOGI(TAG, "EV:connect!");
+        s_conn_id = param->connect.conn_id;
         is_connected = true;
+        xf_hal_gpio_set_intr_enable(DEFAULT_INPUT_IO);
     } break;
     case XF_SLE_SSAPS_EVT_WRITE_REQ: {
         XF_LOGI(TAG, "EV:REQ WRITE:need_rsp:%d,hdl:%d,conn_id:%d,trans_id:%d",
                 param->write_req.need_rsp, param->write_req.handle,
                 param->write_req.conn_id, param->write_req.trans_id);
         XF_LOG_BUFFER_HEXDUMP_ESCAPE(param->write_req.value, param->write_req.value_len);
-        XF_LOGI(TAG, ">>> [0].HDL:%d", service_struct.prop_set[0].prop_handle);
+        
+
+        XF_LOGI(TAG, ">>> NTF HDL:%d", service_struct.prop_set[PROP_INDEX_S2M].prop_handle);
         xf_sle_ssaps_ntf_ind_t param_ntf = 
         {
-            .handle = param->write_req.handle,
+            .handle = service_struct.prop_set[PROP_INDEX_S2M].prop_handle,
             .type = XF_SLE_SSAP_PROPERTY_TYPE_VALUE,
-            .value = s_ntf0_value,
-            .value_len = sizeof(s_ntf0_value),
+            .value = s_ntf1_value,
+            .value_len = sizeof(s_ntf1_value),
         };
-        xf_err_t ret = xf_sle_ssaps_send_notify_indicate(s_aap_id, param->write_req.conn_id, &param_ntf);
+        xf_err_t ret = xf_sle_ssaps_send_notify_indicate(s_app_id, param->read_req.conn_id, &param_ntf);
         XF_CHECK(ret != XF_OK, ret, TAG,
                  "xf_sle_ssaps_send_notify_indicate error:%#X", ret);
+
+        // XF_LOGI(TAG, ">>> [0].HDL:%d", service_struct.prop_set[PROP_INDEX_M2S].prop_handle);
+        // xf_sle_ssaps_ntf_ind_t param_ntf = 
+        // {
+        //     .handle = service_struct.prop_set[PROP_INDEX_M2S].prop_handle,
+        //     .type = XF_SLE_SSAP_PROPERTY_TYPE_VALUE,
+        //     .value = s_ntf0_value,
+        //     .value_len = sizeof(s_ntf0_value),
+        // };
+        // xf_err_t ret = xf_sle_ssaps_send_notify_indicate(s_app_id, param->write_req.conn_id, &param_ntf);
+        // XF_CHECK(ret != XF_OK, ret, TAG,
+        //          "xf_sle_ssaps_send_notify_indicate error:%#X", ret);
     } break;
     case XF_SLE_SSAPS_EVT_READ_REQ: {
         XF_LOGI(TAG, "EV:REQ READ:need_rsp:%d,hdl:%d,conn_id:%d,trans_id:%d",
                 param->read_req.need_rsp, param->read_req.handle,
                 param->read_req.conn_id, param->read_req.trans_id);
+        
+        // xf_sle_ssaps_ntf_ind_t param_ntf = 
+        // {
+        //     .handle = param->read_req.handle,
+        //     .type = XF_SLE_SSAP_PROPERTY_TYPE_VALUE,
+        //     .value = s_rsp_value,
+        //     .value_len = sizeof(s_rsp_value),
+        // };
+        // xf_err_t ret = xf_sle_ssaps_send_notify_indicate(s_app_id, param->read_req.conn_id, &param_ntf);
 
-        XF_LOGI(TAG, ">>> [1].HDL:%d", service_struct.prop_set[1].prop_handle);
-        xf_sle_ssaps_ntf_ind_t param_ntf = 
-        {
-            .handle = service_struct.prop_set[1].prop_handle,
-            .type = XF_SLE_SSAP_PROPERTY_TYPE_VALUE,
-            .value = s_ntf1_value,
-            .value_len = sizeof(s_ntf1_value),
+        xf_sle_ssaps_response_value_t rsp = {
+            .value = s_rsp_value,
+            .value_len = sizeof(s_rsp_value),
         };
-        xf_err_t ret = xf_sle_ssaps_send_notify_indicate(s_aap_id, param->read_req.conn_id, &param_ntf);
+        xf_err_t ret = xf_sle_ssaps_send_response(s_app_id,
+                       param->read_req.conn_id, param->read_req.trans_id,
+                       XF_OK, &rsp
+                                                 );
         XF_CHECK(ret != XF_OK, ret, TAG,
-                 "xf_sle_ssaps_send_notify_indicate error:%#X", ret);
+                 "xf_sle_ssaps_send_response error:%#X", ret);
     } break;
     default:
         break;
